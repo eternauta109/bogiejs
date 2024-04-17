@@ -19,7 +19,23 @@
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
-    "@electron-toolkit/utils": "^3.0.0"
+    "@electron-toolkit/utils": "^3.0.0",
+    "@emotion/react": "11.10.6",
+    "@emotion/styled": "11.10.6",
+    "@mui/icons-material": "5.11.11",
+    "@mui/material": "5.11.15",
+    "@mui/x-data-grid": "^6.19.6",
+    "@mui/x-date-pickers": "6.0.4",
+    "@mui/x-date-pickers-pro": "6.0.4",
+    "@wojtekmaj/react-datetimerange-picker": "^5.5.0",
+    "date-fns": "2.30.0",
+    "level": "^8.0.1",
+    "react-big-calendar": "1.11.2",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-router-dom": "^6.10.0",
+    "react-trello": "^2.2.11",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
