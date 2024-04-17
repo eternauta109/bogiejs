@@ -113,7 +113,6 @@ async function eventExists(key) {
   } catch (error) {
     // Se si verifica un errore, l'evento non esiste
     return false
-  } finally {
   }
 }
 

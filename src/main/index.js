@@ -158,7 +158,7 @@ ipcMain.handle('login', async (event, args) => {
 })
 
 //icp electron che restituisce un array con tutti i nomi dei managers
-ipcMain.on('send:managersName', async (event, args) => {
+ipcMain.on('send:managersName', async () => {
   const managers = await getAllManagersName()
   /*  console.log("managers in main dopo chiamata al db", managers); */
   await mainWindow.webContents.send('managersName', managers)
@@ -194,7 +194,7 @@ ipcMain.handle('getEvents', async () => {
 })
 
 //icp che elimina un event dal db event
-ipcMain.on('send:eventToDelete', async (event, eventId) => {
+ipcMain.handle('removeEvent', async (event, eventId) => {
   /* console.log("send:eventToDelete", eventId); */
   await deleteThisEvent(eventId)
   /* await readAllEvents(); */
@@ -203,7 +203,7 @@ ipcMain.on('send:eventToDelete', async (event, eventId) => {
 //ICP PER GESTIRE I TASK
 
 //icp electron che inserisce o aggiorna  task
-ipcMain.on('send:task', async (event, args) => {
+ipcMain.handle('addNewTask', async (event, args) => {
   /* console.log("MAIN: task da inserire in db", args); */
   await insertTask(args)
   await addNotifyManagers({ typeNotify: 'task', obj: args.task })
@@ -212,14 +212,14 @@ ipcMain.on('send:task', async (event, args) => {
 
 //icp che restituisce tutti gli tasks. mi serve per caricare events alla primo avvio
 //viene letta dal reducers tasks
-ipcMain.on('send:getTasks', async (event, args) => {
+ipcMain.handle('getAllTasks', async () => {
   /*   console.log("argomenti di send:getTasks", args); */
   const stateTasks = await getAllTasks()
-  await mainWindow.webContents.send('return:getTasks', stateTasks)
+  return stateTasks
 })
 
 //icp che elimina un event dal db task
-ipcMain.on('send:taskToDelete', async (event, taskId) => {
+ipcMain.handle('removeTask', async (event, taskId) => {
   /* console.log("send:taskToDelete", taskId); */
   await deleteThisTask(taskId)
   /* await readAllTasks(); */

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ToggleEvent from './ToggleEvent'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -21,11 +21,9 @@ import {
 
 //queste sono le funzioni che bho messo dentro i reducer che
 // vanno a lavorare con il db Level
-import { addNewEvent, deleteEventFromDb } from '../../store/eventsReducer'
-import { addNewTask } from '../../store/taskReducer'
+
 import useEventsStore from '../../store/EventDataContext'
 import { getOptions } from '../../store/optionsReducer'
-import { set } from 'date-fns'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -38,6 +36,7 @@ const MenuProps = {
   }
 }
 
+// eslint-disable-next-line react/prop-types
 function NewEvent({ handleClose, upDate }) {
   const [dateRange, setDateRange] = useState([new Date(), new Date()])
   const [optionsState, setOptionsState] = useState({})
@@ -86,7 +85,7 @@ function NewEvent({ handleClose, upDate }) {
           laneId: `lane-${event.manager}`
         }
         addTask(newTask)
-        await addNewTask(newTask, totalTasks)
+        await window.api.addNewTask({ task: newTask, totalTasks })
       }
       const prepareEvent = {
         ...event,
@@ -107,7 +106,7 @@ function NewEvent({ handleClose, upDate }) {
     e.preventDefault()
     deleteEvent(idToCancel)
     handleClose()
-    await deleteEventFromDb(idToCancel)
+    await window.api.removeEvent(idToCancel)
   }
 
   //gestisco i cambiamenti del valore della divsions e aggiorno sia
@@ -160,7 +159,7 @@ function NewEvent({ handleClose, upDate }) {
         <Button
           variant="outlined"
           sx={{ m: 2 }}
-          onClick={(e) => {
+          onClick={() => {
             handleClose()
             initEvent()
           }}

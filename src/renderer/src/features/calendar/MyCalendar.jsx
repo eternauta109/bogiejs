@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import { useMemo, useEffect } from 'react'
 
 import format from 'date-fns/format'
 import parse from 'date-fns/parse'
@@ -7,9 +7,9 @@ import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import useEventsStore from '../../store/EventDataContext'
 
-import { getEvents } from '../../store/eventsReducer'
+/* import { getEvents } from '../../store/eventsReducer' */
 
-import { Calendar, Views, DateLocalizer, dateFnsLocalizer } from 'react-big-calendar'
+import { Calendar, Views, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 /* const localizer = dayjsLocalizer(dayjs); */
@@ -31,12 +31,13 @@ const localizer = dateFnsLocalizer({
  * We are defaulting the localizer here because we are using this same
  * example on the main 'About' page in Storybook
  */
+// eslint-disable-next-line react/prop-types
 export default function Basic({ handleOpen }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
   console.log('events in calendar', events)
 
-  const { components, defaultDate, max, views } = useMemo(
+  const { max, views } = useMemo(
     () => ({
       /*  max: dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours'), */
       views: Object.keys(Views).map((k) => Views[k])

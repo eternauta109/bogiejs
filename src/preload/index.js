@@ -5,7 +5,11 @@ import { electronAPI } from '@electron-toolkit/preload'
 const api = {
   login,
   getAllEvents,
-  addNewEvent
+  addNewEvent,
+  removeEvent,
+  addNewTask,
+  getAllTasks,
+  removeTask
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -53,5 +57,43 @@ async function addNewEvent(args) {
     return result
   } catch (error) {
     throw new Error('errore in preload addNewEvent:', error)
+  }
+}
+
+async function removeEvent(args) {
+  try {
+    const result = await ipcRenderer.invoke('removeEvent', args)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload removeEvent:', error)
+  }
+}
+
+//ACTION TASK
+//aggiungi o modifica task
+async function addNewTask(args) {
+  try {
+    await ipcRenderer.invoke('addNewTask', args)
+  } catch (error) {
+    throw new Error('errore in preload addNewTask:', error)
+  }
+}
+//estrai tutte le tasks
+async function getAllTasks() {
+  try {
+    const result = await ipcRenderer.invoke('getAllTasks')
+    return result
+  } catch (error) {
+    throw new Error('errore in preload addNewTask:', error)
+  }
+}
+
+//estrai rimuovi un task
+async function removeTask(args) {
+  try {
+    const result = await ipcRenderer.invoke('removeTask', args)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload addNewTask:', error)
   }
 }
