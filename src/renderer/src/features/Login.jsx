@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import icoEye from '../assets/bigeye2.ico'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-
 import useEventsStore from '../store/EventDataContext'
-import { loginUser } from '../store/userReducer'
-
 import { Container, Typography, Box, Link, TextField, Button, Avatar } from '@mui/material'
 
 function Copyright(props) {

@@ -1,11 +1,11 @@
 const { Level } = require('level')
-const path = require('path')
+/* const path = require('path') */
 const fs = require('fs')
 
 const dbName = 'managers'
 
-const { app } = require('electron')
-const userPath = app.getAppPath()
+/* const { app } = require('electron') */
+/* const userPath = app.getAppPath() */
 /* const dbPath = path.join(__dirname, `./dbxbigeye/${dbName}`) */
 const dbPath = `c:\\dbBigEye\\${dbName}` //funziona con percorso assoluto
 console.log('dbPath', dbPath)
@@ -253,6 +253,7 @@ async function getAllManagersName(cinemaValue) {
   console.log('nomi managers')
   await connect()
   const results = []
+  // eslint-disable-next-line no-unused-vars
   for await (const [key, value] of db.iterator()) {
     if (value.cinema === cinemaValue) {
       results.push(value.userName)

@@ -1,173 +1,165 @@
-import { createContext, useReducer, useContext } from "react";
-import eventsReducer, { initialEvents } from "./eventsReducer";
-import taskReducer, { initialTask } from "./taskReducer";
-import topicsReducer, { initialTopic } from "./topicsReducer";
-import userReducer, { initialUser } from "./userReducer";
-import optionsReducer, { initialOption } from "./optionsReducer";
+import { createContext, useReducer, useContext } from 'react'
+import eventsReducer, { initialEvents } from './eventsReducer'
+import taskReducer, { initialTask } from './taskReducer'
+import topicsReducer, { initialTopic } from './topicsReducer'
+import userReducer, { initialUser } from './userReducer'
+import optionsReducer, { initialOption } from './optionsReducer'
 
 export const initialDataContext = {
   events: initialEvents,
   tasks: initialTask,
   topics: initialTopic,
   user: initialUser,
-  option: initialOption,
-};
+  option: initialOption
+}
 
-export const EventDataContext = createContext(initialDataContext);
+export const EventDataContext = createContext(initialDataContext)
 
+// eslint-disable-next-line react/prop-types
 export const EventStoreContext = ({ children }) => {
-  const [eventState, deispatchEvent] = useReducer(eventsReducer, initialEvents);
-  const [taskState, taskDispatch] = useReducer(taskReducer, initialTask);
-  const [topicState, topicDispatch] = useReducer(topicsReducer, initialTopic);
-  const [userState, userDispatch] = useReducer(userReducer, initialUser);
-  const [optionsState, optionDispatch] = useReducer(
-    optionsReducer,
-    initialOption
-  );
+  const [eventState, deispatchEvent] = useReducer(eventsReducer, initialEvents)
+  const [taskState, taskDispatch] = useReducer(taskReducer, initialTask)
+  const [topicState, topicDispatch] = useReducer(topicsReducer, initialTopic)
+  const [userState, userDispatch] = useReducer(userReducer, initialUser)
+  const [optionsState] = useReducer(optionsReducer, initialOption)
 
   //USER ACTION
   const setUser = (args) => {
-    console.log("ricevo args per login user: ", args);
+    console.log('ricevo args per login user: ', args)
     userDispatch({
-      type: "SET_USER",
-      payload: { ...args },
-    });
-  };
+      type: 'SET_USER',
+      payload: { ...args }
+    })
+  }
 
   const setUsersName = (usersName) => {
-    console.log("ricevo userNames: ", usersName);
+    console.log('ricevo userNames: ', usersName)
     userDispatch({
-      type: "SET_NAMES",
-      payload: [...usersName],
-    });
-  };
+      type: 'SET_NAMES',
+      payload: [...usersName]
+    })
+  }
 
   const deleteNotify = (newArrayNotify) => {
-    console.log("EDC riceve array notify", newArrayNotify);
+    console.log('EDC riceve array notify', newArrayNotify)
     userDispatch({
-      type: "SET_NOTIFICATION",
-      payload: newArrayNotify,
-    });
-  };
+      type: 'SET_NOTIFICATION',
+      payload: newArrayNotify
+    })
+  }
 
   //Topic ACTION
   const setTopics = (args) => {
-    console.log("SET TOPICS EDC: ", args);
+    console.log('SET TOPICS EDC: ', args)
     topicDispatch({
-      type: "SET_TOPICS",
-      payload: args,
-    });
-  };
+      type: 'SET_TOPICS',
+      payload: args
+    })
+  }
 
   const addTopic = (topic) => {
     topicDispatch({
-      type: "ADD_TOPIC",
-      payload: topic,
-    });
-  };
+      type: 'ADD_TOPIC',
+      payload: topic
+    })
+  }
 
   const upDateTopic = (topic, id) => {
     topicDispatch({
-      type: "UPDATE_TOPIC",
-      payload: { topic, id },
-    });
-  };
+      type: 'UPDATE_TOPIC',
+      payload: { topic, id }
+    })
+  }
 
   const deleteTopic = (id) => {
     topicDispatch({
-      type: "DELETE_TOPIC",
-      payload: { id },
-    });
-  };
+      type: 'DELETE_TOPIC',
+      payload: { id }
+    })
+  }
 
   //Action EVENT
 
   const addEvent = (event) => {
-    const updateEvents = eventState.events.concat(event);
+    const updateEvents = eventState.events.concat(event)
     deispatchEvent({
-      type: "ADD_EVENT",
-      payload: { events: updateEvents },
-    });
-  };
+      type: 'ADD_EVENT',
+      payload: { events: updateEvents }
+    })
+  }
 
   const upDateEvent = (event, id) => {
-    let updateEvents = eventState.events;
-    let updateEvent = eventState.events.findIndex((e) => e.id === id);
-    updateEvents[updateEvent] = event;
+    let updateEvents = eventState.events
+    let updateEvent = eventState.events.findIndex((e) => e.id === id)
+    updateEvents[updateEvent] = event
     deispatchEvent({
-      type: "UPDATE_EVENT",
-      payload: { events: updateEvents },
-    });
-  };
+      type: 'UPDATE_EVENT',
+      payload: { events: updateEvents }
+    })
+  }
 
   const initEvent = () => {
     deispatchEvent({
-      type: "INIT_EVENT",
-    });
-  };
+      type: 'INIT_EVENT'
+    })
+  }
 
   const deleteEvent = (eventId) => {
     deispatchEvent({
-      type: "DELETE_EVENT",
-      payload: eventId,
-    });
-  };
+      type: 'DELETE_EVENT',
+      payload: eventId
+    })
+  }
 
   const setEvent = (event) => {
     deispatchEvent({
-      type: "SET_EVENT",
-      payload: event,
-    });
-  };
+      type: 'SET_EVENT',
+      payload: event
+    })
+  }
 
   const setEvents = (args) => {
-    console.log("SET EVENTS EDC: ", args);
+    console.log('SET EVENTS EDC: ', args)
     deispatchEvent({
-      type: "SET_EVENTS",
-      payload: args,
-    });
-  };
+      type: 'SET_EVENTS',
+      payload: args
+    })
+  }
 
   //Azioni TASK ############################
 
   const deleteTask = (taskId) => {
     taskDispatch({
-      type: "DELETE_TASK",
-      payload: taskId,
-    });
-  };
+      type: 'DELETE_TASK',
+      payload: taskId
+    })
+  }
 
   const addTask = (task) => {
-    const newTasks = taskState.tasks.concat(task);
+    const newTasks = taskState.tasks.concat(task)
     taskDispatch({
-      type: "ADD_TASK",
-      payload: { tasks: newTasks },
-    });
-  };
-
-  const getTasks = () => {
-    taskDispatch({
-      type: "GET_TASKS",
-    });
-  };
+      type: 'ADD_TASK',
+      payload: { tasks: newTasks }
+    })
+  }
 
   const upDateTask = (task, id) => {
-    let updateTasks = taskState.tasks;
-    let updateTask = taskState.tasks.findIndex((e) => e.id === id);
-    updateTasks[updateTask] = task;
+    let updateTasks = taskState.tasks
+    let updateTask = taskState.tasks.findIndex((e) => e.id === id)
+    updateTasks[updateTask] = task
     taskDispatch({
-      type: "UPDATE_TASK",
-      payload: { tasks: updateTasks },
-    });
-  };
+      type: 'UPDATE_TASK',
+      payload: { tasks: updateTasks }
+    })
+  }
 
   const setTasks = (args) => {
-    console.log("SET TASKS EDC: ", args);
+    console.log('SET TASKS EDC: ', args)
     taskDispatch({
-      type: "SET_TASKS",
-      payload: args,
-    });
-  };
+      type: 'SET_TASKS',
+      payload: args
+    })
+  }
 
   const value = {
     //options
@@ -208,21 +200,17 @@ export const EventStoreContext = ({ children }) => {
     addTask,
     upDateTask,
     deleteTask,
-    setTasks,
-  };
-  return (
-    <EventDataContext.Provider value={value}>
-      {children}
-    </EventDataContext.Provider>
-  );
-};
+    setTasks
+  }
+  return <EventDataContext.Provider value={value}>{children}</EventDataContext.Provider>
+}
 
 const useEventsStore = () => {
-  const context = useContext(EventDataContext);
+  const context = useContext(EventDataContext)
   if (context === undefined) {
-    throw new Error("useData must be used with DataContext");
+    throw new Error('useData must be used with DataContext')
   }
-  return context;
-};
+  return context
+}
 
-export default useEventsStore;
+export default useEventsStore

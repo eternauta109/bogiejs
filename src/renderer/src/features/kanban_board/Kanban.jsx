@@ -1,17 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import { Container, Typography, Box, Button, Card } from '@mui/material'
+import { useEffect, useState, useMemo } from 'react'
+import { Container, Typography, Box, Button } from '@mui/material'
 import Board from 'react-trello'
 import useEventsStore from '../../store/EventDataContext'
 import TaskModal from './TaskModal'
-import CustomCard from './CustomCard'
-
-import { getTasks, addNewTask, deleteTaskFromDb } from '../../store/taskReducer'
-
-const dataInit = {
-  lanes: [
-    // Lascia le tue lane iniziali vuote o come preferisci
-  ]
-}
+/* import CustomCard from './CustomCard' */
 
 const styleLane = {
   width: 270,
@@ -46,11 +38,11 @@ const Kanban = () => {
         manager: targetManager
       }
       upDateTask(newTask, cardId)
-      await addNewTask(newTask, cardId)
+      await window.api.addNewTask({ task: newTask })
     } else {
       const newTask = { ...finder, laneId: targetLaneId }
       upDateTask(newTask, cardId)
-      await addNewTask(newTask, cardId)
+      await window.api.addNewTask({ task: newTask })
     }
   }
 
@@ -59,7 +51,7 @@ const Kanban = () => {
   //task si azzera a ogni ricarica della pagina
   const getTasksFromDb = async () => {
     console.log('getTasksFromDb triggerato')
-    await getTasks().then((args) => {
+    await window.api.getAllTasks().then((args) => {
       console.log('getTasksFromDb result:', args)
       setTasks(args)
     })
@@ -73,18 +65,17 @@ const Kanban = () => {
     if (user.user.role === 'tm' && laneId.endsWith('-completed')) {
       console.log('cancello card :', taskId, laneId, user.user)
       deleteTask(taskId)
-      await deleteTaskFromDb(taskId)
+      await window.api.removeTask(taskId)
     }
   }
 
-  //
-
+  //prendo tutte le task
   useEffect(() => {
     getTasksFromDb()
-
     return () => {}
   }, [])
 
+  //creo l'array per le lanes
   useMemo(() => {
     console.log('task in use effect di kanban', tasks, totalTasks)
     const updatedDataKanban = user?.managersName.map((manager) => ({

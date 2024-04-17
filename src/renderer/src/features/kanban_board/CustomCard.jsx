@@ -1,6 +1,6 @@
-import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+/* eslint-disable react/prop-types */
 
+import { Card, CardContent, Typography } from '@mui/material'
 
 const CustomCard = ({ title, description }) => {
   return (
@@ -10,7 +10,7 @@ const CustomCard = ({ title, description }) => {
         <Typography>{description}</Typography>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default CustomCard;
+export default CustomCard

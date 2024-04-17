@@ -1,27 +1,27 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 
-import { Modal, Box } from "@mui/material/";
-import NewTaskForm from "./NewTaskForm";
+import { Modal, Box } from '@mui/material/'
+import NewTaskForm from './NewTaskForm'
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
-  p: 4,
-};
+  p: 4
+}
 
-const TaskModal = ({ manager,open, handleClose }) => {
+const TaskModal = ({ manager, open, handleClose }) => {
   return (
     <>
       <Modal
         open={open}
         onClose={() => {
-          handleClose();
+          handleClose()
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -31,7 +31,7 @@ const TaskModal = ({ manager,open, handleClose }) => {
         </Box>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default TaskModal;
+export default TaskModal
