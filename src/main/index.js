@@ -127,24 +127,21 @@ contextBridge.exposeInMainWorld() */
 //ICP PER GESTIRE I MANAGERS
 
 //icp per creare un nuovo user
-ipcMain.on('send:newUser', async (event, args) => {
-  const returnNames = await addNewUser({ ...args })
-  console.log('main ritorno add new user ', returnNames)
-  await mainWindow.webContents.send('return:newUser', returnNames)
+ipcMain.handle('addNewUser', async (event, args) => {
+  console.log('main addNewUSer args ', args)
+  return await addNewUser({ ...args })
 })
 
 //icp per cancellare user
 ipcMain.on('send:deleteManager', async (event, args) => {
   const returnNames = await deleteThisManager(args)
-  console.log('main ritorno delete new user ', returnNames)
+  console.log('main: ritorno delete new user ', returnNames)
   await mainWindow.webContents.send('return:deleteManager', returnNames)
 })
 
 //icp per prendere tutti i managers che appartengono al cinema
-ipcMain.on('send:getAllManagers', async (event, args) => {
-  const allManagers = await getAllManagers(args)
-  console.log('main ritorno di tutti i mangers', allManagers)
-  await mainWindow.webContents.send('return:getAllManagers', allManagers)
+ipcMain.handle('getAllManagers', async (event, args) => {
+  return await getAllManagers(args)
 })
 
 //icp per cercare sul db managers chi si sta loggando

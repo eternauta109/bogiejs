@@ -9,7 +9,9 @@ const api = {
   removeEvent,
   addNewTask,
   getAllTasks,
-  removeTask
+  removeTask,
+  addNewUser,
+  getAllManagers
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -36,6 +38,28 @@ async function login({ userName, password }) {
     return result
   } catch (error) {
     throw new Error('errore in preload login:', error)
+  }
+}
+
+async function addNewUser(args) {
+  console.log('addNewUser args', args)
+  try {
+    const result = await ipcRenderer.invoke('addNewUser', args)
+    console.log('addNewUser preload', result)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload addNewUser:', error)
+  }
+}
+
+async function getAllManagers(args) {
+  console.log('sono i get all manager')
+  try {
+    const result = await ipcRenderer.invoke('getAllManagers', args)
+    console.log('ecco tutti i manager', result)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload addNewUser:', error)
   }
 }
 

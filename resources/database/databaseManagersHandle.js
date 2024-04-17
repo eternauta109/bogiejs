@@ -77,13 +77,11 @@ async function getAllManagers(user) {
   console.log('prendo tutti i colleghi di :', user)
   try {
     await connect()
-    for await (const [key, value] of db.iterator()) {
-      console.log('value??', key, value)
+    for await (const [, value] of db.iterator()) {
       if (user.user.cinema === value.cinema) {
         allManagers.push(value)
       }
     }
-    console.log('db colleghi di ritorno', allManagers)
   } catch (error) {
     console.log('errore durante il recupero dei dai dal db mangers', error)
   } finally {
@@ -99,7 +97,7 @@ async function addNewUser(newUser) {
     await connect()
     await db.put(newUser.id, newUser)
     const managersName = await getAllManagersName(newUser.cinema)
-
+    console.log('manager inserito correttamente ritorno questo:')
     return [...managersName]
   } catch (error) {
     throw new Error('addnew user:', error)
@@ -259,7 +257,7 @@ async function getAllManagersName(cinemaValue) {
       results.push(value.userName)
     }
   }
-  console.log("stampo l'array di nomi managers dal gestore del db", results)
+  console.log("stampo l'array di nomi managers da getAllManagersName", results)
   await close()
   return results
 }

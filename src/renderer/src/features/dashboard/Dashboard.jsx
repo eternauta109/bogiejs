@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 import useEventsStore from '../../store/EventDataContext'
 import { v4 as uuidv4 } from 'uuid'
-import { addNewUser, getAllManagers, deleteManager } from '../../store/userReducer'
+import { deleteManager } from '../../store/userReducer'
 import { getOptions } from '../../store/optionsReducer'
 
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -47,7 +47,8 @@ const Dashboard = () => {
       cinema: user.user.cinema
     }
     console.log('onHandleSubmit new manager', insertNewUser)
-    const cinemaNamesReturn = await addNewUser(insertNewUser)
+    const cinemaNamesReturn = await window.api.addNewUser(insertNewUser)
+    console.log('nominativi di ritorno in dashboard', cinemaNamesReturn)
     setManagersList([...cinemaNamesReturn])
     setUsersName(cinemaNamesReturn)
   }
@@ -57,7 +58,7 @@ const Dashboard = () => {
   }, [newUser])
 
   const awaytGetAllManagers = async () => {
-    const managersList = await getAllManagers(user)
+    const managersList = await window.api.getAllManagers(user)
     console.log('dashboard lista managers', managersList)
     setManagersList([...managersList])
   }
