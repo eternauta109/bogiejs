@@ -21,7 +21,7 @@ export const EventStoreContext = ({ children }) => {
   const [taskState, taskDispatch] = useReducer(taskReducer, initialTask)
   const [topicState, topicDispatch] = useReducer(topicsReducer, initialTopic)
   const [userState, userDispatch] = useReducer(userReducer, initialUser)
-  const [optionsState] = useReducer(optionsReducer, initialOption)
+  const [optionsState, optionDispatch] = useReducer(optionsReducer, initialOption)
 
   //USER ACTION
   const setUser = (args) => {

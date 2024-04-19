@@ -1,9 +1,10 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, shell } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
   login,
+  getPath,
   getAllEvents,
   deleteThisNotify,
   addNewEvent,
@@ -16,7 +17,9 @@ const api = {
   deleteThisManager,
   insertTopic,
   getAllTopics,
-  deleteThisTopic
+  deleteThisTopic,
+  getOptions,
+  shell: shell
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -34,10 +37,16 @@ if (process.contextIsolated) {
   window.api = api
 }
 
+//PATH
+async function getPath() {
+  const retPath = await ipcRenderer.invoke('getPath')
+  console.log('path in preload', retPath)
+  return retPath
+}
+
 //MANAGERS ACTIONS
 //login actions
 async function login({ userName, password }) {
-  console.log('login in preload', userName, password)
   try {
     const result = await ipcRenderer.invoke('login', { userName, password })
     return result
@@ -47,10 +56,9 @@ async function login({ userName, password }) {
 }
 
 async function addNewUser(args) {
-  console.log('addNewUser args', args)
   try {
     const result = await ipcRenderer.invoke('addNewUser', args)
-    console.log('addNewUser preload', result)
+
     return result
   } catch (error) {
     throw new Error('errore in preload addNewUser:', error)
@@ -58,10 +66,9 @@ async function addNewUser(args) {
 }
 
 async function deleteThisManager(args) {
-  console.log('deleteThisManager args', args)
   try {
     const result = await ipcRenderer.invoke('deleteThisManager', args)
-    console.log('addNewUser preload', result)
+
     return result
   } catch (error) {
     throw new Error('errore in preload deleteThisManager:', error)
@@ -69,10 +76,9 @@ async function deleteThisManager(args) {
 }
 
 async function deleteThisNotify(args) {
-  console.log('deleteThisNotify args', args)
   try {
     const result = await ipcRenderer.invoke('deleteThisNotify', args)
-    console.log('deleteThisNotify preload', result)
+
     return result
   } catch (error) {
     throw new Error('errore in preload deleteThisNotify:', error)
@@ -83,7 +89,7 @@ async function getAllManagers(args) {
   console.log('sono i get all manager')
   try {
     const result = await ipcRenderer.invoke('getAllManagers', args)
-    console.log('ecco tutti i manager', result)
+
     return result
   } catch (error) {
     throw new Error('errore in preload addNewUser:', error)
@@ -102,7 +108,6 @@ async function getAllEvents() {
 }
 //aggiungi evento e aggiorna notifica ai colleghi
 async function addNewEvent(args) {
-  console.log('addNewEvent', args)
   try {
     const result = await ipcRenderer.invoke('addNewEvent', args)
     return result
@@ -162,7 +167,7 @@ async function insertTopic(args) {
 async function getAllTopics() {
   try {
     const returnTopics = await ipcRenderer.invoke('getAllTopics')
-    console.log('returnTopics da preload:', returnTopics)
+
     return returnTopics
   } catch (error) {
     throw new Error('errore in preload getAllTopics:', error)
@@ -170,12 +175,22 @@ async function getAllTopics() {
 }
 //elimina un topic
 async function deleteThisTopic(args) {
-  console.log('tipocs da cancellare da preload:', args)
-
   try {
     const result = await ipcRenderer.invoke('deleteThisTopic', args)
     return result
   } catch (error) {
     throw new Error('errore in preload deleteThisTopic:', error)
+  }
+}
+
+//ACTION OPTIONS
+//carica le opzioni
+async function getOptions() {
+  try {
+    const returnOptions = await ipcRenderer.invoke('getOptions')
+
+    return returnOptions
+  } catch (error) {
+    throw new Error('errore in preload getOptions:', error)
   }
 }

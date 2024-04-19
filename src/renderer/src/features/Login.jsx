@@ -52,8 +52,14 @@ export default function Login() {
     }
   }
 
+  const getPath = async () => {
+    const pathApp = await window.api.getPath()
+    console.log('appPath in login', pathApp)
+  }
+
   useEffect(() => {
     console.log('user in login useffect', user)
+    getPath()
     if (user?.user.isAuth) {
       navigate('/calendar')
     }

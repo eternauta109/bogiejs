@@ -23,7 +23,6 @@ import {
 // vanno a lavorare con il db Level
 
 import useEventsStore from '../../store/EventDataContext'
-import { getOptions } from '../../store/optionsReducer'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -56,7 +55,7 @@ function NewEvent({ handleClose, upDate }) {
   const [event, setEvent] = useState(upDate ? { ...eventToUpdate } : { ...emptyEvent })
 
   const options = async () => {
-    const getOpt = await getOptions()
+    const getOpt = await window.api.getOptions()
     console.log(getOpt)
     setOptionsState({ ...getOpt })
     return getOpt
@@ -79,6 +78,7 @@ function NewEvent({ handleClose, upDate }) {
           createdBy: user.user.userName,
           title: event.title,
           start: new Date(),
+          cinema: user.user.cinema,
           manager: event.manager,
           description: event.description,
           label: user.user.userName,
@@ -89,6 +89,7 @@ function NewEvent({ handleClose, upDate }) {
       }
       const prepareEvent = {
         ...event,
+        cinema: user.user.cinema,
         createdBy: user.user.userName,
         id: 'event-' + uuidv4()
       }

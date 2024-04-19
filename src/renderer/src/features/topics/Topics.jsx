@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid'
 
 import useEventsStore from '../../store/EventDataContext'
-import { getOptions } from '../../store/optionsReducer'
+
 import ManagerCheckbox from './ManagerCheckBox'
 
 const priorityTypes = [
@@ -35,7 +35,7 @@ function EditToolbar(props) {
     e.preventDefault()
     const id = totalTopics
     console.log('id con new topic: ', id)
-    const newTopic = { ...emptyTopic, id, createdBy: user.user.userName }
+    const newTopic = { ...emptyTopic, id, createdBy: user.user.userName, cinema: user.user.cinema }
     const newTopicsAfterAddTopic = await window.api.insertTopic({ topic: newTopic, totalTopics })
     console.log('added topic in DB: ', newTopicsAfterAddTopic)
     setTopics(newTopicsAfterAddTopic)
@@ -64,8 +64,8 @@ const Topics = () => {
   const [rowModesModel, setRowModesModel] = useState({})
 
   const options = async () => {
-    const getOpt = await getOptions()
-    console.log('options funcvtion loading', getOpt)
+    const getOpt = await window.api.getOptions()
+    console.log('options function loading', getOpt)
     setOptionsState({ ...getOpt })
     return getOpt
   }
@@ -133,13 +133,11 @@ const Topics = () => {
     event.preventDefault() // Impedisci il comportamento predefinito del link
     console.log(rowData)
     if (rowData.value.startsWith('http://') || rowData.value.startsWith('https://')) {
-      const { shell } = window.require('electron')
       // Se il link è un URL Internet, aprilo in un browser esterno
-      shell.openExternal(rowData.value)
+      window.api.shell.openExternal(rowData.value)
     } else {
-      const { shell } = window.require('electron')
       // Se il link è un percorso di file locale, apri il file
-      shell.openPath(rowData.value)
+      window.api.shell.openPath(rowData.value)
     }
   }
 
