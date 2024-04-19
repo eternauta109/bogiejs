@@ -6,11 +6,8 @@ import icon from '../../resources/icon.png?asset'
 const {
   createDbUser,
   addNewUser,
-
   getManagerByCredentials,
-  getAllManagersName,
   addNotifyManagers,
-
   deleteThisNotify,
   getAllManagers,
   deleteThisManager
@@ -116,14 +113,6 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-/* async function login(args) {
-  console.log('arrivata in preload', args)
-  const managerNames = await getManagerByCredentials(args.userName, args.password)
-  return managerNames
-}
-
-contextBridge.exposeInMainWorld() */
-
 //ICP PER GESTIRE I MANAGERS
 
 //icp per creare un nuovo user
@@ -133,10 +122,8 @@ ipcMain.handle('addNewUser', async (event, args) => {
 })
 
 //icp per cancellare user
-ipcMain.on('send:deleteManager', async (event, args) => {
-  const returnNames = await deleteThisManager(args)
-  console.log('main: ritorno delete new user ', returnNames)
-  await mainWindow.webContents.send('return:deleteManager', returnNames)
+ipcMain.handle('deleteThisManager', async (event, args) => {
+  return await deleteThisManager(args)
 })
 
 //icp per prendere tutti i managers che appartengono al cinema
@@ -155,22 +142,19 @@ ipcMain.handle('login', async (event, args) => {
 })
 
 //icp electron che restituisce un array con tutti i nomi dei managers
-ipcMain.on('send:managersName', async () => {
-  const managers = await getAllManagersName()
-  /*  console.log("managers in main dopo chiamata al db", managers); */
+/* ipcMain.on('send:managersName', async () => {
+  const managers = await getAllManagersName()  
   await mainWindow.webContents.send('managersName', managers)
-})
+}) */
 
 //icp che restituisce un array di notifiche aggiornate dopo aver cancellato
 //quella appena letta. con questo andrò a aggionare lo stato di user
-ipcMain.on('send:notifyToDelete', async (event, args) => {
+ipcMain.handle('deleteThisNotify', async (event, args) => {
   console.log(
     'sono in main e mando questa notifica da cancellare al lla funzione che gestisce il db manager',
     args
   )
-  const newNotify = await deleteThisNotify(args)
-  console.log('main: dopo eliminazione di una notifica ritorna questo array', newNotify)
-  await mainWindow.webContents.send('return:notifyToDelete', newNotify)
+  return await deleteThisNotify(args)
 })
 
 //ICP PER GESTIRE GLI EVENTI
@@ -207,7 +191,7 @@ ipcMain.handle('addNewTask', async (event, args) => {
   /* await readAllTasks(); */
 })
 
-//icp che restituisce tutti gli tasks. mi serve per caricare events alla primo avvio
+//icp che restituitopicsce tutti gli tasks. mi serve per caricare events alla primo avvio
 //viene letta dal reducers tasks
 ipcMain.handle('getAllTasks', async () => {
   /*   console.log("argomenti di send:getTasks", args); */
@@ -225,32 +209,27 @@ ipcMain.handle('removeTask', async (event, taskId) => {
 //ICP PER GESTIRE I TOPICS
 
 //icp electron che inserisce o aggiorna un topic
-ipcMain.on('send:topic', async (event, args) => {
+ipcMain.handle('insertTopic', async (event, args) => {
   console.log('MAIN: topic da inserire in db', args)
   await insertTopic(args)
   const stateTopics = await getAllTopics()
   await addNotifyManagers({ typeNotify: 'topic', obj: args.topic })
-  await mainWindow.webContents.send('return:addNewTopics', stateTopics)
+  return stateTopics
   /* await readAllTopics(); */
 })
 
 //icp che restituisce tutti i topics.
-//viene letta dal reducers topics
-ipcMain.on('send:getTopics', async (event, args) => {
-  console.log('argomenti di send:getTopics', args)
-  const stateTopics = await getAllTopics()
-
-  await mainWindow.webContents.send('return:getTopics', stateTopics)
-  /* await readAllTopics(); */
+//viene letta dal reducers topicsS
+ipcMain.handle('getAllTopics', async () => {
+  console.log('main: getAllTopics')
+  return await getAllTopics()
 })
 
 //icp che elimina un event dal db topics
-ipcMain.on('send:topicToDelete', async (event, topicId) => {
-  console.log('send:topicToDelete', topicId)
+ipcMain.handle('deleteThisTopic', async (event, topicId) => {
+  console.log('deleteThisTopic', topicId)
   await deleteThisTopic(topicId)
-  const stateTopics = await getAllTopics()
-  await mainWindow.webContents.send('return:topicToDelete', stateTopics)
-  /* await readAllTopics(); */
+  return await getAllTopics()
 })
 
 //ICP PER OPZIONI

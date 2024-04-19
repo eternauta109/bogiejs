@@ -218,7 +218,7 @@ async function populateDatabase() {
 //qui ricevo un notyfy e la eleimino dall'arrayt notify del manager
 async function deleteThisNotify(args) {
   console.log('managerDB Deleting notify id: ', args)
-  const user = await query(args.userName)
+  const user = await query(args.userId)
   // Cerca la notifica nell'array di notifiche
   const index = user.notification.findIndex((notify) => notify.id === args.notifyId)
 
@@ -228,12 +228,12 @@ async function deleteThisNotify(args) {
     if (index !== -1) {
       user.notification.splice(index, 1)
     } else {
-      console.log("Notifica non trovata per l'utente con ID:", args.userName)
+      console.log("Notifica non trovata per l'utente con ID:", args.userId)
       return null // Notifica non trovata
     }
 
     // Aggiorna l'utente nel database con l'array di notifiche modificato
-    await db.put(args.userName, user)
+    await db.put(args.userId, user)
 
     console.log("Notifica eliminata con successo per l'utente con ID:", args.userName)
     return user.notification // Restituisci l'utente aggiornato

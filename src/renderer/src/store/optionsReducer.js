@@ -83,26 +83,6 @@ export const initialOption = {
   ]
 }
 
-export const getOptions = async () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('sono in DEV_MODE edntro optionsreducers')
-    return { ...initialOption }
-  } else {
-    return new Promise((resolve, reject) => {
-      const { ipcRenderer } = window.require('electron')
-      try {
-        ipcRenderer.send('send:getOptions')
-        ipcRenderer.on('return:getOptions', (e, args) => {
-          console.log('return:getOption da options reducers', args)
-          resolve(args)
-        })
-      } catch (error) {
-        reject(error)
-      }
-    })
-  }
-}
-
 const optionsReducer = (state, action) => {
   console.log('state e action optionReducer', state, action)
   /*  switch (action.type) {

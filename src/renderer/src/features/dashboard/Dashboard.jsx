@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 import useEventsStore from '../../store/EventDataContext'
 import { v4 as uuidv4 } from 'uuid'
-import { deleteManager } from '../../store/userReducer'
+
 import { getOptions } from '../../store/optionsReducer'
 
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -77,7 +77,7 @@ const Dashboard = () => {
   const onHandleDeleteUser = async (e, manager) => {
     e.preventDefault()
     console.log(manager)
-    const arrayNames = await deleteManager(manager)
+    const arrayNames = await window.api.deleteThisManager(manager)
     console.log('dashboard lista managers', arrayNames)
     setManagersList([...arrayNames])
     setUsersName(arrayNames)
@@ -94,8 +94,6 @@ const Dashboard = () => {
   return (
     <Container
       sx={{
-        display: 'flex',
-
         padding: 2,
         justifyContent: 'center'
       }}

@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import { Box, Typography, Switch, Select, MenuItem } from '@mui/material'
+/* eslint-disable react/prop-types */
+import { useEffect, useState, useMemo } from 'react'
+import { Box, Typography, Switch } from '@mui/material'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
@@ -14,8 +15,6 @@ import {
   GridRowEditStopReasons
 } from '@mui/x-data-grid'
 
-import { addNewTopic, deleteTopicFromDb, getTopics } from '../../store/topicsReducer'
-
 import useEventsStore from '../../store/EventDataContext'
 import { getOptions } from '../../store/optionsReducer'
 import ManagerCheckbox from './ManagerCheckBox'
@@ -29,7 +28,7 @@ const priorityTypes = [
 
 function EditToolbar(props) {
   const { setRowModesModel } = props
-  const { totalTopics, emptyTopic, addTopic, user, setTopics } = useEventsStore()
+  const { totalTopics, emptyTopic, user, setTopics } = useEventsStore()
 
   const handleClick = async (e) => {
     console.log('inserisco nuovo topic vuoto', totalTopics)
@@ -37,17 +36,12 @@ function EditToolbar(props) {
     const id = totalTopics
     console.log('id con new topic: ', id)
     const newTopic = { ...emptyTopic, id, createdBy: user.user.userName }
-    if (process.env.NODE_ENV === 'development') {
-      addTopic(newTopic)
-    } else {
-      const newTopicsAfterAddTopic = await addNewTopic(newTopic, totalTopics)
-
-      console.log('added topic in DB: ', newTopicsAfterAddTopic)
-      setTopics(newTopicsAfterAddTopic)
-      /* const getTopicsFromDB = await getTopics();
+    const newTopicsAfterAddTopic = await window.api.insertTopic({ topic: newTopic, totalTopics })
+    console.log('added topic in DB: ', newTopicsAfterAddTopic)
+    setTopics(newTopicsAfterAddTopic)
+    /* const getTopicsFromDB = await getTopics();
       console.log("getTopicsFromDb result:", getTopicsFromDB);
       setTopics(getTopicsFromDB); */
-    }
 
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -65,7 +59,7 @@ function EditToolbar(props) {
 }
 
 const Topics = () => {
-  const { topics, upDateTopic, deleteTopic, setTopics, user, totalTopics } = useEventsStore()
+  const { topics, upDateTopic, setTopics, user } = useEventsStore()
   const [optionsState, setOptionsState] = useState({})
   const [rowModesModel, setRowModesModel] = useState({})
 
@@ -93,13 +87,9 @@ const Topics = () => {
   }
 
   const handleDeleteClick = (id) => async () => {
-    if (process.env.NODE_ENV === 'development') {
-      deleteTopic(id)
-    } else {
-      console.log('cancello un topic', id)
-      const topicsAfterDelete = await deleteTopicFromDb({ topicId: id })
-      setTopics(topicsAfterDelete)
-    }
+    console.log('cancello un topic', id)
+    const topicsAfterDelete = await window.api.deleteThisTopic({ id })
+    setTopics(topicsAfterDelete)
   }
 
   const handleCancelClick = (id) => async () => {
@@ -113,7 +103,7 @@ const Topics = () => {
     console.log('processRowUpDate', newRow)
     const updatedRow = { ...newRow, isNew: false }
     upDateTopic(updatedRow, newRow.id)
-    await addNewTopic(updatedRow)
+    await window.api.insertTopic({ topic: updatedRow })
     return updatedRow
   }
 
@@ -163,7 +153,6 @@ const Topics = () => {
       width: 90,
       editable: true
     },
-
     {
       field: 'topicType',
       headerName: 'topic type',
@@ -189,17 +178,14 @@ const Topics = () => {
         </Typography>
       )
     },
-
     {
       field: 'office',
       headerName: 'office',
-
       width: 110,
       editable: true,
       type: 'singleSelect',
       valueOptions: optionsState.officeTypes
     },
-
     {
       field: 'typeDocument',
       headerName: 'documento',
@@ -240,7 +226,7 @@ const Topics = () => {
         ) : null
     },
 
-    ...user.managersName.map((manager, index) => ({
+    ...user.managersName.map((manager) => ({
       field: manager,
       headerName: manager,
       width: 60,
@@ -296,42 +282,46 @@ const Topics = () => {
 
         if (isInEditMode) {
           return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: 'primary.main'
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />
+            <>
+              <GridActionsCellItem
+                icon={<SaveIcon />}
+                label="Save"
+                sx={{
+                  color: 'primary.main'
+                }}
+                onClick={handleSaveClick(id)}
+              />
+              ,
+              <GridActionsCellItem
+                icon={<CancelIcon />}
+                label="Cancel"
+                className="textPrimary"
+                onClick={handleCancelClick(id)}
+                color="inherit"
+              />
+            </>
           ]
         }
 
         return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />
+          <>
+            <GridActionsCellItem
+              icon={<EditIcon />}
+              label="Edit"
+              className="textPrimary"
+              onClick={handleEditClick(id)}
+              color="inherit"
+            />
+            <GridActionsCellItem
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={handleDeleteClick(id)}
+              color="inherit"
+            />
+          </>
         ]
       }
-    },
-    ,
+    }
   ]
 
   //funzione asincrona che prende i topics dal db con una funzione
@@ -339,7 +329,7 @@ const Topics = () => {
   //topics si azzera a ogni ricarica della pagina
   const getTopicsFromDb = async () => {
     console.log('getTopicsFromDb triggerato')
-    await getTopics(topics, totalTopics).then((args) => {
+    await window.api.getAllTopics().then((args) => {
       /*  for (const element in args.topics) {
         console.log("element: ", element);
       } */

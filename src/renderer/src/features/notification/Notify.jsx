@@ -1,52 +1,40 @@
-import React from "react";
-import Modal from "@mui/material/Modal";
-import useEventsStore from "../../store/EventDataContext";
-import {
-  Box,
-  Card,
-  CardActions,
-  Container,
-  CardContent,
-  Button,
-  Typography,
-} from "@mui/material";
+/* eslint-disable react/prop-types */
 
-import { deleteNotifyFromDb } from "../../store/userReducer";
+import Modal from '@mui/material/Modal'
+import useEventsStore from '../../store/EventDataContext'
+import { Box, Card, CardActions, CardContent, Button, Typography } from '@mui/material'
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 600,
   maxHeight: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
-  overflowY: "auto",
-  p: 5,
-};
+  overflowY: 'auto',
+  p: 5
+}
 
 export const Notify = ({ onHandleClose, open, notify }) => {
-  const { user, deleteNotify } = useEventsStore();
+  const { user, deleteNotify } = useEventsStore()
 
   const handleCancelNotify = async (e, notifyId) => {
-    console.log(notifyId, user);
-    const newNotify = await deleteNotifyFromDb(notifyId, user.user.id);
-    console.log(
-      "array notifiche aggiornato è tornato a Notify cosi",
-      newNotify
-    );
-    deleteNotify(newNotify);
-    console.log("user aggiornato", user);
-  };
+    console.log(notifyId, user)
+    const newNotify = await window.api.deleteThisNotify({ notifyId, userId: user.user.id })
+    console.log('array notifiche aggiornato è tornato a Notify cosi', newNotify)
+    deleteNotify(newNotify)
+    console.log('user aggiornato', user)
+  }
 
   return (
     <>
       <Modal
         open={open}
         onClose={() => {
-          onHandleClose();
+          onHandleClose()
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -55,11 +43,7 @@ export const Notify = ({ onHandleClose, open, notify }) => {
           {notify?.map((value, key) => (
             <Card key={key} sx={{ minWidth: 275, mb: 2 }}>
               <CardContent>
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  color="text.secondary"
-                  gutterBottom
-                >
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                   hai ricevuto la seguente notifica:
                 </Typography>
 
@@ -79,5 +63,5 @@ export const Notify = ({ onHandleClose, open, notify }) => {
         </Box>
       </Modal>
     </>
-  );
-};
+  )
+}
