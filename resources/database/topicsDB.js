@@ -1,98 +1,98 @@
-const { Level } = require("level");
-const path = require("path");
-const fs = require("fs");
+const { Level } = require('level')
+const path = require('path')
+const fs = require('fs')
 
-const dbName = "topics";
+const dbName = 'topics'
 
-const { app } = require("electron");
-const userPath = app.getAppPath();
-const dbPath = path.join(userPath, `./db/${dbName}`);
+const { app } = require('electron')
+const userPath = app.getAppPath()
+const dbPath = path.join(userPath, `./db/${dbName}`)
 
-const db = new Level(dbPath, { valueEncoding: "json" });
+const db = new Level(dbPath, { valueEncoding: 'json' })
 
 // Funzione per creare il database se non esiste
 function createDbTopics() {
   fs.access(dbPath, fs.constants.F_OK, async (err) => {
     if (err) {
-      console.log("db topics non esistente, lo creo");
+      console.log('db topics non esistente, lo creo')
       try {
-        await populateDatabase();
+        await populateDatabase()
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     } else {
-      console.log("db topics esistente lo leggo");
+      console.log('db topics esistente lo leggo')
       try {
-        await readAllTopics();
+        await readAllTopics()
       } catch (error) {
-        console.log("try catch", error);
+        console.log('try catch', error)
       }
     }
-  });
+  })
 }
 
 // Funzione per popolare il database
 async function populateDatabase() {
-  console.log("Populating topics database...");
-  await connect();
+  console.log('Populating topics database...')
+  await connect()
   try {
-    await db.put("totalTopics", 0);
-    console.log("Database topics popolato con successo!");
+    await db.put('totalTopics', 0)
+    console.log('Database topics popolato con successo!')
   } catch (error) {
-    console.error("Error populating topics database:", error);
-    throw error;
+    console.error('Error populating topics database:', error)
+    throw error
   } finally {
-    await close();
+    await close()
   }
 }
 
 // Funzione per convertire le date in formato stringa ISO
 function convertDateToString(date) {
-  return date.toISOString();
+  return date.toISOString()
 }
 
 // Funzione per convertire le stringhe ISO in oggetti Date
 function convertStringToDate(dateString) {
-  return new Date(dateString);
+  return new Date(dateString)
 }
 
 //funzione che restituisce tutto il db
 async function getAllTopics() {
-  console.log("Reading all topics from database...");
-  await connect();
-  const alltopics = [];
+  console.log('Reading all topics from database...')
+  await connect()
+  const alltopics = []
 
   try {
-    const tottopics = await query("totalTopics");
-    console.log("dopo query");
+    const tottopics = await query('totalTopics')
+    console.log('dopo query')
     for await (const [key, value] of db.iterator()) {
-      if (key !== "totalTopics") {
-        const parsedtopic = JSON.parse(value);
-        parsedtopic.dateStart = convertStringToDate(parsedtopic.dateStart);
+      if (key !== 'totalTopics') {
+        const parsedtopic = JSON.parse(value)
+        parsedtopic.dateStart = convertStringToDate(parsedtopic.dateStart)
         /* console.log("parsedtopic", parsedtopic, value); */
-        alltopics.push(parsedtopic);
+        alltopics.push(parsedtopic)
       }
     }
-    /* console.log("cosa sto manadando da getAllTopics", alltopics, tottopics); */
-    return { topics: alltopics, totalTopics: tottopics };
+    console.log('cosa sto manadando da getAllTopics', alltopics, tottopics)
+    return { topics: alltopics, totalTopics: tottopics }
   } catch (error) {
-    console.log("errore durante il recupero dei dai dal db topics", error);
+    console.log('errore durante il recupero dei dai dal db topics', error)
   } finally {
-    await close();
+    await close()
   }
 }
 
 // funzione che legge tutto il database
 async function readAllTopics() {
-  console.log("Database topics letto!");
-  await connect();
-  const results = [];
+  console.log('Database topics letto!')
+  await connect()
+  const results = []
   for await (const [key, value] of db.iterator()) {
-    results.push({ key, value });
+    results.push({ key, value })
   }
-  console.log("satmapa di tutto il db topics", results);
-  await close();
-  return results;
+  console.log('satmapa di tutto il db topics', results)
+  await close()
+  return results
 }
 
 //funzione che connette al db
@@ -100,25 +100,25 @@ function connect() {
   return new Promise((resolve, reject) => {
     db.open((err) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve();
+        resolve()
       }
-    });
-  });
+    })
+  })
 }
 
 // Funzione per controllare se un topico esiste nel database
 // mi servirà quando aggiungo un nuovo topic per capire
 // se aumentare o no totaltopics
 async function topicExists(key) {
-  console.log("topicExists", key);
+  console.log('topicExists', key)
   try {
-    const value = await db.get(key); // Recupero il valore dell'topico
-    return value !== undefined; // Ritorno true se l'topico esiste, altrimenti false
+    const value = await db.get(key) // Recupero il valore dell'topico
+    return value !== undefined // Ritorno true se l'topico esiste, altrimenti false
   } catch (error) {
     // Se si verifica un errore, l'topico non esiste
-    return false;
+    return false
   }
 }
 
@@ -127,70 +127,70 @@ async function topicExists(key) {
 // se devo aggiungere l'topic e aumentare totaltopics in caso non esista,
 // o aggiornare un topic e non aumentare totaltopics in caso esista.
 async function insertTopic(value) {
-  console.log("topic in insertOrUpdatetopic in db:", value);
+  console.log('topic in insertOrUpdatetopic in db:', value)
   const serializetopic = JSON.stringify({
     ...value.topic,
-    dateStart: convertDateToString(value.topic.dateStart),
-  });
+    dateStart: convertDateToString(value.topic.dateStart)
+  })
   try {
-    await connect(); // Connessione al database
+    await connect() // Connessione al database
     if (await topicExists(value.topic.id)) {
-      console.log("topic already exists", value.topic);
+      console.log('topic already exists', value.topic)
       // Se l'topico esiste già, non aggiorno totaltopics
-      await db.put(value.topic.id, serializetopic); // Aggiornamento dell'topico nel database
+      await db.put(value.topic.id, serializetopic) // Aggiornamento dell'topico nel database
     } else {
-      console.log("topic not exists");
+      console.log('topic not exists')
       // Se l'topico non esiste, incremento totaltopics
-      await db.put("totalTopics", value.totalTopics + 1); // Aggiornamento di totaltopics
-      await db.put(value.topic.id, serializetopic); // Inserimento dell'topico nel database
+      await db.put('totalTopics', value.totalTopics + 1) // Aggiornamento di totaltopics
+      await db.put(value.topic.id, serializetopic) // Inserimento dell'topico nel database
     }
-    console.log("topic inserted or updated successfully.");
+    console.log('topic inserted or updated successfully.')
   } catch (error) {
-    console.error("Error inserting or updating topic:", error);
-    throw error; // Gestione dell'errore
+    console.error('Error inserting or updating topic:', error)
+    throw error // Gestione dell'errore
   }
 }
 
 //qui ricevo un topicId e lo elimino
 async function deleteThisTopic(topicId) {
-  console.log("Deleting topic id: ", topicId);
+  console.log('Deleting topic id: ', topicId)
   try {
-    await connect(); // Connessione al database
-    await db.del(topicId); // Elimina l'topico utilizzando l'ID come chiave
-    console.log("topic deleted successfully.");
+    await connect() // Connessione al database
+    await db.del(topicId.id) // Elimina l'topico utilizzando l'ID come chiave
+    console.log('topic deleted successfully.')
   } catch (error) {
-    console.error("Error deleting topic:", error);
-    throw error; // Gestione dell'errore
+    console.error('Error deleting topic:', error)
+    throw error // Gestione dell'errore
   } finally {
-    await close(); // Chiusura della connessione al database
+    await close() // Chiusura della connessione al database
   }
 }
 
 //non so
 async function query(key) {
-  await connect();
+  await connect()
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve(value);
+        resolve(value)
       }
-    });
-  });
+    })
+  })
 }
 //funzione che chiude il db e fa un log di conferma chiusura
 function close() {
   return new Promise((resolve, reject) => {
     db.close((err) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        console.log("db topics close");
-        resolve();
+        console.log('db topics close')
+        resolve()
       }
-    });
-  });
+    })
+  })
 }
 
 module.exports = {
@@ -199,5 +199,5 @@ module.exports = {
 
   readAllTopics,
   getAllTopics,
-  deleteThisTopic,
-};
+  deleteThisTopic
+}

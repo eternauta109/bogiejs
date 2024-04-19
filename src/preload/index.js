@@ -5,13 +5,18 @@ import { electronAPI } from '@electron-toolkit/preload'
 const api = {
   login,
   getAllEvents,
+  deleteThisNotify,
   addNewEvent,
   removeEvent,
   addNewTask,
   getAllTasks,
   removeTask,
   addNewUser,
-  getAllManagers
+  getAllManagers,
+  deleteThisManager,
+  insertTopic,
+  getAllTopics,
+  deleteThisTopic
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -49,6 +54,28 @@ async function addNewUser(args) {
     return result
   } catch (error) {
     throw new Error('errore in preload addNewUser:', error)
+  }
+}
+
+async function deleteThisManager(args) {
+  console.log('deleteThisManager args', args)
+  try {
+    const result = await ipcRenderer.invoke('deleteThisManager', args)
+    console.log('addNewUser preload', result)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload deleteThisManager:', error)
+  }
+}
+
+async function deleteThisNotify(args) {
+  console.log('deleteThisNotify args', args)
+  try {
+    const result = await ipcRenderer.invoke('deleteThisNotify', args)
+    console.log('deleteThisNotify preload', result)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload deleteThisNotify:', error)
   }
 }
 
@@ -97,7 +124,7 @@ async function removeEvent(args) {
 //aggiungi o modifica task
 async function addNewTask(args) {
   try {
-    await ipcRenderer.invoke('addNewTask', args)
+    return await ipcRenderer.invoke('addNewTask', args)
   } catch (error) {
     throw new Error('errore in preload addNewTask:', error)
   }
@@ -119,5 +146,36 @@ async function removeTask(args) {
     return result
   } catch (error) {
     throw new Error('errore in preload addNewTask:', error)
+  }
+}
+
+//TOPICS ACTION
+//add new topic
+async function insertTopic(args) {
+  try {
+    return await ipcRenderer.invoke('insertTopic', args)
+  } catch (error) {
+    throw new Error('errore in preload insertTopic:', error)
+  }
+}
+//leggi tutti i topics
+async function getAllTopics() {
+  try {
+    const returnTopics = await ipcRenderer.invoke('getAllTopics')
+    console.log('returnTopics da preload:', returnTopics)
+    return returnTopics
+  } catch (error) {
+    throw new Error('errore in preload getAllTopics:', error)
+  }
+}
+//elimina un topic
+async function deleteThisTopic(args) {
+  console.log('tipocs da cancellare da preload:', args)
+
+  try {
+    const result = await ipcRenderer.invoke('deleteThisTopic', args)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload deleteThisTopic:', error)
   }
 }
