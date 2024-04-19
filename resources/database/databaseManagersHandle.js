@@ -1,14 +1,19 @@
 const { Level } = require('level')
-/* const path = require('path') */
+const path = require('path')
+const { app } = require('electron')
 const fs = require('fs')
-
 const dbName = 'managers'
 
-/* const { app } = require('electron') */
-/* const userPath = app.getAppPath() */
-/* const dbPath = path.join(__dirname, `./dbxbigeye/${dbName}`) */
-const dbPath = `c:\\dbBigEye\\${dbName}` //funziona con percorso assoluto
-console.log('dbPath', dbPath)
+const dbPathApp = path.join(app.getAppPath(), `./db/${dbName}`)
+console.log('db path app path', dbPathApp)
+
+const dbPathDirr = path.join(__dirname, `./dbxbigeye/${dbName}`)
+console.log('dirname path', dbPathDirr)
+
+const dbPathAbs = `c:\\dbBigEye\\${dbName}` //funziona con percorso assoluto
+console.log('dirname path abs', dbPathAbs)
+
+const dbPath = dbPathApp
 const db = new Level(dbPath, { valueEncoding: 'json' })
 
 //funzione per cercare e restituire il manager con crede
@@ -20,11 +25,10 @@ async function getManagerByCredentials(userName, password) {
   let managersName = null
 
   try {
-    for await (const [key, value] of db.iterator()) {
+    for await (const [, value] of db.iterator()) {
       const manager = value
-      console.log('manager iterati', manager)
+
       if (manager.userName === userName && manager.password === password) {
-        console.log('Credenziali corrette', key, manager)
         managerFound = { ...manager, isAuth: true }
         managersName = await getAllManagersName(managerFound.cinema)
         await close()
@@ -48,7 +52,7 @@ async function getManagerByCredentials(userName, password) {
 }
 
 // Funzione per creare il database se non esiste
-function createDbUser() {
+async function createDbUser() {
   fs.access(dbPath, fs.constants.F_OK, async (err) => {
     if (err) {
       console.log('db managers non esistente, lo creo')
@@ -56,6 +60,7 @@ function createDbUser() {
       await connect()
       try {
         await populateDatabase()
+        return dbPath
       } catch (error) {
         console.log(error)
       }
@@ -108,6 +113,7 @@ async function addNewUser(newUser) {
 
 //funzione che aggiunge una notifica nel db managers
 async function addNotifyManagers({ typeNotify, obj }) {
+  console.log('sono nel db managers e sto inserendo una notifica', typeNotify, obj)
   console.log('NOTIFY', typeNotify, obj)
   let newNotify
   if (typeNotify === 'topic') {
@@ -127,12 +133,11 @@ async function addNotifyManagers({ typeNotify, obj }) {
       id: obj.id
     }
   }
-
   console.log('oggetto new notify', newNotify)
   try {
     await connect()
     for await (const [key, value] of db.iterator()) {
-      if (obj.createdBy !== value.userName) {
+      if (obj.createdBy !== value.userName && obj.cinema === value.cinema) {
         console.log('inserisco nuova notifica a ', value.userName)
 
         // Aggiungi la nuova notifica per il manager corrente
@@ -270,7 +275,7 @@ async function readAll() {
   for await (const [key, value] of db.iterator()) {
     results.push({ key, value })
   }
-  console.log(results)
+
   await close()
   return results
 }

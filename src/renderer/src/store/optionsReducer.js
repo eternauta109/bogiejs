@@ -85,13 +85,13 @@ export const initialOption = {
 
 const optionsReducer = (state, action) => {
   console.log('state e action optionReducer', state, action)
-  /*  switch (action.type) {
-    case value:
-      break;
+  switch (action.type) {
+    case action.type:
+      break
 
     default:
-      break;
-  } */
+      break
+  }
 }
 
 export default optionsReducer

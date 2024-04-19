@@ -18,8 +18,6 @@ import {
 import useEventsStore from '../../store/EventDataContext'
 import { v4 as uuidv4 } from 'uuid'
 
-import { getOptions } from '../../store/optionsReducer'
-
 import DeleteIcon from '@mui/icons-material/Delete'
 /* import { set } from "date-fns"; */
 
@@ -64,7 +62,7 @@ const Dashboard = () => {
   }
 
   const awaytGetAllOptions = async () => {
-    const options = await getOptions()
+    const options = await window.api.getOptions()
     console.log('options in dashboard', options)
     setOptionsState({ ...options })
   }

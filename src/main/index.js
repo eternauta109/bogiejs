@@ -3,6 +3,12 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+ipcMain.handle('getPath', async () => {
+  const appPath = await app.getAppPath()
+  console.log('MAIN: getPath', appPath)
+  return app.getAppPath()
+})
+
 const {
   createDbUser,
   addNewUser,
@@ -235,10 +241,10 @@ ipcMain.handle('deleteThisTopic', async (event, topicId) => {
 //ICP PER OPZIONI
 //icp che restituisce tutti le opt.
 //viene letta dal reducers options
-ipcMain.on('send:getOptions', async (event, args) => {
-  console.log('argomenti di send:getOptions', args)
+ipcMain.handle('getOptions', async (event, args) => {
+  console.log('getOptions', args)
   const stateOptions = await getAllOptions()
-
-  await mainWindow.webContents.send('return:getOptions', stateOptions)
+  console.log('stateOptions in main', stateOptions)
+  return stateOptions
   /* await readAllTopics(); */
 })

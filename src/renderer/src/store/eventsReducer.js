@@ -6,6 +6,7 @@ export const initialEvents = {
     createdBy: null,
     eventType: 'evento',
     colorDivision: null,
+    cinema: null,
     colorEventType: '#F39C12',
     description: '',
     division: null,
