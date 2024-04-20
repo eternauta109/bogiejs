@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useMemo, useEffect } from 'react'
 
 import format from 'date-fns/format'
@@ -31,7 +32,7 @@ const localizer = dateFnsLocalizer({
  * We are defaulting the localizer here because we are using this same
  * example on the main 'About' page in Storybook
  */
-// eslint-disable-next-line react/prop-types
+
 export default function Basic({ handleOpen }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
@@ -65,7 +66,7 @@ export default function Basic({ handleOpen }) {
 
   useEffect(() => {
     getEventsFromDb()
-
+    console.log('calendar effect triggered')
     return () => {}
   }, [events.lenght])
 
