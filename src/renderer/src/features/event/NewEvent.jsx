@@ -43,7 +43,7 @@ function NewEvent({ handleClose, upDate }) {
     addTask,
     addEvent,
     eventToUpdate,
-    totalEvent,
+    totalEvents,
     totalTasks,
     upDateEvent,
     emptyEvent,
@@ -70,7 +70,7 @@ function NewEvent({ handleClose, upDate }) {
     if (upDate) {
       upDateEvent(event, event.id)
       handleClose()
-      await window.api.addNewEvent(event, totalEvent)
+      await window.api.addNewEvent({ event, totalEvents })
     } else {
       if (event.manager !== '') {
         const newTask = {
@@ -96,7 +96,7 @@ function NewEvent({ handleClose, upDate }) {
       addEvent(prepareEvent)
       initEvent()
       handleClose()
-      await window.api.addNewEvent({ event: prepareEvent, totalEvent })
+      await window.api.addNewEvent({ event: prepareEvent, totalEvents })
     }
   }
 

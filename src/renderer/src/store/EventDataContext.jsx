@@ -21,6 +21,7 @@ export const EventStoreContext = ({ children }) => {
   const [taskState, taskDispatch] = useReducer(taskReducer, initialTask)
   const [topicState, topicDispatch] = useReducer(topicsReducer, initialTopic)
   const [userState, userDispatch] = useReducer(userReducer, initialUser)
+  // eslint-disable-next-line no-unused-vars
   const [optionsState, optionDispatch] = useReducer(optionsReducer, initialOption)
 
   //USER ACTION
@@ -180,7 +181,7 @@ export const EventStoreContext = ({ children }) => {
 
     //EVENT
 
-    totalEvent: eventState.totalEvents,
+    totalEvents: eventState.totalEvents,
     events: eventState.events,
     eventToUpdate: eventState.newEvent,
     emptyEvent: initialEvents.newEvent,
