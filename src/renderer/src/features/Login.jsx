@@ -4,7 +4,17 @@ import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@mui/material/styles'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import useEventsStore from '../store/EventDataContext'
-import { Container, Typography, Box, Link, TextField, Button, Avatar } from '@mui/material'
+import {
+  Container,
+  Typography,
+  Box,
+  Link,
+  TextField,
+  Button,
+  Avatar,
+  Snackbar,
+  Alert
+} from '@mui/material'
 
 function Copyright(props) {
   return (
@@ -30,9 +40,20 @@ function Copyright(props) {
 export default function Login() {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-
+  const [openSnackBar, setOpenSnackBar] = useState(false)
   const { user, setUser } = useEventsStore()
   const navigate = useNavigate()
+
+  const openSnack = () => {
+    setOpenSnackBar(true)
+  }
+
+  const closeSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenSnackBar(false)
+  }
 
   const theme = useTheme()
 
@@ -40,18 +61,16 @@ export default function Login() {
     event.preventDefault()
     console.log('invio pign')
     const { managerFound, managersName } = await window.api.login({ userName, password })
-
     console.log('ritorno di login in login component:', { managerFound, managersName })
-
     if (managerFound.isAuth) {
       console.log('manager autorizzato')
       setUser({ managerFound, managersName })
     } else {
       /* alert('credenziali non corrette') */
+      openSnack()
       console.log('credenziali non corrette')
     }
   }
-
   const getPath = async () => {
     const pathApp = await window.api.getPath()
     console.log('appPath in login', pathApp)
@@ -132,6 +151,11 @@ export default function Login() {
           />
         </Box>
       </Container>
+      <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={closeSnack}>
+        <Alert onClose={closeSnack} severity="warning" variant="filled" sx={{ width: '100%' }}>
+          errore! ricontrolla username e password
+        </Alert>
+      </Snackbar>
 
       <Box sx={{ mt: 'auto', display: 'flex', justifyContent: 'center' }}>
         <Copyright />

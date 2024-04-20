@@ -1,5 +1,6 @@
 appId: com.electron.app
 productName: big_eye_vite
+
 directories:
   buildResources: build
 files:
@@ -10,8 +11,9 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
   - resources/**
+  - db/**
 win:
-  executableName: big_eye_vite
+  executableName: bigeye
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

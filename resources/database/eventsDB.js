@@ -5,8 +5,9 @@ const fs = require('fs')
 const dbName = 'events'
 
 const { app } = require('electron')
-const userPath = app.getAppPath()
-const dbPath = path.join(userPath, `./db/${dbName}`)
+const isBuild = process.env.NODE_ENV === 'production'
+const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
+console.log('nuova path', dbPath)
 
 const db = new Level(dbPath, { valueEncoding: 'json' })
 
@@ -136,6 +137,7 @@ async function insertEvent(value) {
       // Se l'evento non esiste, incremento totalEvents
       await db.put('totalEvents', value.totalEvents + 1) // Aggiornamento di totalEvents
       await db.put(value.event.id, serializeEvent) // Inserimento dell'evento nel database
+      /*  return { totalEvents: value.totalEvents + 1 } */
     }
     console.log('Event inserted or updated successfully.')
   } catch (error) {

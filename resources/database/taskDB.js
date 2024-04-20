@@ -5,8 +5,8 @@ const fs = require('fs')
 const dbName = 'tasks'
 
 const { app } = require('electron')
-const userPath = app.getAppPath()
-const dbPath = path.join(userPath, `./db/${dbName}`)
+const isBuild = process.env.NODE_ENV === 'production'
+const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
 
 const db = new Level(dbPath, { valueEncoding: 'json' })
 

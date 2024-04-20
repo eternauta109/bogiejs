@@ -5,6 +5,8 @@ import useEventsStore from '../../store/EventDataContext'
 import TaskModal from './TaskModal'
 /* import CustomCard from './CustomCard' */
 
+const isBuild = process.env.NODE_ENV === 'production'
+
 const styleLane = {
   width: 270,
   overflowY: 'auto',
@@ -169,12 +171,14 @@ const Kanban = () => {
               +
             </Button>
           </Box>
-          <Board
-            style={{ height: '500px', marginTop: '20px', overflowY: 'auto' }}
-            data={data} // Passa direttamente l'oggetto data
-            handleDragEnd={onhandleDragEnd}
-            onCardDelete={onHandleCardDelete}
-          />
+          {isBuild && (
+            <Board
+              style={{ height: '500px', marginTop: '20px', overflowY: 'auto' }}
+              data={data} // Passa direttamente l'oggetto data
+              handleDragEnd={onhandleDragEnd}
+              onCardDelete={onHandleCardDelete}
+            />
+          )}
         </Box>
       ))}
       <TaskModal manager={selectedManager} open={openNewTask} handleClose={handleCloseNewTask} />

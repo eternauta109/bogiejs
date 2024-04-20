@@ -1,19 +1,15 @@
 const { Level } = require('level')
 const path = require('path')
-const { app } = require('electron')
 const fs = require('fs')
+
 const dbName = 'managers'
 
-const dbPathApp = path.join(app.getAppPath(), `./db/${dbName}`)
-console.log('db path app path', dbPathApp)
+const { app } = require('electron')
+const isBuild = process.env.NODE_ENV === 'production'
+const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
 
-const dbPathDirr = path.join(__dirname, `./dbxbigeye/${dbName}`)
-console.log('dirname path', dbPathDirr)
+/* const dbPath = path.join(dbPathFolder, `${dbName}`) */
 
-const dbPathAbs = `c:\\dbBigEye\\${dbName}` //funziona con percorso assoluto
-console.log('dirname path abs', dbPathAbs)
-
-const dbPath = dbPathApp
 const db = new Level(dbPath, { valueEncoding: 'json' })
 
 //funzione per cercare e restituire il manager con crede
