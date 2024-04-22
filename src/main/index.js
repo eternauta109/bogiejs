@@ -17,29 +17,24 @@ const {
   deleteThisNotify,
   getAllManagers,
   deleteThisManager
-} = require('../../resources/database/databaseManagersHandle')
+} = require('../../database/databaseManagersHandle')
 
 const {
   createDbEvents,
   insertEvent,
   getAllEvents,
   deleteThisEvent
-} = require('../../resources/database/eventsDB')
+} = require('../../database/eventsDB')
 
-const {
-  createDbTasks,
-  insertTask,
-  getAllTasks,
-  deleteThisTask
-} = require('../../resources/database/taskDB')
+const { createDbTasks, insertTask, getAllTasks, deleteThisTask } = require('../../database/taskDB')
 
 const {
   createDbTopics,
   insertTopic,
   getAllTopics,
   deleteThisTopic
-} = require('../../resources/database/topicsDB')
-const { getAllOptions, createDbOptions } = require('../../resources/database/optionsDB')
+} = require('../../database/topicsDB')
+const { getAllOptions, createDbOptions } = require('../../database/optionsDB')
 
 createDbUser()
 createDbEvents()
