@@ -30,7 +30,7 @@ function createDbOptions() {
       } catch (error) {
         console.log('try catch', error)
       } finally {
-        await populateDatabase()
+        /* await populateDatabase() */
       }
     }
   })

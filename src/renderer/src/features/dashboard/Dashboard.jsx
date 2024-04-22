@@ -19,7 +19,6 @@ import useEventsStore from '../../store/EventDataContext'
 import { v4 as uuidv4 } from 'uuid'
 
 import DeleteIcon from '@mui/icons-material/Delete'
-/* import { set } from "date-fns"; */
 
 const Dashboard = () => {
   const [newUser, setNewUser] = useState({
