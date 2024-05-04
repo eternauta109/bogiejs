@@ -27,7 +27,7 @@ async function getManagerByCredentials(userName, password) {
       if (manager.userName === userName && manager.password === password) {
         managerFound = { ...manager, isAuth: true }
         managersName = await getAllManagersName(managerFound.cinema)
-        await close()
+        console.log('risultato accesso:', managerFound, managersName)
         return { managerFound, managersName } // Esci dal loop quando trovi il manager corrispondente
       }
     }
@@ -249,44 +249,41 @@ async function deleteThisNotify(args) {
 //funzione che restituisce un array contenente
 //tutti i nomi dei managers
 async function getAllManagersName(cinemaValue) {
-  console.log('nomi managers')
-  await connect()
-  const results = []
-  // eslint-disable-next-line no-unused-vars
-  for await (const [key, value] of db.iterator()) {
-    if (value.cinema === cinemaValue) {
-      results.push(value.userName)
+  try {
+    console.log('prendo i nomi dei managers dal db')
+    await connect()
+    const results = []
+    // eslint-disable-next-line no-unused-vars
+    for await (const [key, value] of db.iterator()) {
+      if (value.cinema === cinemaValue) {
+        results.push(value.userName)
+      }
     }
+    console.log("stampo l'array di nomi managers da getAllManagersName", results)
+
+    return results
+  } catch (error) {
+    throw new Error('getAllManagersName:', error)
+  } finally {
+    await close()
   }
-  console.log("stampo l'array di nomi managers da getAllManagersName", results)
-  await close()
-  return results
 }
 
 //funzione che legge e stampa tutto il db
 async function readAll() {
-  console.log('Database manager letto!')
-  await connect()
-  const results = []
-  for await (const [key, value] of db.iterator()) {
-    results.push({ key, value })
+  try {
+    await connect()
+    console.log('Database manager letto!')
+    const results = []
+    for await (const [key, value] of db.iterator()) {
+      results.push({ key, value })
+    }
+    return results
+  } catch (error) {
+    throw new Error('readAll:', error)
+  } finally {
+    await close()
   }
-
-  await close()
-  return results
-}
-
-function connect() {
-  console.log('Connect with managers')
-  return new Promise((resolve, reject) => {
-    db.open((err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(db)
-      }
-    })
-  })
 }
 
 async function insertNewManager(key, value) {
@@ -314,14 +311,28 @@ async function query(key) {
     })
   })
 }
+//funzione che connette al db
+function connect() {
+  return new Promise((resolve, reject) => {
+    db.open((err) => {
+      if (err) {
+        reject(err)
+      } else {
+        console.log('db manager open')
+        resolve()
+      }
+    })
+  })
+}
 
+//funzione che chiude il db e fa un log di conferma chiusura
 function close() {
   return new Promise((resolve, reject) => {
     db.close((err) => {
       if (err) {
         reject(err)
       } else {
-        console.log('db managers close')
+        console.log('db manager close')
         resolve()
       }
     })

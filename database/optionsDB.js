@@ -24,7 +24,7 @@ function createDbOptions() {
         await populateDatabase()
       }
     } else {
-      console.log('db tasks esistente lo leggo')
+      console.log('db option esistente lo leggo')
       try {
         /* await readAllTasks(); */
       } catch (error) {
@@ -38,7 +38,6 @@ function createDbOptions() {
 
 // Funzione per popolare il database
 async function populateDatabase() {
-  await connect()
   // Inserisci i manager nel database (assumendo che dbMan sia l'istanza del database creato)
   const setOptions = {
     divisions: [
@@ -139,31 +138,18 @@ async function populateDatabase() {
 
 //funzione che restituisce tutto il db
 async function getAllOptions() {
-  await connect()
   console.log('leggo tutto il db options')
 
   try {
+    await connect()
     const value = await db.get('config')
 
     return value
   } catch (err) {
-    throw new Error('estr5aggo options', err)
+    throw new Error('errore in fase di estraggo options', err)
   } finally {
-    await close()
+    close()
   }
-}
-
-//funzione che connette al db
-function connect() {
-  return new Promise((resolve, reject) => {
-    db.open((err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
-    })
-  })
 }
 
 //non so
@@ -180,6 +166,21 @@ function query(key) {
     })
   })
 }
+
+//funzione che connette al db
+function connect() {
+  return new Promise((resolve, reject) => {
+    db.open((err) => {
+      if (err) {
+        reject(err)
+      } else {
+        console.log('db option open')
+        resolve()
+      }
+    })
+  })
+}
+
 //funzione che chiude il db e fa un log di conferma chiusura
 function close() {
   return new Promise((resolve, reject) => {
@@ -187,7 +188,7 @@ function close() {
       if (err) {
         reject(err)
       } else {
-        console.log('db tasks close')
+        console.log('db option close')
         resolve()
       }
     })

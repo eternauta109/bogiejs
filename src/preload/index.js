@@ -188,7 +188,7 @@ async function deleteThisTopic(args) {
 async function getOptions() {
   try {
     const returnOptions = await ipcRenderer.invoke('getOptions')
-
+    console.log('preload options', returnOptions)
     return returnOptions
   } catch (error) {
     throw new Error('errore in preload getOptions:', error)
