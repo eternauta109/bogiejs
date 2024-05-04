@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
@@ -237,7 +238,7 @@ ipcMain.handle('deleteThisTopic', async (event, topicId) => {
 //icp che restituisce tutti le opt.
 //viene letta dal reducers options
 ipcMain.handle('getOptions', async (event, args) => {
-  console.log('getOptions', args)
+  /* console.log('getOptions', args) */
   const stateOptions = await getAllOptions()
   console.log('stateOptions in main', stateOptions)
   return stateOptions

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Typography, Switch } from '@mui/material'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
@@ -64,10 +64,14 @@ const Topics = () => {
   const [rowModesModel, setRowModesModel] = useState({})
 
   const options = async () => {
-    const getOpt = await window.api.getOptions()
-    console.log('options function loading', getOpt)
-    setOptionsState({ ...getOpt })
-    return getOpt
+    console.log('in options di topics')
+    try {
+      const getOpt = await window.api.getOptions()
+      console.log('options function loading', getOpt)
+      setOptionsState({ ...getOpt })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleRowEditStop = (params, event) => {
@@ -227,13 +231,13 @@ const Topics = () => {
     ...user.managersName.map((manager) => ({
       field: manager,
       headerName: manager,
-      width: 60,
+      width: 110,
       renderCell: (params) => (
         <ManagerCheckbox
           row={params.row}
           manager={manager}
-          onCheckboxChange={(managerName) => {
-            handleCheckboxChange(params.row.id, managerName)
+          onCheckboxChange={(manager) => {
+            handleCheckboxChange(params.row.id, manager)
             setRowModesModel({
               ...rowModesModel,
               [params.row.id]: { mode: GridRowModes.Edit }
@@ -336,14 +340,9 @@ const Topics = () => {
     })
   }
 
-  useMemo(() => {
-    console.log('usememo di topics', topics, rowModesModel)
-    getTopicsFromDb()
-  }, [])
-
   useEffect(() => {
     options()
-
+    getTopicsFromDb()
     return () => {}
   }, [])
 
