@@ -22,16 +22,10 @@ function createDbOptions() {
         console.log(error)
       } finally {
         await populateDatabase()
+        await close()
       }
     } else {
-      console.log('db option esistente lo leggo')
-      try {
-        /* await readAllTasks(); */
-      } catch (error) {
-        console.log('try catch', error)
-      } finally {
-        /* await populateDatabase() */
-      }
+      console.log('db option esistente')
     }
   })
 }
@@ -148,7 +142,7 @@ async function getAllOptions() {
   } catch (err) {
     throw new Error('errore in fase di estraggo options', err)
   } finally {
-    close()
+    await close()
   }
 }
 
