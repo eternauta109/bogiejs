@@ -240,7 +240,7 @@ ipcMain.handle('deleteThisTopic', async (event, topicId) => {
 ipcMain.handle('getOptions', async (event, args) => {
   /* console.log('getOptions', args) */
   const stateOptions = await getAllOptions()
-  console.log('stateOptions in main', stateOptions)
+  /* console.log('stateOptions in main', stateOptions) */
   return stateOptions
   /* await readAllTopics(); */
 })

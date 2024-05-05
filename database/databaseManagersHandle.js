@@ -26,7 +26,7 @@ async function getManagerByCredentials(userName, password) {
 
       if (manager.userName === userName && manager.password === password) {
         managerFound = { ...manager, isAuth: true }
-        managersName = await getAllManagersName(managerFound.cinema)
+        managersName = await getAllManagersName(managerFound)
         console.log('risultato accesso:', managerFound, managersName)
         return { managerFound, managersName } // Esci dal loop quando trovi il manager corrispondente
       }
@@ -173,6 +173,7 @@ async function populateDatabase() {
     {
       userName: 'fabioc',
       role: 'tm',
+      area: 4,
       password: '109',
       isAuth: false,
       cinema: 'guidonia',
@@ -180,8 +181,39 @@ async function populateDatabase() {
       notification: []
     },
     {
+      userName: 'fabios',
+      role: 'tm',
+      area: 4,
+      password: '109',
+      isAuth: false,
+      cinema: 'parco',
+      id: 'magman1',
+      notification: []
+    },
+    {
+      userName: 'agostinol',
+      role: 'tm',
+      area: 4,
+      password: '109',
+      isAuth: false,
+      cinema: 'catania',
+      id: 'catman1',
+      notification: []
+    },
+    {
+      userName: 'marion',
+      role: 'areamanager',
+      area: 4,
+      password: '1001',
+      isAuth: false,
+      cinema: 'area4',
+      id: 'area4',
+      notification: []
+    },
+    {
       userName: 'enricor',
       role: 'tm',
+      area: 4,
       password: '0231',
       isAuth: false,
       cinema: 'moderno',
@@ -191,6 +223,7 @@ async function populateDatabase() {
     {
       userName: 'stefanias',
       role: 'tm',
+      area: 4,
       password: '0105',
       isAuth: false,
       cinema: 'napoli',
@@ -200,6 +233,7 @@ async function populateDatabase() {
     {
       userName: 'donatov',
       role: 'tm',
+      area: 4,
       password: '0106',
       isAuth: false,
       cinema: 'bari',
@@ -248,24 +282,45 @@ async function deleteThisNotify(args) {
 
 //funzione che restituisce un array contenente
 //tutti i nomi dei managers
-async function getAllManagersName(cinemaValue) {
-  try {
-    console.log('prendo i nomi dei managers dal db')
+async function getAllManagersName(manager) {
+  console.log('get all manager user:', manager)
+  const cinemaValue = manager.cinema
+  const areaValue = manager.area
+  let results = []
+  if (manager.role === 'areamanager') {
+    console.log('prendo i nomi dei direttori dal db')
     await connect()
-    const results = []
-    // eslint-disable-next-line no-unused-vars
-    for await (const [key, value] of db.iterator()) {
-      if (value.cinema === cinemaValue) {
-        results.push(value.userName)
+    try {
+      for await (const [, value] of db.iterator()) {
+        if (value.area === areaValue) {
+          results.push(value.userName)
+        }
       }
-    }
-    console.log("stampo l'array di nomi managers da getAllManagersName", results)
+      console.log("stampo l'array di nomi managers da getAllManagersName", results)
 
-    return results
-  } catch (error) {
-    throw new Error('getAllManagersName:', error)
-  } finally {
-    await close()
+      return results
+    } catch (error) {
+      throw new Error('getAllTheatreManager error', error)
+    }
+  } else {
+    try {
+      console.log('prendo i nomi dei managers dal db')
+      await connect()
+      results = []
+      // eslint-disable-next-line no-unused-vars
+      for await (const [key, value] of db.iterator()) {
+        if (value.cinema === cinemaValue) {
+          results.push(value.userName)
+        }
+      }
+      console.log("stampo l'array di nomi managers da getAllManagersName", results)
+
+      return results
+    } catch (error) {
+      throw new Error('getAllManagersName:', error)
+    } finally {
+      await close()
+    }
   }
 }
 

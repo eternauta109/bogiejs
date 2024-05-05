@@ -13,6 +13,7 @@ import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
 import LocalAirportIcon from '@mui/icons-material/LocalAirport'
 import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront'
 import Groups2Icon from '@mui/icons-material/Groups2'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 
 // eslint-disable-next-line react/prop-types
 const ToggleEvent = ({ setEventType, event }) => {
@@ -55,6 +56,9 @@ const ToggleEvent = ({ setEventType, event }) => {
         break
       case 'meeting':
         color = '#4F7DE5'
+        break
+      case 'delivery':
+        color = '#4F8DF5'
         break
       default:
         console.error('Valore del toggle non previsto:', alignment)
@@ -133,6 +137,16 @@ const ToggleEvent = ({ setEventType, event }) => {
         >
           <Tooltip title="extra">
             <RocketLaunchIcon />
+          </Tooltip>
+        </ToggleButton>
+
+        <ToggleButton
+          value="delivery"
+          aria-label="justified"
+          onClick={() => handleToggleAlignment('delivery')}
+        >
+          <Tooltip title="delivery">
+            <LocalShippingIcon />
           </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>
