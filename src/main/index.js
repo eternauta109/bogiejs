@@ -212,7 +212,7 @@ ipcMain.handle('removeTask', async (event, taskId) => {
 
 //icp electron che inserisce o aggiorna un topic
 ipcMain.handle('insertTopic', async (event, args) => {
-  console.log('MAIN: topic da inserire in db', args)
+  console.log('MAIN: insertTopic: topic da inserire in db', args)
   await insertTopic(args)
   const stateTopics = await getAllTopics()
   await addNotifyManagers({ typeNotify: 'topic', obj: args.topic })
