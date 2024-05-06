@@ -33,7 +33,7 @@ function NavBar() {
   const [openModal, setOpenModal] = useState(false)
   const handleOpenModal = () => setOpenModal(true)
   const handleCloseModal = () => setOpenModal(false)
-  const { user } = useEventsStore()
+  const { user, logOut } = useEventsStore()
 
   const settings = [`name: ${user.user.userName}`, `role: ${user.user.role}`]
 
@@ -69,6 +69,11 @@ function NavBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const handleLogout = () => {
+    logOut()
+    navigate('/')
   }
 
   const MenuElement = ({ page }) => {
@@ -210,6 +215,9 @@ function NavBar() {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem key="logout" onClick={handleLogout}>
+                <Typography color="secondary">LogOut</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

@@ -48,6 +48,12 @@ export const EventStoreContext = ({ children }) => {
       payload: newArrayNotify
     })
   }
+  const logOut = () => {
+    console.log('EDC logout')
+    userDispatch({
+      type: 'LOG_OUT'
+    })
+  }
 
   //Topic ACTION
   const setTopics = (args) => {
@@ -170,6 +176,8 @@ export const EventStoreContext = ({ children }) => {
     setUser,
     setUsersName,
     deleteNotify,
+    logOut,
+
     //TOPICS
     totalTopics: topicState.totalTopics,
     emptyTopic: initialTopic.newTopic,
