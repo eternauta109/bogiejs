@@ -19,6 +19,10 @@ const userReducer = (state, action) => {
         user: { ...action.payload.managerFound },
         managersName: [...action.payload.managersName]
       }
+    case 'LOG_OUT':
+      return {
+        ...initialUser
+      }
     case 'SET_NAMES':
       return {
         ...state,
