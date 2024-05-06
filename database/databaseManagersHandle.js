@@ -107,10 +107,38 @@ async function addNewUser(newUser) {
   }
 }
 
+//funzione che itera il db e aggiunge una notifica differenziando
+//tra area manager e altri ruoli
+async function iteratorForAddNotify(obj, newNotify, discriminator) {
+  try {
+    await connect()
+    for await (const [key, value] of db.iterator()) {
+      // Controllo per determinare se il manager è l'autore della notifica
+      // e se il cinema o l'area corrispondono al discriminatore
+      if (
+        obj.createdBy !== value.userName &&
+        obj.cinema === (discriminator ? value.area : value.cinema)
+      ) {
+        console.log('inserisco nuova notifica a ', value.userName)
+
+        // Aggiungi la nuova notifica per il manager corrente
+        value.notification.push(newNotify)
+
+        // Aggiorna il manager nel database
+        await db.put(key, value)
+      }
+    }
+  } catch (error) {
+    console.log("errore nell'inserimento nuova notifica", error)
+  } finally {
+    await close()
+  }
+}
+
 //funzione che aggiunge una notifica nel db managers
 async function addNotifyManagers({ typeNotify, obj }) {
   console.log('sono nel db managers e sto inserendo una notifica', typeNotify, obj)
-  console.log('NOTIFY', typeNotify, obj)
+
   let newNotify
   if (typeNotify === 'topic') {
     if (obj.topicArgument !== '') {
@@ -129,25 +157,13 @@ async function addNotifyManagers({ typeNotify, obj }) {
       id: obj.id
     }
   }
-  console.log('oggetto new notify', newNotify)
-  try {
-    await connect()
-    for await (const [key, value] of db.iterator()) {
-      if (obj.createdBy !== value.userName && obj.cinema === value.cinema) {
-        console.log('inserisco nuova notifica a ', value.userName)
+  console.log('managerdb: addNotify: oggetto new notify', newNotify)
 
-        // Aggiungi la nuova notifica per il manager corrente
-        value.notification.push(newNotify)
+  // Determina il discriminatore in base al tipo di notifica
+  const discriminator = obj.cinema.includes('area')
 
-        // Aggiorna il manager nel database
-        await db.put(key, value)
-      }
-    }
-  } catch (error) {
-    console.log("errore nell'inserimento nuova notifica", error)
-  } finally {
-    await close()
-  }
+  // Aggiungi la notifica in base al discriminatore
+  await iteratorForAddNotify(obj, newNotify, discriminator)
 }
 
 async function deleteThisManager(user) {
@@ -173,7 +189,7 @@ async function populateDatabase() {
     {
       userName: 'fabioc',
       role: 'tm',
-      area: 4,
+      area: 'area4',
       password: '109',
       isAuth: false,
       cinema: 'guidonia',
@@ -183,7 +199,7 @@ async function populateDatabase() {
     {
       userName: 'fabios',
       role: 'tm',
-      area: 4,
+      area: 'area4',
       password: '109',
       isAuth: false,
       cinema: 'parco',
@@ -193,7 +209,7 @@ async function populateDatabase() {
     {
       userName: 'agostinol',
       role: 'tm',
-      area: 4,
+      area: 'area4',
       password: '109',
       isAuth: false,
       cinema: 'catania',
@@ -203,7 +219,7 @@ async function populateDatabase() {
     {
       userName: 'marion',
       role: 'areamanager',
-      area: 4,
+      area: 'area4',
       password: '1001',
       isAuth: false,
       cinema: 'area4',
@@ -213,7 +229,7 @@ async function populateDatabase() {
     {
       userName: 'enricor',
       role: 'tm',
-      area: 4,
+      area: 'area4',
       password: '0231',
       isAuth: false,
       cinema: 'moderno',
@@ -223,7 +239,7 @@ async function populateDatabase() {
     {
       userName: 'stefanias',
       role: 'tm',
-      area: 4,
+      area: 'area4',
       password: '0105',
       isAuth: false,
       cinema: 'napoli',
@@ -233,7 +249,7 @@ async function populateDatabase() {
     {
       userName: 'donatov',
       role: 'tm',
-      area: 4,
+      area: 'area4',
       password: '0106',
       isAuth: false,
       cinema: 'bari',
@@ -250,7 +266,7 @@ async function populateDatabase() {
   console.log('Database manager popolato con successo!')
 }
 
-//qui ricevo un notyfy e la eleimino dall'arrayt notify del manager
+//qui ricevo un notyfy e la eleimino dall'array notify del manager
 async function deleteThisNotify(args) {
   console.log('managerDB Deleting notify id: ', args)
   const user = await query(args.userId)
@@ -280,42 +296,42 @@ async function deleteThisNotify(args) {
   }
 }
 
+//funzione per restituire i nomi dei colleghi in base al ruolo dell'utente loggato.
+//discriminator puo essere areamanager o am,tm,ti, etc
+async function iteratorForManagersName(discriminator, manager) {
+  let results = []
+  console.log(`prendo i nomi dei colleghi di  ${manager.userName} `)
+  await connect()
+  try {
+    for await (const [, value] of db.iterator()) {
+      if (value.area === discriminator) {
+        results.push(value.userName)
+      }
+    }
+    console.log("stampo l'array di nomi managers da getAllManagersName", results)
+    return results
+  } catch (error) {
+    throw new Error(
+      `errore in get all managers name in managerDB se l'user loggato è ${manager.role}`,
+      error
+    )
+  }
+}
+
 //funzione che restituisce un array contenente
 //tutti i nomi dei managers
 async function getAllManagersName(manager) {
   console.log('get all manager user:', manager)
   const cinemaValue = manager.cinema
   const areaValue = manager.area
-  let results = []
-  if (manager.role === 'areamanager') {
-    console.log('prendo i nomi dei direttori dal db')
-    await connect()
-    try {
-      for await (const [, value] of db.iterator()) {
-        if (value.area === areaValue) {
-          results.push(value.userName)
-        }
-      }
-      console.log("stampo l'array di nomi managers da getAllManagersName", results)
 
-      return results
-    } catch (error) {
-      throw new Error('getAllTheatreManager error', error)
-    }
+  if (manager.role === 'areamanager') {
+    const nomiDreittori = await iteratorForManagersName(areaValue, manager)
+    return nomiDreittori
   } else {
     try {
-      console.log('prendo i nomi dei managers dal db')
-      await connect()
-      results = []
-      // eslint-disable-next-line no-unused-vars
-      for await (const [key, value] of db.iterator()) {
-        if (value.cinema === cinemaValue) {
-          results.push(value.userName)
-        }
-      }
-      console.log("stampo l'array di nomi managers da getAllManagersName", results)
-
-      return results
+      const nomiColleghi = await iteratorForManagersName(cinemaValue, manager)
+      return nomiColleghi
     } catch (error) {
       throw new Error('getAllManagersName:', error)
     } finally {
