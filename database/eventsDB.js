@@ -17,21 +17,14 @@ function createDbEvents() {
     if (err) {
       console.log('db events non esistente, lo creo')
 
-      await connect()
       try {
+        await connect()
         await populateDatabase()
       } catch (error) {
         console.log(error)
       }
-      /* await readAllEvents(); */
     } else {
-      console.log('db events esistente lo leggo')
-      await readAllEvents()
-      /* try {
-        await readAllEvents();
-      } catch (error) {
-        console.log("try catch", error);
-      } */
+      console.log('eventsDB: createDbEvents: db events esiste gia')
     }
   })
 }
@@ -71,13 +64,19 @@ async function getAllEvents() {
 // Funzione per popolare il database
 async function populateDatabase() {
   await connect()
-  // Inserisci i manager nel database (assumendo che dbMan sia l'istanza del database creato)
-  await db.put('totalEvents', 0)
-  await close()
-  console.log('Database events popolato con successo!')
+  // Inserisci i manager nel database
+  try {
+    await db.put('totalEvents', 0)
+  } catch (error) {
+    throw new Error('eventsDB: populateDatabase: error: ' + error)
+  } finally {
+    console.log('Database events popolato con successo!')
+    await close()
+  }
 }
 
 // funzione che legge tutto il database
+// eslint-disable-next-line no-unused-vars
 async function readAllEvents() {
   console.log('Database events letto!')
   await connect()
@@ -85,7 +84,7 @@ async function readAllEvents() {
   for await (const [key, value] of db.iterator()) {
     results.push({ key, value })
   }
-  console.log('satmapa di tutto il db events', results)
+  console.log('read', results)
   await close()
   return results
 }

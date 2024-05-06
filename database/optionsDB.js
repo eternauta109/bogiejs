@@ -18,10 +18,10 @@ function createDbOptions() {
 
       try {
         await connect()
+        await populateDatabase()
       } catch (error) {
         console.log(error)
       } finally {
-        await populateDatabase()
         await close()
       }
     } else {
@@ -119,23 +119,22 @@ async function populateDatabase() {
       { value: 'finance', label: 'finance' }
     ]
   }
+  await connect()
   try {
-    await connect()
     await db.put('config', setOptions)
+    console.log('Database options popolato con successo!')
   } catch (error) {
     throw new Error('populate database  options', error)
   } finally {
     await close()
-    console.log('db options chiuso')
   }
 }
 
 //funzione che restituisce tutto il db
 async function getAllOptions() {
   console.log('leggo tutto il db options')
-
+  await connect()
   try {
-    await connect()
     const value = await db.get('config')
 
     return value

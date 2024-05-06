@@ -35,7 +35,14 @@ function EditToolbar(props) {
     e.preventDefault()
     const id = totalTopics
     console.log('id con new topic: ', id)
-    const newTopic = { ...emptyTopic, id, createdBy: user.user.userName, cinema: user.user.cinema }
+    const newTopic = {
+      ...emptyTopic,
+      id,
+      createdBy: user.user.userName,
+      role: user.user.role,
+      area: user.user.area,
+      cinema: user.user.cinema
+    }
     const newTopicsAfterAddTopic = await window.api.insertTopic({ topic: newTopic, totalTopics })
     console.log('added topic in DB: ', newTopicsAfterAddTopic)
     setTopics(newTopicsAfterAddTopic)

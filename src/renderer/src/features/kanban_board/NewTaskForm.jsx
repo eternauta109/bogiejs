@@ -17,6 +17,8 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
       ...newTask,
       manager: manager,
       cinema: user.user.cinema,
+      role: user.user.role,
+      area: user.user.area,
       createdBy: user.user.userName,
       start: new Date(),
       label: user.user.userName,

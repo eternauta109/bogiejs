@@ -6,7 +6,7 @@ import icon from '../../resources/icon.png?asset'
 
 ipcMain.handle('getPath', async () => {
   const appPath = await app.getAppPath()
-  console.log('MAIN: getPath', appPath)
+  /* console.log('MAIN: getPath', appPath) */
   return app.getAppPath()
 })
 
@@ -37,11 +37,27 @@ const {
 } = require('../../database/topicsDB')
 const { getAllOptions, createDbOptions } = require('../../database/optionsDB')
 
-createDbUser()
+async function createAllDb() {
+  try {
+    await createDbUser()
+    await createDbEvents()
+    await createDbTasks()
+    await createDbTopics()
+    await createDbOptions()
+    console.log('Tutti i database sono stati creati con successo.')
+  } catch (error) {
+    console.error('Si è verificato un errore durante la creazione dei database:', error)
+  }
+}
+
+;(async () => {
+  await createAllDb()
+})()
+/* createDbUser()
 createDbEvents()
 createDbTasks()
 createDbTopics()
-createDbOptions()
+createDbOptions() */
 
 let mainWindow
 function createWindow() {
@@ -239,8 +255,14 @@ ipcMain.handle('deleteThisTopic', async (event, topicId) => {
 //viene letta dal reducers options
 ipcMain.handle('getOptions', async (event, args) => {
   /* console.log('getOptions', args) */
-  const stateOptions = await getAllOptions()
+  try {
+    const stateOptions = await getAllOptions()
+    return stateOptions
+  } catch (error) {
+    console.log('Main: getOptions: error:', error)
+  }
+
   /* console.log('stateOptions in main', stateOptions) */
-  return stateOptions
+
   /* await readAllTopics(); */
 })

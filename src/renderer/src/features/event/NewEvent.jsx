@@ -75,6 +75,8 @@ function NewEvent({ handleClose, upDate }) {
       if (event.manager !== '') {
         const newTask = {
           id: 'task-' + uuidv4(),
+          role: user.user.role,
+          area: user.user.area,
           createdBy: user.user.userName,
           title: event.title,
           start: new Date(),
@@ -90,6 +92,8 @@ function NewEvent({ handleClose, upDate }) {
       const prepareEvent = {
         ...event,
         cinema: user.user.cinema,
+        role: user.user.role,
+        area: user.user.area,
         createdBy: user.user.userName,
         id: 'event-' + uuidv4()
       }

@@ -25,7 +25,10 @@ async function getManagerByCredentials(userName, password) {
       const manager = value
 
       if (manager.userName === userName && manager.password === password) {
-        managerFound = { ...manager, isAuth: true }
+        //restituisco l'user senza password
+        // eslint-disable-next-line no-unused-vars
+        const { password, ...managerWithoutPassword } = manager
+        managerFound = { ...managerWithoutPassword, isAuth: true }
         managersName = await getAllManagersName(managerFound)
         console.log('risultato accesso:', managerFound, managersName)
         return { managerFound, managersName } // Esci dal loop quando trovi il manager corrispondente
@@ -62,12 +65,6 @@ async function createDbUser() {
       }
     } else {
       console.log('db managers esistente')
-      try {
-        await connect()
-        await readAll()
-      } catch (error) {
-        console.log('try catch', error)
-      }
     }
   })
 }
@@ -109,17 +106,31 @@ async function addNewUser(newUser) {
 
 //funzione che itera il db e aggiunge una notifica differenziando
 //tra area manager e altri ruoli
-async function iteratorForAddNotify(obj, newNotify, discriminator) {
+async function iteratorForAddNotify(obj, newNotify) {
+  await connect()
+
   try {
-    await connect()
     for await (const [key, value] of db.iterator()) {
-      // Controllo per determinare se il manager è l'autore della notifica
-      // e se il cinema o l'area corrispondono al discriminatore
-      if (
-        obj.createdBy !== value.userName &&
-        obj.cinema === (discriminator ? value.area : value.cinema)
-      ) {
-        console.log('inserisco nuova notifica a ', value.userName)
+      let shouldAddNotification = false
+
+      switch (obj.role) {
+        case 'areamanager':
+          shouldAddNotification = obj.createdBy !== value.userName && obj.area === value.area
+          break
+        case 'tm':
+          shouldAddNotification =
+            (obj.createdBy !== value.userName &&
+              obj.area === value.area &&
+              value.role === 'areamanager') ||
+            (obj.createdBy !== value.userName && obj.cinema === value.cinema)
+          break
+        default:
+          shouldAddNotification = obj.createdBy !== value.userName && obj.cinema === value.cinema
+          break
+      }
+
+      if (shouldAddNotification) {
+        console.log('Inserisco nuova notifica per', value.userName)
 
         // Aggiungi la nuova notifica per il manager corrente
         value.notification.push(newNotify)
@@ -129,7 +140,7 @@ async function iteratorForAddNotify(obj, newNotify, discriminator) {
       }
     }
   } catch (error) {
-    console.log("errore nell'inserimento nuova notifica", error)
+    console.log("Errore nell'inserimento della nuova notifica:", error)
   } finally {
     await close()
   }
@@ -137,8 +148,7 @@ async function iteratorForAddNotify(obj, newNotify, discriminator) {
 
 //funzione che aggiunge una notifica nel db managers
 async function addNotifyManagers({ typeNotify, obj }) {
-  console.log('sono nel db managers e sto inserendo una notifica', typeNotify, obj)
-
+  console.log('sono nel db managers e sto inserendo una notifica')
   let newNotify
   if (typeNotify === 'topic') {
     if (obj.topicArgument !== '') {
@@ -157,13 +167,9 @@ async function addNotifyManagers({ typeNotify, obj }) {
       id: obj.id
     }
   }
-  console.log('managerdb: addNotify: oggetto new notify', newNotify)
-
-  // Determina il discriminatore in base al tipo di notifica
-  const discriminator = obj.cinema.includes('area')
-
   // Aggiungi la notifica in base al discriminatore
-  await iteratorForAddNotify(obj, newNotify, discriminator)
+  console.log('managerdb: addNotify: oggetto new notify', newNotify)
+  await iteratorForAddNotify(obj, newNotify, 'default')
 }
 
 async function deleteThisManager(user) {
@@ -259,11 +265,16 @@ async function populateDatabase() {
   ]
 
   // Inserisci i manager nel database (assumendo che dbMan sia l'istanza del database creato)
-  for (const manager of managers) {
-    await db.put(manager.id, manager)
+  try {
+    for (const manager of managers) {
+      await db.put(manager.id, manager)
+    }
+    console.log('Database manager popolato con successo!')
+  } catch (error) {
+    throw new Error('databaseManager: populateDB: error:'.error)
+  } finally {
+    await close()
   }
-  await close()
-  console.log('Database manager popolato con successo!')
 }
 
 //qui ricevo un notyfy e la eleimino dall'array notify del manager
@@ -298,13 +309,25 @@ async function deleteThisNotify(args) {
 
 //funzione per restituire i nomi dei colleghi in base al ruolo dell'utente loggato.
 //discriminator puo essere areamanager o am,tm,ti, etc
-async function iteratorForManagersName(discriminator, manager) {
+async function iteratorForManagersName(manager) {
   let results = []
   console.log(`prendo i nomi dei colleghi di  ${manager.userName} `)
   await connect()
+
   try {
     for await (const [, value] of db.iterator()) {
-      if (value.area === discriminator) {
+      let shouldAddManagerName = false
+
+      switch (manager.role) {
+        case 'areamanager':
+          shouldAddManagerName = manager.area === value.area
+          break
+
+        default:
+          shouldAddManagerName = manager.cinema === value.cinema
+          break
+      }
+      if (shouldAddManagerName) {
         results.push(value.userName)
       }
     }
@@ -321,26 +344,20 @@ async function iteratorForManagersName(discriminator, manager) {
 //funzione che restituisce un array contenente
 //tutti i nomi dei managers
 async function getAllManagersName(manager) {
-  console.log('get all manager user:', manager)
-  const cinemaValue = manager.cinema
-  const areaValue = manager.area
+  /* console.log('get all manager user:', manager) */
 
-  if (manager.role === 'areamanager') {
-    const nomiDreittori = await iteratorForManagersName(areaValue, manager)
-    return nomiDreittori
-  } else {
-    try {
-      const nomiColleghi = await iteratorForManagersName(cinemaValue, manager)
-      return nomiColleghi
-    } catch (error) {
-      throw new Error('getAllManagersName:', error)
-    } finally {
-      await close()
-    }
+  try {
+    const nomiColleghi = await iteratorForManagersName(manager)
+    return nomiColleghi
+  } catch (error) {
+    throw new Error('getAllManagersName:', error)
+  } finally {
+    await close()
   }
 }
 
 //funzione che legge e stampa tutto il db
+// eslint-disable-next-line no-unused-vars
 async function readAll() {
   try {
     await connect()
