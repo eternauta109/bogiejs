@@ -161,11 +161,7 @@ const Dashboard = () => {
                   >
                     <Box>
                       <Typography>{manager.userName}</Typography>
-                      <TextField
-                        disabled
-                        defaultValue={manager.password}
-                        variant="filled"
-                      ></TextField>
+                      <TextField disabled value={manager.password} variant="filled"></TextField>
                     </Box>
                   </ListItem>
                 ))}

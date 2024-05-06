@@ -140,7 +140,7 @@ const Kanban = () => {
     }))
     console.log('mappa lane da kanban', updatedDataKanban)
     setDataKanban(updatedDataKanban)
-  }, [tasks.length])
+  }, [tasks.length, user.managersName.length])
 
   return (
     <Container>

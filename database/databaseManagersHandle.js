@@ -178,7 +178,7 @@ async function deleteThisManager(user) {
     await connect()
     // Rimuovi l'elemento dal database usando il metodo del
     await db.del(user.id)
-    const managersName = await getAllManagersName(user.cinema)
+    const managersName = await getAllManagersName(user)
 
     return [...managersName]
   } catch (error) {

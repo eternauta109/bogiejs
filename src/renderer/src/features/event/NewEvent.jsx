@@ -143,7 +143,7 @@ function NewEvent({ handleClose, upDate }) {
     return () => {
       initEvent()
     }
-  }, [])
+  }, [user.managersName.length])
 
   return (
     <Container
