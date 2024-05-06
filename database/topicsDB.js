@@ -21,12 +21,7 @@ function createDbTopics() {
         console.log(error)
       }
     } else {
-      console.log('db topics esistente lo leggo')
-      try {
-        await readAllTopics()
-      } catch (error) {
-        console.log('try catch', error)
-      }
+      console.log('topicsDB: createDbTopics: db topics esiste gia')
     }
   })
 }
@@ -67,7 +62,7 @@ async function getAllTopics() {
     console.log('dopo query')
     for await (const [key, value] of db.iterator()) {
       if (key !== 'totalTopics') {
-        const parsedtopic = JSON.parse(value)
+        const parsedtopic = await JSON.parse(value)
         parsedtopic.dateStart = convertStringToDate(parsedtopic.dateStart)
         /* console.log("parsedtopic", parsedtopic, value); */
         alltopics.push(parsedtopic)
@@ -174,6 +169,7 @@ async function query(key) {
       if (err) {
         reject(err)
       } else {
+        console.log('db topics open')
         resolve(value)
       }
     })
