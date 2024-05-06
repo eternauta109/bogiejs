@@ -94,7 +94,7 @@ async function addNewUser(newUser) {
   try {
     await connect()
     await db.put(newUser.id, newUser)
-    const managersName = await getAllManagersName(newUser.cinema)
+    const managersName = await getAllManagersName(newUser)
     console.log('manager inserito correttamente ritorno questo:')
     return [...managersName]
   } catch (error) {
@@ -311,7 +311,9 @@ async function deleteThisNotify(args) {
 //discriminator puo essere areamanager o am,tm,ti, etc
 async function iteratorForManagersName(manager) {
   let results = []
-  console.log(`prendo i nomi dei colleghi di  ${manager.userName} `)
+  console.log(
+    `dbmanager: iteratorForManagerName: prendo i nomi dei colleghi di  ${manager.userName} `
+  )
   await connect()
 
   try {
@@ -344,10 +346,11 @@ async function iteratorForManagersName(manager) {
 //funzione che restituisce un array contenente
 //tutti i nomi dei managers
 async function getAllManagersName(manager) {
-  /* console.log('get all manager user:', manager) */
+  console.log('get all manager user:', manager)
 
   try {
     const nomiColleghi = await iteratorForManagersName(manager)
+    console.log('databaseManager: getAllManagersName', nomiColleghi)
     return nomiColleghi
   } catch (error) {
     throw new Error('getAllManagersName:', error)

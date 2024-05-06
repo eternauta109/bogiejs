@@ -146,6 +146,7 @@ ipcMain.handle('deleteThisManager', async (event, args) => {
 
 //icp per prendere tutti i managers che appartengono al cinema
 ipcMain.handle('getAllManagers', async (event, args) => {
+  console.log('main getAllManagers', args)
   return await getAllManagers(args)
 })
 

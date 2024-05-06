@@ -106,7 +106,7 @@ const Dashboard = () => {
                   required
                   label="user name"
                   variant="outlined"
-                  name="useName"
+                  name="userName"
                   value={newUser.userName}
                   onChange={(user) => setNewUser({ ...newUser, userName: user.target.value })}
                   helperText="nome+iniziale cognome. Es marioc, francof, iolandar"
