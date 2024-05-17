@@ -97,6 +97,7 @@ async function populateDatabase() {
       { value: 'tutorial', label: 'Tutorial' },
       { value: 'procedur', label: 'procedura interna' },
       { value: 'brief', label: 'brief' },
+      { value: 'file', label: 'file' },
       { value: 'module', label: 'modulo' },
       { value: 'internalComunication', label: 'comunicazione da sede' }
     ],
@@ -116,7 +117,10 @@ async function populateDatabase() {
       { value: 'pricing', label: 'pricing' },
       { value: 'filmcontent', label: 'Film Content' },
       { value: 'it', label: 'it' },
-      { value: 'finance', label: 'finance' }
+      { value: 'finance', label: 'finance' },
+      { value: 'retail', label: 'retail' },
+      { value: 'events', label: 'events' },
+      { value: 'health', label: 'health and safety' }
     ]
   }
   await connect()
