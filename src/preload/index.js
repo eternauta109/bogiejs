@@ -6,6 +6,7 @@ const api = {
   login,
   getPath,
   getAllEvents,
+  getSingleTask,
   deleteThisNotify,
   addNewEvent,
   removeEvent,
@@ -138,9 +139,21 @@ async function addNewTask(args) {
 async function getAllTasks() {
   try {
     const result = await ipcRenderer.invoke('getAllTasks')
+    console.log('preload: getAllTask: result', result)
     return result
   } catch (error) {
     throw new Error('errore in preload addNewTask:', error)
+  }
+}
+
+//estrai tutte le tasks
+async function getSingleTask(id) {
+  try {
+    const result = await ipcRenderer.invoke('getSingleTask', id)
+    console.log('preload: getSingleTask: result', result)
+    return result
+  } catch (error) {
+    throw new Error('errore in preload getSingleTask:', error)
   }
 }
 

@@ -52,6 +52,22 @@ function convertStringToDate(dateString) {
   return new Date(dateString)
 }
 
+//funzione che restituisce un task del db
+async function getSingleTask(idTask) {
+  await connect()
+  try {
+    console.log('taskDB: getSingleTask: siamo nel try', idTask)
+    const result = await query(idTask)
+    const parsedtask = JSON.parse(result)
+    parsedtask.start = convertStringToDate(parsedtask.start)
+    console.log('tasksDb: getSingleTask; result della query:', parsedtask)
+    return parsedtask
+  } catch (error) {
+    throw new Error(error)
+  } finally {
+    await close()
+  }
+}
 //funzione che restituisce tutto il db
 async function getAllTasks() {
   await connect()
@@ -194,7 +210,7 @@ function close() {
 module.exports = {
   insertTask,
   createDbTasks,
-
+  getSingleTask,
   readAllTasks,
   getAllTasks,
   deleteThisTask
