@@ -27,7 +27,13 @@ const {
   deleteThisEvent
 } = require('../../database/eventsDB')
 
-const { createDbTasks, insertTask, getAllTasks, deleteThisTask } = require('../../database/taskDB')
+const {
+  createDbTasks,
+  insertTask,
+  getAllTasks,
+  deleteThisTask,
+  getSingleTask
+} = require('../../database/taskDB')
 
 const {
   createDbTopics,
@@ -206,7 +212,9 @@ ipcMain.handle('removeEvent', async (event, eventId) => {
 ipcMain.handle('addNewTask', async (event, args) => {
   /* console.log("MAIN: task da inserire in db", args); */
   await insertTask(args)
-  await addNotifyManagers({ typeNotify: 'task', obj: args.task })
+  if (args.upDate) {
+    await addNotifyManagers({ typeNotify: 'task', obj: args.task })
+  }
   /* await readAllTasks(); */
 })
 
@@ -222,6 +230,14 @@ ipcMain.handle('getAllTasks', async () => {
 ipcMain.handle('removeTask', async (event, taskId) => {
   /* console.log("send:taskToDelete", taskId); */
   await deleteThisTask(taskId)
+  /* await readAllTasks(); */
+})
+
+ipcMain.handle('getSingleTask', async (event, taskId) => {
+  /* console.log("send:taskToDelete", taskId); */
+  const result = await getSingleTask(taskId)
+
+  return result
   /* await readAllTasks(); */
 })
 

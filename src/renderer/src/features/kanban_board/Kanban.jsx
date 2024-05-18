@@ -3,7 +3,7 @@ import { Container, Typography, Box, Button } from '@mui/material'
 import Board from 'react-trello'
 import useEventsStore from '../../store/EventDataContext'
 import TaskModal from './TaskModal'
-/* import CustomCard from './CustomCard' */
+import CustomCard from './CustomCard'
 
 const isBuild = process.env.NODE_ENV === 'production'
 
@@ -20,6 +20,7 @@ const Kanban = () => {
   const { tasks, upDateTask, user, setTasks, totalTasks, deleteTask } = useEventsStore()
   const [openNewTask, setOpenNewTask] = useState(false)
   const [selectedManager, setSelectedManager] = useState()
+  const [signal, setSignal] = useState(0)
 
   const handleOpenNewTask = () => setOpenNewTask(true)
   const handleCloseNewTask = () => setOpenNewTask(false)
@@ -72,13 +73,18 @@ const Kanban = () => {
   }
 
   //prendo tutte le task
-  useEffect(() => {
+  /* useEffect(() => {
     getTasksFromDb()
     return () => {}
+  }, []) */
+
+  useMemo(() => {
+    console.log('kanbam: useEffect: signal:', signal)
+    getTasksFromDb()
   }, [])
 
   //creo l'array per le lanes
-  useMemo(() => {
+  useEffect(() => {
     console.log('task in use effect di kanban', tasks, totalTasks)
     const updatedDataKanban = user?.managersName.map((manager) => ({
       manager: manager,
@@ -104,7 +110,6 @@ const Kanban = () => {
               ...styleLane,
               backgroundColor: '#F9A825'
             },
-
             cards: tasks.filter(
               (task) => task.manager === manager && task.laneId === `lane-${manager}-in-progress`
             )
@@ -113,7 +118,6 @@ const Kanban = () => {
             id: `lane-${manager}-completed`,
             title: 'Completi',
             label: '',
-
             style: {
               ...styleLane,
               backgroundColor: '#689F38'
@@ -130,7 +134,6 @@ const Kanban = () => {
               ...styleLane,
               backgroundColor: '#9E9E9E'
             },
-
             cards: tasks.filter(
               (task) => task.manager === manager && task.laneId === `lane-${manager}-blocked`
             )
@@ -140,12 +143,12 @@ const Kanban = () => {
     }))
     console.log('mappa lane da kanban', updatedDataKanban)
     setDataKanban(updatedDataKanban)
-  }, [tasks.length, user.managersName.length])
+  }, [tasks.length, user.managersName, signal])
 
   return (
     <Container>
       {dataKanban.map(({ manager, data }) => (
-        <Box key={manager} sx={{ mt: '30px' }}>
+        <Box key={manager} sx={{ mt: '30px', mb: '30px' }}>
           <Box
             sx={{
               display: 'flex',
@@ -159,7 +162,7 @@ const Kanban = () => {
             <Button
               variant="contained"
               sx={{
-                borderRadius: '50%',
+                borderRadius: '20%',
                 backgroundColor: 'orange',
                 color: 'white'
               }}
@@ -173,10 +176,19 @@ const Kanban = () => {
           </Box>
           {isBuild && (
             <Board
-              style={{ height: '500px', marginTop: '20px', overflowY: 'auto' }}
+              style={{ height: '500px', marginBottum: '20px', overflowY: 'auto' }}
               data={data} // Passa direttamente l'oggetto data
               handleDragEnd={onhandleDragEnd}
               onCardDelete={onHandleCardDelete}
+              components={{
+                Card: (props) => (
+                  <CustomCard
+                    {...props}
+                    onHandleCardDelete={onHandleCardDelete}
+                    onChangeSignal={setSignal}
+                  />
+                )
+              }} // Usa CustomCard come componente per le carte
             />
           )}
         </Box>

@@ -7,6 +7,7 @@ export const initialTask = {
     colorType: '#F39C12',
     description: '',
     start: new Date(),
+    percent: 0,
     /* end: new Date(), */
     note: '',
     title: '',
