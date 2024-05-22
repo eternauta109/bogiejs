@@ -79,7 +79,7 @@ const Kanban = () => {
   }, []) */
 
   useMemo(() => {
-    console.log('kanbam: useEffect: signal:', signal)
+    console.log('kanbam: useMemo: signal:', signal)
     getTasksFromDb()
   }, [])
 
