@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import NavBar from './features/NavBar'
-import Kanban from './features/kanban_board/Kanban'
+import Lavagna from './features/kanban_board/Lavagna'
 import Topics from './features/topics/Topics'
 import ShareCalendar from './features/calendar/ShareCalendar'
 import Login from './features/Login'
@@ -18,7 +18,7 @@ function App() {
           <Route exact path="/" element={<Login />} />
           <Route path="/calendar" element={<ShareCalendar />} />
           <Route path="/topics" element={<Topics />} />
-          <Route path="/kanban" element={<Kanban />} />
+          <Route path="/kanban" element={<Lavagna />} />
           {user?.user.role === 'tm' ? <Route path="/dashboard" element={<Dashboard />} /> : null}
         </Routes>
       </div>
