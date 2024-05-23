@@ -1,106 +1,100 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
 import Task from './Task'
 import DnDContext from './DnDContext'
+import TaskModal from './TaskModal'
+import { Button, Box } from '@mui/material'
 import './KanbanBoard.css'
-
-const initialTasks = [
-  {
-    id: '1',
-    manager: 'fabioc',
-    title: 'Task 1',
-    status: 'newtask',
-    description: "come e' bello essere qui"
-  },
-  {
-    id: '2',
-    manager: 'fabioc',
-    title: 'Task 2',
-    status: 'newtask',
-    description: "come e' bello essere qui"
-  },
-  {
-    id: '3',
-    manager: 'roberto',
-    title: 'Task 3',
-    status: 'newtask',
-    description: "come e' bello essere qui"
-  },
-  {
-    id: '4',
-    manager: 'fabioc',
-    title: 'Task 4',
-    status: 'newtask',
-    description: "come e' bello essere qui"
-  },
-  {
-    id: '5',
-    manager: 'carlo',
-    title: 'Task 5',
-    status: 'newtask',
-    description: "come e' bello essere qui"
-  }
-]
+import useEventsStore from '../../store/EventDataContext'
 
 const KanbanBoard = ({ managerName }) => {
-  const [tasks, setTasks] = useState(initialTasks)
+  const { tasks, upDateTask, user, setTasks, totalTasks, deleteTask } = useEventsStore()
   const [columns, setColumns] = useState({})
+  const [openNewTask, setOpenNewTask] = useState(false)
 
-  const moveTask = (taskId, targetStatus) => {
+  const handleOpenNewTask = () => setOpenNewTask(true)
+  const handleCloseNewTask = () => setOpenNewTask(false)
+
+  const moveTask = async (taskId, targetStatus) => {
     const task = tasks.find((t) => t.id === taskId)
-    if (task.status === targetStatus) return // Se l'elemento viene rilasciato nella stessa colonna, non fare nulla
+    if (!task || task.status === targetStatus) return // Controlla se il task esiste e se il nuovo stato è diverso
 
-    const updatedTasks = tasks.map((t) => (t.id === taskId ? { ...t, status: targetStatus } : t))
-    setTasks(updatedTasks)
+    const taskAggiornato = { ...task, status: targetStatus }
+    try {
+      await window.api.addNewTask({ task: taskAggiornato })
+      const updatedTasks = tasks.map((t) => (t.id === taskId ? taskAggiornato : t))
+      setTasks({ ...tasks, tasks: updatedTasks })
 
-    setColumns((prevColumns) => {
-      const sourceColumn = { ...prevColumns[task.status] }
-      const targetColumn = { ...prevColumns[targetStatus] }
-      sourceColumn.items = sourceColumn.items.filter((item) => item.id !== taskId)
-      targetColumn.items = [...targetColumn.items, { ...task, status: targetStatus }]
+      setColumns((prevColumns) => {
+        const sourceColumn = { ...prevColumns[task.status] }
+        const targetColumn = { ...prevColumns[targetStatus] }
+        sourceColumn.items = sourceColumn.items.filter((item) => item.id !== taskId)
+        targetColumn.items = [...targetColumn.items, taskAggiornato]
 
-      return {
-        ...prevColumns,
-        [task.status]: sourceColumn,
-        [targetStatus]: targetColumn
-      }
-    })
+        return {
+          ...prevColumns,
+          [task.status]: sourceColumn,
+          [targetStatus]: targetColumn
+        }
+      })
+    } catch (error) {
+      console.error('Errore durante lo spostamento del task:', error)
+    }
   }
+
+  const getTasksFromDb = async () => {
+    try {
+      const tasksFromDb = await window.api.getAllTasks()
+      setTasks(tasksFromDb)
+    } catch (error) {
+      console.error('Errore durante il recupero dei task dal DB:', error)
+    }
+  }
+
+  useEffect(() => {
+    getTasksFromDb()
+  }, [])
 
   useEffect(() => {
     const initialColumns = {
       newtask: {
         name: 'New Task',
-        items: initialTasks.filter(
-          (task) => task.status === 'newtask' && task.manager === managerName
-        )
+        items: tasks.filter((task) => task.status === 'newtask' && task.manager === managerName)
       },
       incharge: {
         name: 'In Charge',
-        items: initialTasks.filter(
-          (task) => task.status === 'incharge' && task.manager === managerName
-        )
+        items: tasks.filter((task) => task.status === 'incharge' && task.manager === managerName)
       },
       completed: {
         name: 'Completed',
-        items: initialTasks.filter(
-          (task) => task.status === 'completed' && task.manager === managerName
-        )
+        items: tasks.filter((task) => task.status === 'completed' && task.manager === managerName)
       },
       blocked: {
         name: 'Blocked',
-        items: initialTasks.filter(
-          (task) => task.status === 'blocked' && task.manager === managerName
-        )
+        items: tasks.filter((task) => task.status === 'blocked' && task.manager === managerName)
       }
     }
     setColumns(initialColumns)
-    return () => {}
-  }, [managerName])
+  }, [managerName, tasks])
 
   return (
-    <div className="kanban-board-container">
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Button
+        variant="contained"
+        sx={{
+          mt: 2,
+          mb: 2,
+          borderRadius: '50%',
+          backgroundColor: 'orange',
+          color: 'white',
+          width: '40px',
+          height: '40px',
+          minWidth: 'unset'
+        }}
+        onClick={handleOpenNewTask}
+      >
+        +
+      </Button>
       <DnDContext>
         <div className="kanban-board">
           {Object.entries(columns).map(([columnId, column]) => (
@@ -114,11 +108,11 @@ const KanbanBoard = ({ managerName }) => {
           ))}
         </div>
       </DnDContext>
-    </div>
+      <TaskModal manager={managerName} open={openNewTask} handleClose={handleCloseNewTask} />
+    </Box>
   )
 }
 
-// eslint-disable-next-line react/prop-types
 const Column = ({ columnId, name, items, moveTask }) => {
   const [, drop] = useDrop({
     accept: 'TASK',
