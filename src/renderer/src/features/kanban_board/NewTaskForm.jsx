@@ -22,7 +22,7 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
       createdBy: user.user.userName,
       start: new Date(),
       label: user.user.userName,
-      laneId: `lane-${manager}`,
+      status: `newtask`,
       id: 'task-' + uuidv4()
     }
     console.log('task to save!', sendNewTaskInStore, totalTasks)
