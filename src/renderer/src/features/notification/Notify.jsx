@@ -3,6 +3,7 @@
 import Modal from '@mui/material/Modal'
 import useEventsStore from '../../store/EventDataContext'
 import { Box, Card, CardActions, CardContent, Button, Typography } from '@mui/material'
+import { useMemo } from 'react'
 
 const style = {
   position: 'absolute',
@@ -28,7 +29,7 @@ export const Notify = ({ onHandleClose, open, notify }) => {
     deleteNotify(newNotify)
     console.log('user aggiornato', user)
   }
-
+  useMemo(() => notify.length === 0 && onHandleClose(), [notify.length])
   return (
     <>
       <Modal

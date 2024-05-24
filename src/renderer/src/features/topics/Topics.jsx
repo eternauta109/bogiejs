@@ -14,6 +14,7 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons
 } from '@mui/x-data-grid'
+import { getOptionsFromDb, getTopicsFromDb } from './api'
 
 import useEventsStore from '../../store/EventDataContext'
 
@@ -69,17 +70,6 @@ const Topics = () => {
   const { topics, upDateTopic, setTopics, user } = useEventsStore()
   const [optionsState, setOptionsState] = useState({})
   const [rowModesModel, setRowModesModel] = useState({})
-
-  const options = async () => {
-    console.log('in options di topics')
-    try {
-      const getOpt = await window.api.getOptions()
-      console.log('options function loading', getOpt)
-      setOptionsState({ ...getOpt })
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -333,23 +323,20 @@ const Topics = () => {
     }
   ]
 
-  //funzione asincrona che prende i topics dal db con una funzione
-  // sotto topicsReducer attenzione ch in modalita dev
-  //topics si azzera a ogni ricarica della pagina
-  const getTopicsFromDb = async () => {
-    console.log('getTopicsFromDb triggerato')
-    await window.api.getAllTopics().then((args) => {
-      /*  for (const element in args.topics) {
-        console.log("element: ", element);
-      } */
-      console.log('getTopicsFromDb result:', args)
-      setTopics(args)
-    })
+  const getOptions = async () => {
+    const result = await getOptionsFromDb()
+    setOptionsState(result)
+  }
+
+  const getTopics = async () => {
+    const result = await getTopicsFromDb()
+    console.log(result)
+    setTopics(result)
   }
 
   useEffect(() => {
-    options()
-    getTopicsFromDb()
+    getOptions()
+    getTopics()
     return () => {}
   }, [])
 

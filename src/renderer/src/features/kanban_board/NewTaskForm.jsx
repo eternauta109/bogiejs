@@ -7,7 +7,9 @@ import { FormControl, Container, TextField, Button } from '@mui/material'
 const NewTaskForm = ({ manager, onHandleClose }) => {
   const { addTask, totalTasks, emptyTask, user } = useEventsStore()
   const [newTask, setNewTask] = useState({ ...emptyTask })
-  console.log(user)
+  const maxTitleLength = 30
+  const maxDescriptionLength = 240
+  const maxNoteLength = 160
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -63,18 +65,21 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
             <TextField
               required
               fullWidth
-              label="title"
+              label={`title: ${newTask.title.length}/${maxTitleLength}`}
               variant="outlined"
+              inputProps={{ maxLength: maxTitleLength }}
               value={newTask ? newTask.title : ''}
               name="title"
               onChange={(t) => setNewTask({ ...newTask, title: t.target.value })}
               sx={{ mb: 2 }}
             />
+
             <TextField
               fullWidth
-              label="description"
               variant="outlined"
+              label={`description: ${newTask.description.length}/${maxDescriptionLength}`}
               multiline
+              inputProps={{ maxLength: maxDescriptionLength }}
               rows={4}
               value={newTask ? newTask.description : ''}
               name="description"
@@ -84,8 +89,9 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
 
             <TextField
               fullWidth
-              label="note"
+              label={`note: ${newTask.note.length}/${maxNoteLength}`}
               variant="outlined"
+              inputProps={{ maxLength: maxNoteLength }}
               value={newTask ? newTask.note : ''}
               name="note"
               onChange={(t) => setNewTask({ ...newTask, note: t.target.value })}
