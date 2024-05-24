@@ -1,0 +1,58 @@
+.draggable-item {
+    position: relative;
+    padding: 16px;
+    background: linear-gradient(135deg, #c1ccd9, #647274);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    color: rgb(2, 0, 0);
+  }
+  
+  .draggable-item.dragging {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .draggable-item h6,
+  .draggable-item h2,
+  .draggable-item h4,
+  .draggable-item h5 {
+    margin: 8px 0;
+  }
+  
+  .draggable-item .description {
+    max-height: 100px;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  
+  .draggable-item .description::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .draggable-item .description::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 2px;
+  }
+  
+  .draggable-item .description::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .draggable-item .MuiIconButton-root {
+    color: white;
+  }
+  
+  .draggable-item .MuiSlider-root {
+    color: white;
+  }
+  
+  .draggable-item .MuiSlider-markLabel {
+    color: white;
+  }
+  
+  .draggable-item .MuiSlider-valueLabel {
+    background-color: white;
+    color: #af4261;
+  }
+  

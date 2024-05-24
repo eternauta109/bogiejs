@@ -54,6 +54,10 @@ function NewEvent({ handleClose, upDate }) {
 
   const [event, setEvent] = useState(upDate ? { ...eventToUpdate } : { ...emptyEvent })
 
+  const maxTitleLength = 30
+  const maxDescriptionLength = 240
+  const maxNoteLength = 160
+
   const options = async () => {
     const getOpt = await window.api.getOptions()
     console.log(getOpt)
@@ -197,9 +201,10 @@ function NewEvent({ handleClose, upDate }) {
         <TextField
           required
           fullWidth
-          label="title"
+          label={`title: ${event.title.length}/${maxTitleLength}`}
           variant="outlined"
           value={event?.title ? event.title : ''}
+          inputProps={{ maxLength: maxTitleLength }}
           name="title"
           sx={{ mb: 2 }}
           onChange={(e) => setEvent({ ...event, title: e.target.value })}
@@ -207,9 +212,10 @@ function NewEvent({ handleClose, upDate }) {
 
         <TextField
           fullWidth
-          label="Describe event"
           variant="filled"
           multiline
+          inputProps={{ maxLength: maxDescriptionLength }}
+          label={`description: ${event.description.length}/${maxDescriptionLength}`}
           value={event?.description ? event.description : ''}
           name="description"
           rows={4}
@@ -265,7 +271,8 @@ function NewEvent({ handleClose, upDate }) {
         />
         <TextField
           fullWidth
-          label="some note"
+          label={`note: ${event.note.length}/${maxNoteLength}`}
+          inputProps={{ maxLength: maxNoteLength }}
           variant="outlined"
           multiline
           name="note"
