@@ -82,7 +82,6 @@ async function getAllTasks(managerName) {
       for await (const [key, value] of db.iterator()) {
         if (key !== 'totalTasks') {
           const parsedTask = JSON.parse(value)
-          console.log('Task parsato:', parsedTask)
           parsedTask.start = convertStringToDate(parsedTask.start)
           allTasks.push(parsedTask)
         }
@@ -91,9 +90,7 @@ async function getAllTasks(managerName) {
       // Recupera solo i task del manager specificato
       for await (const [key, value] of db.iterator()) {
         const parsedTask = JSON.parse(value)
-        console.log('value?:', parsedTask)
         if (key !== 'totalTasks' && parsedTask.manager === managerName) {
-          console.log('Task parsato:', parsedTask)
           parsedTask.start = convertStringToDate(parsedTask.start)
           allTasks.push(parsedTask)
         }
