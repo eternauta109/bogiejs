@@ -147,7 +147,6 @@ const Dashboard = () => {
               <List sx={{ overflowY: 'auto' }}>
                 {managersList?.map((manager, key) => (
                   <ListItem
-                    value={manager.userName}
                     key={key}
                     secondaryAction={
                       <IconButton
@@ -180,7 +179,6 @@ const Dashboard = () => {
                     {optionsState?.topicType?.map((topic, key) => (
                       <ListItem
                         sx={{ mt: 2 }}
-                        value={topic.value}
                         key={key}
                         secondaryAction={
                           <IconButton edge="end" aria-label="delete">
@@ -210,7 +208,6 @@ const Dashboard = () => {
                     {optionsState?.docTypes?.map((doc, key) => (
                       <ListItem
                         sx={{ mt: 2 }}
-                        value={doc.value}
                         key={key}
                         secondaryAction={
                           <IconButton
@@ -238,7 +235,6 @@ const Dashboard = () => {
                     {optionsState?.divisions?.map((doc, key) => (
                       <ListItem
                         sx={{ mt: 2 }}
-                        value={doc.value}
                         key={key}
                         secondaryAction={
                           <IconButton

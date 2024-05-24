@@ -69,20 +69,34 @@ async function getSingleTask(idTask) {
   }
 }
 //funzione che restituisce tutto il db
-async function getAllTasks() {
+async function getAllTasks(managerName) {
   await connect()
-  console.log('leggo tutto il db tasks')
+  console.log('leggo tutto il db tasks di:', managerName)
   /* await readAllTasks(); */
-  const alltasks = []
-  const tottasks = await query('totalTasks')
+  let allTasks = []
+  const totalTasks = await query('totalTasks')
   try {
-    for await (const [key, value] of db.iterator()) {
-      if (key !== 'totalTasks') {
-        const parsedtask = JSON.parse(value)
-        console.log('parsedtask', parsedtask, value)
-        parsedtask.start = convertStringToDate(parsedtask.start)
-        /* parsedtask.end = convertStringToDate(parsedtask.end); */
-        alltasks.push(parsedtask)
+    if (managerName === 'all') {
+      // Recupera tutti i task
+
+      for await (const [key, value] of db.iterator()) {
+        if (key !== 'totalTasks') {
+          const parsedTask = JSON.parse(value)
+          console.log('Task parsato:', parsedTask)
+          parsedTask.start = convertStringToDate(parsedTask.start)
+          allTasks.push(parsedTask)
+        }
+      }
+    } else {
+      // Recupera solo i task del manager specificato
+      for await (const [key, value] of db.iterator()) {
+        const parsedTask = JSON.parse(value)
+        console.log('value?:', parsedTask)
+        if (key !== 'totalTasks' && parsedTask.manager === managerName) {
+          console.log('Task parsato:', parsedTask)
+          parsedTask.start = convertStringToDate(parsedTask.start)
+          allTasks.push(parsedTask)
+        }
       }
     }
   } catch (error) {
@@ -90,8 +104,8 @@ async function getAllTasks() {
   } finally {
     await close()
   }
-  console.log('cosa sto manadando da getAllTasks', alltasks, tottasks)
-  return { tasks: alltasks, totalTasks: tottasks }
+  console.log('cosa sto manadando da getAllTasks', allTasks, totalTasks)
+  return { tasks: allTasks, totalTasks: totalTasks }
 }
 
 // funzione che legge tutto il database

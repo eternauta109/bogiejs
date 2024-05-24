@@ -220,9 +220,9 @@ ipcMain.handle('addNewTask', async (event, args) => {
 
 //icp che restituitopicsce tutti gli tasks. mi serve per caricare events alla primo avvio
 //viene letta dal reducers tasks
-ipcMain.handle('getAllTasks', async () => {
+ipcMain.handle('getAllTasks', async (event, managerName) => {
   /*   console.log("argomenti di send:getTasks", args); */
-  const stateTasks = await getAllTasks()
+  const stateTasks = await getAllTasks(managerName)
   return stateTasks
 })
 

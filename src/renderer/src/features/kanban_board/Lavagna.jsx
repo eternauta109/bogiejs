@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Tabs, Tab, Box, Button, Stack } from '@mui/material'
+import { Tabs, Tab, Box } from '@mui/material'
 
 import useEventsStore from '../../store/EventDataContext'
 import KanbanBoard from './KanbanBoard'
@@ -25,6 +25,7 @@ export default function ColorTabs() {
         {user.managersName.map((name, index) => (
           <Tab key={index} value={name} label={name} />
         ))}
+        <Tab key={'all'} value={'all'} label={'Tutti'} />
       </Tabs>
 
       {user.managersName.map((name, index) => (
@@ -32,6 +33,7 @@ export default function ColorTabs() {
           {value === name && <KanbanBoard managerName={name} />}
         </div>
       ))}
+      <div key={'all'}>{value === 'all' && <KanbanBoard managerName={'all'} />}</div>
     </Box>
   )
 }

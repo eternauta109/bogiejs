@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
 import Task from './Task'
@@ -8,7 +9,7 @@ import './KanbanBoard.css'
 import useEventsStore from '../../store/EventDataContext'
 
 const KanbanBoard = ({ managerName }) => {
-  const { tasks, upDateTask, user, setTasks, totalTasks, deleteTask } = useEventsStore()
+  const { tasks, setTasks } = useEventsStore()
   const [columns, setColumns] = useState({})
   const [openNewTask, setOpenNewTask] = useState(false)
 
@@ -44,7 +45,7 @@ const KanbanBoard = ({ managerName }) => {
 
   const getTasksFromDb = async () => {
     try {
-      const tasksFromDb = await window.api.getAllTasks()
+      const tasksFromDb = await window.api.getAllTasks(managerName)
       setTasks(tasksFromDb)
     } catch (error) {
       console.error('Errore durante il recupero dei task dal DB:', error)
@@ -56,24 +57,47 @@ const KanbanBoard = ({ managerName }) => {
   }, [])
 
   useEffect(() => {
-    const initialColumns = {
-      newtask: {
-        name: 'New Task',
-        items: tasks.filter((task) => task.status === 'newtask' && task.manager === managerName)
-      },
-      incharge: {
-        name: 'In Charge',
-        items: tasks.filter((task) => task.status === 'incharge' && task.manager === managerName)
-      },
-      completed: {
-        name: 'Completed',
-        items: tasks.filter((task) => task.status === 'completed' && task.manager === managerName)
-      },
-      blocked: {
-        name: 'Blocked',
-        items: tasks.filter((task) => task.status === 'blocked' && task.manager === managerName)
+    let initialColumns = {}
+    if (managerName === 'all') {
+      initialColumns = {
+        newtask: {
+          name: 'New Task',
+          items: tasks.filter((task) => task.status === 'newtask')
+        },
+        incharge: {
+          name: 'In Charge',
+          items: tasks.filter((task) => task.status === 'incharge')
+        },
+        completed: {
+          name: 'Completed',
+          items: tasks.filter((task) => task.status === 'completed')
+        },
+        blocked: {
+          name: 'Blocked',
+          items: tasks.filter((task) => task.status === 'blocked')
+        }
+      }
+    } else {
+      initialColumns = {
+        newtask: {
+          name: 'New Task',
+          items: tasks.filter((task) => task.status === 'newtask' && task.manager === managerName)
+        },
+        incharge: {
+          name: 'In Charge',
+          items: tasks.filter((task) => task.status === 'incharge' && task.manager === managerName)
+        },
+        completed: {
+          name: 'Completed',
+          items: tasks.filter((task) => task.status === 'completed' && task.manager === managerName)
+        },
+        blocked: {
+          name: 'Blocked',
+          items: tasks.filter((task) => task.status === 'blocked' && task.manager === managerName)
+        }
       }
     }
+
     setColumns(initialColumns)
   }, [managerName, tasks])
 
@@ -121,7 +145,9 @@ const Column = ({ columnId, name, items, moveTask }) => {
 
   return (
     <div className={`column ${columnId}`} ref={drop}>
-      <h2>{name}</h2>
+      <h2>
+        {name} ({items.length})
+      </h2>
       <div className="droppable-col">
         {items.map((item, index) => (
           <Task

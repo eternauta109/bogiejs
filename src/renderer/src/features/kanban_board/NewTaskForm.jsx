@@ -28,7 +28,7 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
     console.log('task to save!', sendNewTaskInStore, totalTasks)
     addTask(sendNewTaskInStore)
     onHandleClose()
-    await window.api.addNewTask({ task: sendNewTaskInStore, totalTasks: totalTasks, upDate: true })
+    await window.api.addNewTask({ task: sendNewTaskInStore, totalTasks: totalTasks, upDate: false })
   }
   console.log('Form submitted!', newTask, manager, totalTasks)
 
