@@ -25,7 +25,7 @@ const marks = [
   }
 ]
 
-export default function Task({ id, task, onHandleCardDelete, status }) {
+export default function Task({ id, task, status }) {
   const [{ isDragging }, drag] = useDrag({
     type: 'TASK',
     item: { id },
@@ -37,11 +37,22 @@ export default function Task({ id, task, onHandleCardDelete, status }) {
   const [perc, setPerc] = useState(task.percent)
   const [visible, setVisible] = useState(false)
 
-  const { upDateTask } = useEventsStore()
+  const { upDateTask, user, deleteTask } = useEventsStore()
 
   const onPercentChange = async (event, newValue) => {
     setPerc(newValue)
     setVisible(true)
+  }
+
+  //funzione che cancella una task solo se l'user è tm e la lane e quella
+  //completed. se queste condizioni sono verificate, procedo con la chiamata della funzione
+  // su taskReducer
+  const onHandleCardDelete = async (taskId, status) => {
+    console.log('cancello card :', taskId, status)
+    if (user.user.role === 'tm' && status === 'completed') {
+      deleteTask(taskId)
+      await window.api.removeTask(taskId)
+    }
   }
 
   const onConfirmPercentChange = async () => {
