@@ -136,9 +136,9 @@ async function addNewTask(args) {
   }
 }
 //estrai tutte le tasks
-async function getAllTasks() {
+async function getAllTasks(managerName) {
   try {
-    const result = await ipcRenderer.invoke('getAllTasks')
+    const result = await ipcRenderer.invoke('getAllTasks', managerName)
     console.log('preload: getAllTask: result', result)
     return result
   } catch (error) {
