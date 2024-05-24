@@ -210,9 +210,9 @@ ipcMain.handle('removeEvent', async (event, eventId) => {
 
 //icp electron che inserisce o aggiorna  task
 ipcMain.handle('addNewTask', async (event, args) => {
-  /* console.log("MAIN: task da inserire in db", args); */
+  console.log('MAIN: task da inserire in db', args)
   await insertTask(args)
-  if (args.upDate) {
+  if (!args.upDate) {
     await addNotifyManagers({ typeNotify: 'task', obj: args.task })
   }
   /* await readAllTasks(); */

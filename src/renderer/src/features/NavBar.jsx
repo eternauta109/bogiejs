@@ -25,7 +25,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import useEventsStore from '../store/EventDataContext'
 import { useNavigate } from 'react-router-dom'
 
-const pages = ['ShareCalendar', 'KanBanBoard', 'topics', 'dashboard']
+const pages = ['Calendario', 'Lavagna', 'Topics', 'dashboard']
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -49,13 +49,13 @@ function NavBar() {
   const handleCloseNavMenu = (e, page) => {
     console.log('menu toggle', page)
     switch (page) {
-      case 'topics':
+      case 'Topics':
         navigate('/topics')
         break
-      case 'KanBanBoard':
+      case 'Lavagna':
         navigate('/kanban')
         break
-      case 'ShareCalendar':
+      case 'Calendario':
         navigate('/calendar')
         break
       case 'dashboard':
