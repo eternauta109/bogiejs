@@ -57,44 +57,27 @@ const KanbanBoard = ({ managerName }) => {
   }, [])
 
   useEffect(() => {
-    let initialColumns = {}
-    if (managerName === 'all') {
-      initialColumns = {
-        newtask: {
-          name: 'New Task',
-          items: tasks.filter((task) => task.status === 'newtask')
-        },
-        incharge: {
-          name: 'In Charge',
-          items: tasks.filter((task) => task.status === 'incharge')
-        },
-        completed: {
-          name: 'Completed',
-          items: tasks.filter((task) => task.status === 'completed')
-        },
-        blocked: {
-          name: 'Blocked',
-          items: tasks.filter((task) => task.status === 'blocked')
-        }
-      }
-    } else {
-      initialColumns = {
-        newtask: {
-          name: 'New Task',
-          items: tasks.filter((task) => task.status === 'newtask' && task.manager === managerName)
-        },
-        incharge: {
-          name: 'In Charge',
-          items: tasks.filter((task) => task.status === 'incharge' && task.manager === managerName)
-        },
-        completed: {
-          name: 'Completed',
-          items: tasks.filter((task) => task.status === 'completed' && task.manager === managerName)
-        },
-        blocked: {
-          name: 'Blocked',
-          items: tasks.filter((task) => task.status === 'blocked' && task.manager === managerName)
-        }
+    const filterTasksByStatusAndManager = (status, manager) =>
+      tasks.filter(
+        (task) => task.status === status && (manager === 'all' || task.manager === manager)
+      )
+
+    const initialColumns = {
+      newtask: {
+        name: 'New Task',
+        items: filterTasksByStatusAndManager('newtask', managerName)
+      },
+      incharge: {
+        name: 'In Charge',
+        items: filterTasksByStatusAndManager('incharge', managerName)
+      },
+      completed: {
+        name: 'Completed',
+        items: filterTasksByStatusAndManager('completed', managerName)
+      },
+      blocked: {
+        name: 'Blocked',
+        items: filterTasksByStatusAndManager('blocked', managerName)
       }
     }
 
