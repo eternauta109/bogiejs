@@ -103,22 +103,24 @@ const KanbanBoard = ({ managerName }) => {
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Button
-        variant="contained"
-        sx={{
-          mt: 2,
-          mb: 2,
-          borderRadius: '50%',
-          backgroundColor: 'orange',
-          color: 'white',
-          width: '40px',
-          height: '40px',
-          minWidth: 'unset'
-        }}
-        onClick={handleOpenNewTask}
-      >
-        +
-      </Button>
+      {managerName !== 'all' && (
+        <Button
+          variant="contained"
+          sx={{
+            mt: 2,
+            mb: 2,
+            borderRadius: '50%',
+            backgroundColor: 'orange',
+            color: 'white',
+            width: '40px',
+            height: '40px',
+            minWidth: 'unset'
+          }}
+          onClick={handleOpenNewTask}
+        >
+          +
+        </Button>
+      )}
       <DnDContext>
         <div className="kanban-board">
           {Object.entries(columns).map(([columnId, column]) => (
