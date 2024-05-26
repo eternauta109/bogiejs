@@ -11,14 +11,15 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Menu
+  Menu,
+  Container,
+  Avatar,
+  Tooltip,
+  MenuItem
 } from '@mui/material'
 import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
-import Avatar from '@mui/material/Avatar'
-import Tooltip from '@mui/material/Tooltip'
-import MenuItem from '@mui/material/MenuItem'
+
 import eyeIcon from '../assets/bigeye2.ico'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 
