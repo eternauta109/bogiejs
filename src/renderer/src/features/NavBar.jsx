@@ -19,6 +19,7 @@ import {
 } from '@mui/material'
 import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
+import NotificationsIcon from '@mui/icons-material/Notifications'
 
 import eyeIcon from '../assets/bigeye2.ico'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
@@ -185,8 +186,11 @@ function NavBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenModal} sx={{ mr: 1 }}>
-              <Badge badgeContent={user.user.notification.length} color="secondary">
+              <Badge color="secondary">
                 <MailIcon />
+              </Badge>
+              <Badge badgeContent={user.user.notification.length} color="secondary" sx={{ ml: 1 }}>
+                <NotificationsIcon />
               </Badge>
             </IconButton>
             <Tooltip title="Open settings">
