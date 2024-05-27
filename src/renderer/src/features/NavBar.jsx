@@ -41,6 +41,38 @@ function NavBar() {
 
   const navigate = useNavigate()
 
+  function stringToColor(string) {
+    let hash = 0
+    let i
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash)
+    }
+
+    let color = '#'
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff
+      color += `00${value.toString(16)}`.slice(-2)
+    }
+    /* eslint-enable no-bitwise */
+
+    return color
+  }
+
+  function stringAvatar(name) {
+    console.log(name)
+    const firstLetter = name[0]
+    const lastLetter = name[name.length - 1]
+    return {
+      sx: {
+        bgcolor: stringToColor(name)
+      },
+      children: `${firstLetter}${lastLetter}`
+    }
+  }
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget)
   }
@@ -186,16 +218,18 @@ function NavBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={handleOpenModal} sx={{ mr: 1 }}>
-              <Badge color="secondary">
-                <MailIcon />
-              </Badge>
-              <Badge badgeContent={user.user.notification.length} color="secondary" sx={{ ml: 1 }}>
+              <Badge badgeContent={user.user.notification.length} color="secondary">
                 <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton>
+              <Badge color="secondary" sx={{ mr: 1 }}>
+                <MailIcon />
               </Badge>
             </IconButton>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" />
+                <Avatar {...stringAvatar(user.user.userName)} />
               </IconButton>
             </Tooltip>
             <Menu
