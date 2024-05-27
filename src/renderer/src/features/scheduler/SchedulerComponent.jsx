@@ -56,7 +56,7 @@ const SchedulerComponent = ({ handleOpen }) => {
     const transformed = transformEvents(events)
     setTransformedEvents(transformed)
     setIsLoading(false)
-  }, [events])
+  }, [events, setEvent])
 
   return (
     <Box
