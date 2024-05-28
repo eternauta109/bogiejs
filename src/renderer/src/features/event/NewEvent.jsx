@@ -88,7 +88,7 @@ function NewEvent({ handleClose, upDate }) {
           manager: event.manager,
           description: event.description,
           label: user.user.userName,
-          laneId: `lane-${event.manager}`
+          status: 'newtask'
         }
         addTask(newTask)
         await window.api.addNewTask({ task: newTask, totalTasks, upDate: true })

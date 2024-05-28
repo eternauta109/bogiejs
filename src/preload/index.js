@@ -180,7 +180,7 @@ async function insertTopic(args) {
 async function getAllTopics() {
   try {
     const returnTopics = await ipcRenderer.invoke('getAllTopics')
-
+    console.log('preload: getAllTopics: result', returnTopics)
     return returnTopics
   } catch (error) {
     throw new Error('errore in preload getAllTopics:', error)

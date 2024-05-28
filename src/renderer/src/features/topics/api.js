@@ -2,8 +2,10 @@
 // sotto topicsReducer attenzione ch in modalita dev
 //topics si azzera a ogni ricarica della pagina
 export const getTopicsFromDb = async () => {
-  console.log('getTopicsFromDb triggerato')
+  console.log('apiTopics: getTopicsFromDb triggerato')
   const result = await window.api.getAllTopics()
+
+  console.log('apiTopics: getTopicsFromDb: result:', result)
   return result
 }
 
@@ -14,6 +16,6 @@ export const getOptionsFromDb = async () => {
     console.log('options function loading', getOpt)
     return { ...getOpt }
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
