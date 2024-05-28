@@ -32,6 +32,7 @@ async function populateDatabase() {
   await connect()
   try {
     await db.put('totalTopics', 0)
+    await readAllTopics()
     console.log('Database topics popolato con successo!')
   } catch (error) {
     console.error('Error populating topics database:', error)
@@ -62,9 +63,10 @@ async function getAllTopics() {
     console.log('dopo query')
     for await (const [key, value] of db.iterator()) {
       if (key !== 'totalTopics') {
+        console.log('parsedtopic', value)
         const parsedtopic = await JSON.parse(value)
         parsedtopic.dateStart = convertStringToDate(parsedtopic.dateStart)
-        /* console.log("parsedtopic", parsedtopic, value); */
+
         alltopics.push(parsedtopic)
       }
     }

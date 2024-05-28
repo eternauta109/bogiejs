@@ -330,8 +330,9 @@ const Topics = () => {
 
   const getTopics = async () => {
     const result = await getTopicsFromDb()
-    console.log(result)
-    setTopics(result)
+    const newResult = result !== undefined ? result : { topics: [], totalTopics: 0 }
+    console.log('Topics: getTopics da useeffect:', result)
+    setTopics(newResult)
   }
 
   useEffect(() => {
@@ -354,7 +355,7 @@ const Topics = () => {
       }}
     >
       <DataGrid
-        rows={topics}
+        rows={topics ? topics : ''}
         columns={columns}
         editMode="row"
         onProcessRowUpdateError={(error) =>
