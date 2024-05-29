@@ -344,7 +344,7 @@ const Topics = () => {
   return (
     <Box
       sx={{
-        height: 800,
+        height: 900,
         width: '100%',
         '& .actions': {
           color: 'text.secondary'
