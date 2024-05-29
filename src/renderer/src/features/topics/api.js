@@ -4,9 +4,9 @@
 export const getTopicsFromDb = async () => {
   console.log('apiTopics: getTopicsFromDb triggerato')
   const result = await window.api.getAllTopics()
-
-  console.log('apiTopics: getTopicsFromDb: result:', result)
-  return result
+  const sortedResult = result.topics.sort((a, b) => b.id - a.id)
+  console.log('apiTopics: getTopicsFromDb: result:', sortedResult)
+  return { topics: sortedResult, totalTopics: result.totalTopics }
 }
 
 export const getOptionsFromDb = async () => {

@@ -226,17 +226,7 @@ async function populateDatabase() {
       notification: [],
       messages: []
     },
-    {
-      userName: 'marion',
-      role: 'areamanager',
-      area: 'area4',
-      password: '1001',
-      isAuth: false,
-      cinema: 'area4',
-      id: 'area4',
-      notification: [],
-      messages: []
-    },
+
     {
       userName: 'enricor',
       role: 'tm',
