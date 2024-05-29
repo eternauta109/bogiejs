@@ -125,7 +125,8 @@ async function iteratorForAddNotify(obj, newNotify) {
             (obj.createdBy !== value.userName && obj.cinema === value.cinema)
           break
         default:
-          shouldAddNotification = obj.createdBy !== value.userName && obj.cinema === value.cinema
+          shouldAddNotification =
+            obj.createdBy !== value.userName && obj.cinema === value.cinema && value.role !== 'tm'
           break
       }
 
@@ -200,7 +201,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'guidonia',
       id: 'guiman1',
-      notification: []
+      notification: [],
+      messages: []
     },
     {
       userName: 'fabios',
@@ -210,7 +212,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'parco',
       id: 'magman1',
-      notification: []
+      notification: [],
+      messages: []
     },
     {
       userName: 'agostinol',
@@ -220,7 +223,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'catania',
       id: 'catman1',
-      notification: []
+      notification: [],
+      messages: []
     },
     {
       userName: 'marion',
@@ -230,7 +234,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'area4',
       id: 'area4',
-      notification: []
+      notification: [],
+      messages: []
     },
     {
       userName: 'enricor',
@@ -240,7 +245,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'moderno',
       id: 'modman1',
-      notification: []
+      notification: [],
+      messages: []
     },
     {
       userName: 'stefanias',
@@ -250,7 +256,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'napoli',
       id: 'napman1',
-      notification: []
+      notification: [],
+      messages: []
     },
     {
       userName: 'donatov',
@@ -260,7 +267,8 @@ async function populateDatabase() {
       isAuth: false,
       cinema: 'bari',
       id: 'barman1',
-      notification: []
+      notification: [],
+      messages: []
     }
   ]
 

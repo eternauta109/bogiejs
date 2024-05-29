@@ -5,7 +5,7 @@
   align-items: center;
   height: 100vh;
   width: 100%;
-  background: linear-gradient(135deg, #e2e2e2 0%, #cfd9df 100%);
+  background: linear-gradient(135deg, #641414 0%, #cfd9df 100%);
 }
 
 .kanban-board {
@@ -97,7 +97,7 @@
   margin-bottom: 10px;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px #fcfbf91a;
   cursor: grab;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border-left: 5px solid;
