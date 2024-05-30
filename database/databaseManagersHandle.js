@@ -125,8 +125,11 @@ async function iteratorForAddNotify(obj, newNotify) {
             (obj.createdBy !== value.userName && obj.cinema === value.cinema)
           break
         default:
+          console.log('manager inserisce notifica:', obj, value)
           shouldAddNotification =
-            obj.createdBy !== value.userName && obj.cinema === value.cinema && value.role !== 'tm'
+            obj.createdBy !== value.userName &&
+            obj.cinema === value.cinema &&
+            value.role !== 'areamanager'
           break
       }
 
@@ -295,7 +298,7 @@ async function deleteThisNotify(args) {
     // Aggiorna l'utente nel database con l'array di notifiche modificato
     await db.put(args.userId, user)
 
-    console.log("Notifica eliminata con successo per l'utente con ID:", args.userName)
+    console.log("Notifica eliminata con successo per l'utente con ID:", args.userId)
     return user.notification // Restituisci l'utente aggiornato
   } catch (error) {
     console.error('Error deleting event:', error)
