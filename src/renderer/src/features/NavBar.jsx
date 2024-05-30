@@ -26,6 +26,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 
 import useEventsStore from '../store/EventDataContext'
 import { useNavigate } from 'react-router-dom'
+import { Message } from './messages/Message'
 
 const pages = ['Calendario', 'Lavagna', 'Topics', 'dashboard']
 
@@ -33,8 +34,11 @@ function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
   const [openModal, setOpenModal] = useState(false)
+  const [openMessageModal, setOpenMessgaeModal] = useState(false)
   const handleOpenModal = () => setOpenModal(true)
   const handleCloseModal = () => setOpenModal(false)
+  const handleOpenMessageModal = () => setOpenMessgaeModal(true)
+  const handleCloseMessageModal = () => setOpenMessgaeModal(false)
   const { user, logOut } = useEventsStore()
 
   const settings = [`name: ${user.user.userName}`, `role: ${user.user.role}`]
@@ -222,7 +226,7 @@ function NavBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleOpenMessageModal}>
               <Badge color="secondary" sx={{ mr: 1 }}>
                 <MailIcon />
               </Badge>
@@ -261,6 +265,7 @@ function NavBar() {
         </Toolbar>
       </Container>
       <Notify onHandleClose={handleCloseModal} open={openModal} notify={user.user.notification} />
+      <Message onHandleMessageClose={handleCloseMessageModal} open={openMessageModal} />
     </AppBar>
   )
 }
