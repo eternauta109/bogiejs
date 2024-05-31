@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import ToggleEvent from './ToggleEvent'
 import { v4 as uuidv4 } from 'uuid'
-
+import ClassicEvent from './eventType/ClassicEvent'
+import MattineEvent from './eventType/MattineEvent'
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
 import '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker.css'
 import 'react-calendar/dist/Calendar.css'
@@ -23,6 +24,7 @@ import {
 // vanno a lavorare con il db Level
 
 import useEventsStore from '../../store/EventDataContext'
+import Prevendite from './eventType/Prevendite'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -65,6 +67,18 @@ function NewEvent({ handleClose, upDate }) {
     return getOpt
   }
 
+  const RenderEventType = () => {
+    switch (event.eventType) {
+      case 'evento':
+        return <ClassicEvent event={event} setEvent={setEvent} />
+      case 'matineè':
+        return <MattineEvent event={event} setEvent={setEvent} />
+      case 'prevendite':
+        return <Prevendite event={event} setEvent={setEvent} />
+      default:
+        return <ClassicEvent event={event} setEvent={setEvent} />
+    }
+  }
   //funzione di submit. qua succedono un sacco di cose.
   //primo: se event è nuov lo aggiungo sia sllo store EDC che al db
   //se è solo da aggiornare aggiorno lo store e il db senza aumentare totalEvents
@@ -210,6 +224,7 @@ function NewEvent({ handleClose, upDate }) {
           onChange={(e) => setEvent({ ...event, title: e.target.value })}
         />
 
+        <RenderEventType />
         <TextField
           fullWidth
           variant="filled"
