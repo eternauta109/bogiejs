@@ -50,9 +50,10 @@ export const MessageForm = forwardRef((props, ref) => {
     from: '',
     text: ''
   })
+  const [personName, setPersonName] = useState([])
 
   const theme = useTheme()
-  const [personName, setPersonName] = useState([])
+
   const handleChange = (event) => {
     const {
       target: { value }
@@ -64,7 +65,7 @@ export const MessageForm = forwardRef((props, ref) => {
   }
 
   return (
-    <Box sx={style} ref={ref}>
+    <Box sx={style} ref={ref} tabIndex={-1}>
       <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel id="demo-multiple-name-label">send to:</InputLabel>
         <Select
@@ -88,9 +89,10 @@ export const MessageForm = forwardRef((props, ref) => {
         variant="filled"
         multiline
         inputProps={{ maxLength: maxDescriptionLength }}
-        label={`description: ${newMessage.description?.length || 0}/${maxDescriptionLength}`}
-        value={newMessage?.description || ''}
-        name="description"
+        label={`text msg: ${newMessage.text?.length || 0}/${maxDescriptionLength}`}
+        value={newMessage?.text || ''}
+        onChange={(e) => setNewMessage((old) => ({ ...old, text: e.target.value }))}
+        name="textMsg"
         rows={4}
         sx={{ mb: 2 }}
       />

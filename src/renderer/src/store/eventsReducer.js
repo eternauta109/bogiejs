@@ -1,23 +1,7 @@
 export const initialEvents = {
   totalEvents: 0,
   events: [],
-  newEvent: {
-    id: null,
-    createdBy: null,
-    eventType: 'evento',
-    colorDivision: null,
-    cinema: null,
-    colorEventType: '#F39C12',
-    description: '',
-    division: null,
-    start: new Date(),
-    end: new Date(),
-    link: null,
-    note: '',
-    title: '',
-    manager: '',
-    laneId: 'lane1'
-  }
+  newEvent: {}
 }
 
 const eventsReducer = (state, action) => {
@@ -46,7 +30,7 @@ const eventsReducer = (state, action) => {
       return { ...state, events: payload.events }
 
     case 'SET_EVENT':
-      /* console.log("payload SET_EVETN in reducer says:", payload); */
+      console.log('eventReducer: SET_EVENT: payload:', payload)
       return {
         ...state,
         newEvent: {
@@ -54,9 +38,19 @@ const eventsReducer = (state, action) => {
         }
       }
 
+    case 'SET_FIELD_EVENT':
+      console.log('eventReducer: SET_FIELD_EVENT: payload:', payload)
+      return {
+        ...state,
+        newEvent: {
+          ...state.newEvent,
+          [payload.campo]: payload.valore
+        }
+      }
+
     case 'SET_EVENTS':
       /* console.log("payload SET_EVETN in reducer says:", payload); */
-      console.log('payload.events SET_EVENT in reducer says:', payload)
+      console.log('eventReducer: SET_EVENTS: payload:', payload)
       return {
         ...state,
         totalEvents: payload.totalEvents,

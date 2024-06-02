@@ -1,17 +1,23 @@
 import Box from '@mui/material/Box'
+import { forwardRef } from 'react'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
 import NewEvent from './NewEvent'
 import useEventsStore from '../../store/EventDataContext'
+import Slide from '@mui/material/Slide'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+import Typography from '@mui/material/Typography'
 
-import Modal from '@mui/material/Modal'
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />
+})
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: '500px',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  borderRadius: '8px',
   boxShadow: 24,
   p: 4
 }
@@ -20,22 +26,42 @@ const style = {
 const ModalEvent = ({ open, handleClose, upDate }) => {
   const { initEvent } = useEventsStore()
 
+  const handleDialogClose = () => {
+    handleClose()
+    initEvent() // Suppongo che tu abbia la funzione initEvent()
+  }
+  console.log('update', upDate)
+
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={() => {
-          handleClose()
-          initEvent() // Suppongo che tu abbia la funzione initEvent()
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      onClose={handleDialogClose}
+      keepMounted
+      aria-labelledby="dialog-title"
+      aria-describedby="dialog-description"
+    >
+      <DialogTitle sx={{ m: 0, p: 2 }}>
+        <Typography variant="h6">{upDate ? 'Update Event' : 'New Event'}</Typography>
+        <IconButton
+          aria-label="close"
+          onClick={handleDialogClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500]
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers>
         <Box sx={style}>
           <NewEvent handleClose={handleClose} upDate={upDate} />
         </Box>
-      </Modal>
-    </>
+      </DialogContent>
+    </Dialog>
   )
 }
 

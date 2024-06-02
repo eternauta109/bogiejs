@@ -1,4 +1,7 @@
 export const initialOption = {
+  MAXTITLELENGTH: 40,
+  MAXDESCRIPTIONLENGTH: 240,
+  MAXNOTELENGTH: 140,
   divisions: [
     {
       nameDivision: 'marketing',
@@ -84,13 +87,14 @@ export const initialOption = {
 }
 
 const optionsReducer = (state, action) => {
-  console.log('state e action optionReducer', state, action)
-  switch (action.type) {
-    case action.type:
-      break
+  const { type, payload } = action
+  switch (type) {
+    case 'SET_OPTIONS':
+      console.log('optionsReducer: SET_OPTIONS: state, action', state, action)
+      return { ...payload }
 
     default:
-      break
+      throw new Error('no case for type', type)
   }
 }
 

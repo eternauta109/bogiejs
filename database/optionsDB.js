@@ -34,6 +34,9 @@ function createDbOptions() {
 async function populateDatabase() {
   // Inserisci i manager nel database (assumendo che dbMan sia l'istanza del database creato)
   const setOptions = {
+    MAXTITLELENGTH: 40,
+    MAXDESCRIPTIONLENGTH: 240,
+    MAXNOTELENGTH: 140,
     divisions: [
       {
         nameDivision: 'marketing',

@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import ToggleEvent from './ToggleEvent'
 import { v4 as uuidv4 } from 'uuid'
 import ClassicEvent from './eventType/ClassicEvent'
 import MattineEvent from './eventType/MattineEvent'
-import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
+
 import '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker.css'
 import 'react-calendar/dist/Calendar.css'
 import 'react-clock/dist/Clock.css'
 
 import {
-  Typography,
   Container,
   InputLabel,
   MenuItem,
@@ -25,6 +24,16 @@ import {
 
 import useEventsStore from '../../store/EventDataContext'
 import Prevendite from './eventType/Prevendite'
+import Promo from './eventType/Promo'
+import Compleanni from './eventType/Compleanni'
+import Extra from './eventType/Extra'
+import Delivery from './eventType/Delivery'
+import Anteprima from './eventType/Anteprima'
+import Maratona from './eventType/Maratona'
+import Visita from './eventType/Visita'
+import Stampa from './eventType/Stampa'
+import Sopraluogo from './eventType/Sopraluogo'
+import Meeting from './eventType/Meeting'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -39,46 +48,28 @@ const MenuProps = {
 
 // eslint-disable-next-line react/prop-types
 function NewEvent({ handleClose, upDate }) {
-  const [dateRange, setDateRange] = useState([new Date(), new Date()])
-  const [optionsState, setOptionsState] = useState({})
   const {
+    event,
+    setFieldEvent,
     addTask,
     addEvent,
-    eventToUpdate,
+    setOptions,
     totalEvents,
     totalTasks,
     upDateEvent,
-    emptyEvent,
+
     initEvent,
     deleteEvent,
     user
   } = useEventsStore()
 
-  const [event, setEvent] = useState(upDate ? { ...eventToUpdate } : { ...emptyEvent })
-
-  const maxTitleLength = 30
-  const maxDescriptionLength = 240
-  const maxNoteLength = 160
-
   const options = async () => {
     const getOpt = await window.api.getOptions()
-    console.log(getOpt)
-    setOptionsState({ ...getOpt })
+    console.log('newEvent: options: getOptions:', getOpt)
+    setOptions(getOpt)
     return getOpt
   }
 
-  const RenderEventType = () => {
-    switch (event.eventType) {
-      case 'evento':
-        return <ClassicEvent event={event} setEvent={setEvent} />
-      case 'matineè':
-        return <MattineEvent event={event} setEvent={setEvent} />
-      case 'prevendite':
-        return <Prevendite event={event} setEvent={setEvent} />
-      default:
-        return <ClassicEvent event={event} setEvent={setEvent} />
-    }
-  }
   //funzione di submit. qua succedono un sacco di cose.
   //primo: se event è nuov lo aggiungo sia sllo store EDC che al db
   //se è solo da aggiornare aggiorno lo store e il db senza aumentare totalEvents
@@ -132,23 +123,37 @@ function NewEvent({ handleClose, upDate }) {
     await window.api.removeEvent(idToCancel)
   }
 
-  //gestisco i cambiamenti del valore della divsions e aggiorno sia
-  // lo stato che il colore relativo
-  const handleDivisionChange = (e) => {
-    console.log('selected div', e.target.value)
-    const division = optionsState?.divisions?.find(
-      (division) => division.nameDivision === e.target.value
-    )
-    console.log('selected divobj', division)
-    setEvent({
-      ...event,
-      division: e.target.value,
-      colorDivision: division.color
-    })
-  }
-
-  //funzione che stampa event a pogni modifica
-  /* useMemo(() => console.log("useMemo newEvent", event), [event]); */
+  const RenderEventType = useCallback(() => {
+    console.log('event in Render: ', event)
+    switch (event.eventType) {
+      case 'prevendite':
+        return <Prevendite />
+      case 'promo':
+        return <Promo />
+      case 'compleanni':
+        return <Compleanni />
+      case 'delivery':
+        return <Delivery />
+      case 'extra':
+        return <Extra />
+      case 'anteprima':
+        return <Anteprima />
+      case 'maratona':
+        return <Maratona />
+      case 'visita':
+        return <Visita />
+      case 'stampa':
+        return <Stampa />
+      case 'sopraluogo':
+        return <Sopraluogo />
+      case 'meeting':
+        return <Meeting />
+      case 'matineè':
+        return <MattineEvent />
+      default:
+        return <ClassicEvent upDate={upDate} />
+    }
+  }, [event.eventType])
 
   useEffect(() => {
     console.log('UPDATE', upDate)
@@ -173,11 +178,6 @@ function NewEvent({ handleClose, upDate }) {
         overflowY: 'auto'
       }}
     >
-      {!upDate && (
-        <Typography variant="h4" sx={{ mb: 1 }}>
-          New Event
-        </Typography>
-      )}
       {upDate && (
         <Button
           variant="outlined"
@@ -191,7 +191,7 @@ function NewEvent({ handleClose, upDate }) {
         </Button>
       )}
       <form onSubmit={onSubmit}>
-        <ToggleEvent setEventType={setEvent} event={event} />
+        <ToggleEvent />
 
         <TextField
           fullWidth
@@ -212,98 +212,16 @@ function NewEvent({ handleClose, upDate }) {
           />
         )}
 
-        <TextField
-          required
-          fullWidth
-          label={`title: ${event.title.length}/${maxTitleLength}`}
-          variant="outlined"
-          value={event?.title ? event.title : ''}
-          inputProps={{ maxLength: maxTitleLength }}
-          name="title"
-          sx={{ mb: 2 }}
-          onChange={(e) => setEvent({ ...event, title: e.target.value })}
-        />
-
         <RenderEventType />
-        <TextField
-          fullWidth
-          variant="filled"
-          multiline
-          inputProps={{ maxLength: maxDescriptionLength }}
-          label={`description: ${event.description.length}/${maxDescriptionLength}`}
-          value={event?.description ? event.description : ''}
-          name="description"
-          rows={4}
-          sx={{ mb: 2 }}
-          onChange={(e) => setEvent({ ...event, description: e.target.value })}
-        />
-
-        <DateTimeRangePicker
-          onChange={(newDateRange) => {
-            setDateRange(newDateRange)
-            console.log(newDateRange)
-            setEvent({
-              ...event,
-              start: newDateRange[0],
-              end: newDateRange[1]
-            })
-          }}
-          value={upDate ? [event.start, event.end] : dateRange}
-        />
-
-        {optionsState?.divisions && (
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="division">Division</InputLabel>
-            <Select
-              labelId="division"
-              name="division"
-              input={<OutlinedInput label="division" />}
-              id="demo-simple-select"
-              value={event?.division ? event.division : ''}
-              onChange={(e) => handleDivisionChange(e)}
-              fullWidth
-            >
-              <MenuItem value={''}>none</MenuItem>
-              {optionsState?.divisions?.map((division, key) => (
-                <MenuItem value={division.nameDivision} key={key}>
-                  {division.nameDivision}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-
-        <TextField
-          fullWidth
-          label="link egnyte"
-          variant="outlined"
-          size="small"
-          name="egnyte"
-          value={event?.link ? event.link : ''}
-          onChange={(link) => setEvent({ ...event, link: link.target.value })}
-          rows={1}
-          sx={{ mt: 2, mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          label={`note: ${event.note.length}/${maxNoteLength}`}
-          inputProps={{ maxLength: maxNoteLength }}
-          variant="outlined"
-          multiline
-          name="note"
-          value={event?.note ? event.note : ''}
-          onChange={(note) => setEvent({ ...event, note: note.target.value })}
-          rows={4}
-          sx={{ mt: 2, mb: 2 }}
-        />
-
         <FormControl fullWidth sx={{ my: 2 }}>
           <InputLabel id="owner">person in charge</InputLabel>
           <Select
             fullWidth
             labelId="owner"
             value={event?.manager ? event.manager : ''}
-            onChange={(manager) => setEvent({ ...event, manager: manager.target.value })}
+            onChange={(manager) =>
+              setFieldEvent({ campo: 'manager', valore: manager.target.value })
+            }
             MenuProps={MenuProps}
             input={<OutlinedInput label="assign this task to.." />}
           >
@@ -315,33 +233,6 @@ function NewEvent({ handleClose, upDate }) {
             ))}
           </Select>
         </FormControl>
-
-        {/*  
-        <FormControl fullWidth sx={{ mt: 2, maxWidth: 400 }}>
-          <InputLabel id="cinemaInvolved">Cinema involved </InputLabel>
-          <Select
-            multiple
-            labelId="cinemaInvolved"
-            multiline
-            value={cinemaSelect}
-            onChange={handleChangeCinema}
-            MenuProps={MenuProps}
-            input={<OutlinedInput label="Cinema involved" />}
-          >
-            {cinemaDB.map((el, key) => (
-              <MenuItem
-                key={key}
-                value={el.name}
-                style={getStyles(el.name, cinemaSelect, theme)}
-              >
-                {el.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        
-        
-         */}
 
         <Button fullWidth variant="outlined" type="submit" color="secondary">
           {upDate ? 'updates' : 'save'}
