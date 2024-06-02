@@ -22,7 +22,7 @@ export const EventStoreContext = ({ children }) => {
   const [topicState, topicDispatch] = useReducer(topicsReducer, initialTopic)
   const [userState, userDispatch] = useReducer(userReducer, initialUser)
   // eslint-disable-next-line no-unused-vars
-  const [optionsState, optionDispatch] = useReducer(optionsReducer, initialOption)
+  const [optionsState, optionsDispatch] = useReducer(optionsReducer, initialOption)
 
   //USER ACTION
   const setUser = (args) => {
@@ -125,6 +125,13 @@ export const EventStoreContext = ({ children }) => {
     })
   }
 
+  const setFieldEvent = (field) => {
+    deispatchEvent({
+      type: 'SET_FIELD_EVENT',
+      payload: field
+    })
+  }
+
   const setEvents = (args) => {
     console.log('SET EVENTS EDC: ', args)
     deispatchEvent({
@@ -168,9 +175,16 @@ export const EventStoreContext = ({ children }) => {
     })
   }
 
+  //ACTION OPTIONS ---------------------------------------------
+  const setOptions = (options) => {
+    console.log('EDC: setOptions: ', options)
+    optionsDispatch({ type: 'SET_OPTIONS', payload: options })
+  }
+
   const value = {
     //options
     options: optionsState,
+    setOptions,
     //USER
     user: userState,
     setUser,
@@ -188,7 +202,7 @@ export const EventStoreContext = ({ children }) => {
     setTopics,
 
     //EVENT
-
+    event: eventState.newEvent,
     totalEvents: eventState.totalEvents,
     events: eventState.events,
     eventToUpdate: eventState.newEvent,
@@ -199,6 +213,7 @@ export const EventStoreContext = ({ children }) => {
     setEvent,
     setEvents,
     deleteEvent,
+    setFieldEvent,
 
     //TASK
 

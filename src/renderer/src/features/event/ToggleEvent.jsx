@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-
+import EventDataContext from '../../store/EventDataContext'
 import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility'
@@ -14,9 +14,12 @@ import LocalAirportIcon from '@mui/icons-material/LocalAirport'
 import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront'
 import Groups2Icon from '@mui/icons-material/Groups2'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import { useEffect } from 'react'
 
 // eslint-disable-next-line react/prop-types
-const ToggleEvent = ({ setEventType, event }) => {
+const ToggleEvent = () => {
+  const { event, setFieldEvent } = EventDataContext()
+
   const handleToggleAlignment = (alignment) => {
     console.log('Toggle event', alignment)
     let color = '#F39C12'
@@ -65,12 +68,15 @@ const ToggleEvent = ({ setEventType, event }) => {
         // Gestire il caso imprevisto, ad esempio impostando un valore di default
         break
     }
-    setEventType({
-      ...event,
-      eventType: alignment,
-      colorEventType: color
-    })
+
+    setFieldEvent({ campo: 'eventType', valore: alignment })
+    setFieldEvent({ campo: 'colorEventType', valore: color })
   }
+
+  useEffect(() => {
+    setFieldEvent({ campo: 'eventType', valore: 'evento' })
+    setFieldEvent({ campo: 'colorEventType', valore: '#F39C12' })
+  }, [])
 
   return (
     <>
