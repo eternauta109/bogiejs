@@ -68,7 +68,7 @@ export default function Basic({ handleOpen }) {
     getEventsFromDb()
     console.log('calendar effect triggered')
     return () => {}
-  }, [events.lenght])
+  }, [events.length])
 
   return (
     <div className="calendarContainer">
