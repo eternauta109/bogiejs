@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import { forwardRef } from 'react'
+
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -34,6 +35,7 @@ const ModalEvent = ({ open, handleClose, upDate }) => {
 
   return (
     <Dialog
+      sx={{ top: '0' }}
       open={open}
       TransitionComponent={Transition}
       onClose={handleDialogClose}
@@ -41,7 +43,9 @@ const ModalEvent = ({ open, handleClose, upDate }) => {
       aria-labelledby="dialog-title"
       aria-describedby="dialog-description"
     >
-      <DialogTitle sx={{ m: 0, p: 2 }}>
+      <DialogTitle
+        sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+      >
         <Typography variant="h6">{upDate ? 'Update Event' : 'New Event'}</Typography>
         <IconButton
           aria-label="close"

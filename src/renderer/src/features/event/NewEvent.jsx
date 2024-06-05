@@ -57,7 +57,7 @@ function NewEvent({ handleClose, upDate }) {
     totalEvents,
     totalTasks,
     upDateEvent,
-
+    setEvents,
     initEvent,
     deleteEvent,
     user
@@ -76,12 +76,13 @@ function NewEvent({ handleClose, upDate }) {
   //devo fare lo stesso con le tasks
   const onSubmit = async (e) => {
     e.preventDefault()
+
     if (upDate) {
       upDateEvent(event, event.id)
       handleClose()
       await window.api.addNewEvent({ event, totalEvents })
     } else {
-      if (event.manager !== '') {
+      if (event.manager) {
         const newTask = {
           id: 'task-' + uuidv4(),
           role: user.user.role,
@@ -106,11 +107,38 @@ function NewEvent({ handleClose, upDate }) {
         createdBy: user.user.userName,
         id: 'event-' + uuidv4()
       }
+
       addEvent(prepareEvent)
-      initEvent()
-      handleClose()
+
       await window.api.addNewEvent({ event: prepareEvent, totalEvents })
+
+      if (event.eventType === 'prevendite') {
+        console.log('lancia!!!')
+        const dobleEvent = {
+          ...event,
+          cinema: user.user.cinema,
+          role: user.user.role,
+          area: user.user.area,
+          createdBy: user.user.userName,
+          start: event.startOpen,
+          surrogato: true,
+          end: event.endOpen,
+          id: 'event-' + uuidv4()
+        }
+        addEvent(dobleEvent)
+        await window.api.addNewEvent({ event: dobleEvent, totalEvents })
+        await getEventsFromDb()
+      }
+
+      handleClose()
     }
+  }
+
+  const getEventsFromDb = async () => {
+    console.log('getEventsFromDb triggerato')
+    const result = await window.api.getAllEvents()
+    console.log('result get events from db', result)
+    setEvents(result)
   }
 
   //questa funzione andra a cancellare l'event. qui upDate deve essere sicuramente true,
@@ -124,34 +152,36 @@ function NewEvent({ handleClose, upDate }) {
   }
 
   const RenderEventType = useCallback(() => {
-    console.log('event in Render: ', event)
+    console.log('event in useCallback: ', event)
     switch (event.eventType) {
+      case 'evento':
+        return <ClassicEvent />
       case 'prevendite':
-        return <Prevendite />
+        return <Prevendite upDate={upDate} />
       case 'promo':
-        return <Promo />
+        return <Promo upDate={upDate} />
       case 'compleanni':
-        return <Compleanni />
+        return <Compleanni upDate={upDate} />
       case 'delivery':
-        return <Delivery />
+        return <Delivery upDate={upDate} />
       case 'extra':
-        return <Extra />
+        return <Extra upDate={upDate} />
       case 'anteprima':
-        return <Anteprima />
+        return <Anteprima upDate={upDate} />
       case 'maratona':
-        return <Maratona />
+        return <Maratona upDate={upDate} />
       case 'visita':
-        return <Visita />
+        return <Visita upDate={upDate} />
       case 'stampa':
-        return <Stampa />
+        return <Stampa upDate={upDate} />
       case 'sopraluogo':
-        return <Sopraluogo />
+        return <Sopraluogo upDate={upDate} />
       case 'meeting':
-        return <Meeting />
-      case 'matineè':
-        return <MattineEvent />
+        return <Meeting upDate={upDate} />
+      case 'matinee':
+        return <MattineEvent upDate={upDate} />
       default:
-        return <ClassicEvent upDate={upDate} />
+        return <ClassicEvent />
     }
   }, [event.eventType])
 
@@ -178,20 +208,8 @@ function NewEvent({ handleClose, upDate }) {
         overflowY: 'auto'
       }}
     >
-      {upDate && (
-        <Button
-          variant="outlined"
-          sx={{ m: 2 }}
-          onClick={() => {
-            handleClose()
-            initEvent()
-          }}
-        >
-          exit without save
-        </Button>
-      )}
       <form onSubmit={onSubmit}>
-        <ToggleEvent />
+        {!upDate && <ToggleEvent />}
 
         <TextField
           fullWidth
@@ -213,7 +231,19 @@ function NewEvent({ handleClose, upDate }) {
         )}
 
         <RenderEventType />
-        <FormControl fullWidth sx={{ my: 2 }}>
+        <TextField
+          fullWidth
+          label={`note: ${event.note ? event.note.length : 0}/${options.MAXNOTELENGTH}`}
+          inputProps={{ maxLength: options.MAXNOTELENGTH }}
+          variant="outlined"
+          multiline
+          name="note"
+          value={event?.note ? event.note : ''}
+          onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
+          rows={4}
+          sx={{ mt: 2, mb: 2 }}
+        />
+        <FormControl fullWidth sx={{ my: 4 }}>
           <InputLabel id="owner">person in charge</InputLabel>
           <Select
             fullWidth
@@ -241,7 +271,7 @@ function NewEvent({ handleClose, upDate }) {
           <Button
             variant="contained"
             color="error"
-            sx={{ mt: 4 }}
+            sx={{ mt: 6 }}
             onClick={(e) => {
               onDelete(e, event.id)
             }}
