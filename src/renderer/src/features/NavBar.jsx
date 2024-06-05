@@ -96,6 +96,7 @@ function NavBar() {
       case 'Calendario':
         navigate('/calendar')
         break
+
       case 'dashboard':
         navigate('/dashboard')
         break

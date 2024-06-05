@@ -86,7 +86,7 @@ export default function Basic({ handleOpen }) {
           onSelectEvent={(event) => onSelectEvent(event)}
           /* onSelectSlot={handleSelect} */
           eventPropGetter={(event) => {
-            const backgroundColor = event.colorEventType
+            const backgroundColor = event.eventColorType
             return { style: { backgroundColor } }
           }}
         />

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import EventDataContext from '../../store/EventDataContext'
+
 import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility'
@@ -14,141 +14,99 @@ import LocalAirportIcon from '@mui/icons-material/LocalAirport'
 import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront'
 import Groups2Icon from '@mui/icons-material/Groups2'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
-import { useEffect } from 'react'
+import useEventsStore from '../../store/EventDataContext'
 
-// eslint-disable-next-line react/prop-types
 const ToggleEvent = () => {
-  const { event, setFieldEvent } = EventDataContext()
+  const { event, setEvent } = useEventsStore()
 
-  const handleToggleAlignment = (alignment) => {
-    console.log('Toggle event', alignment)
-    let color = '#F39C12'
-    switch (alignment) {
-      case 'evento':
-        color = '#F39C12'
-        break
-      case 'matineè':
-        color = '#7DCEA0'
-        break
-      case 'prevendite':
-        color = '#BB8FCE'
-        break
-      case 'promo':
-        color = '#AAB7B8'
-        break
-      case 'compleanni':
-        color = '#448AFF'
-        break
-      case 'extra':
-        color = '#EF5350'
-        break
-      case 'anteprima':
-        color = '#43B5A2'
-        break
-      case 'maratona':
-        color = '#A67FB8'
-        break
-      case 'visita':
-        color = '#FF5733'
-        break
-      case 'stampa':
-        color = '#669999'
-        break
-      case 'sopraluogo':
-        color = '#7859C5'
-        break
-      case 'meeting':
-        color = '#4F7DE5'
-        break
-      case 'delivery':
-        color = '#4F8DF5'
-        break
-      default:
-        console.error('Valore del toggle non previsto:', alignment)
-        // Gestire il caso imprevisto, ad esempio impostando un valore di default
-        break
+  const handleToggleAlignment = (newAlignment) => {
+    console.log('toggleAlignment', newAlignment)
+    if (newAlignment !== null) {
+      const colorMap = {
+        evento: '#F39C12',
+        matinee: '#7DCEA0',
+        prevendite: '#BB8FCE',
+        promo: '#AAB7B8',
+        compleanni: '#448AFF',
+        extra: '#EF5350',
+        anteprima: '#43B5A2',
+        maratona: '#A67FB8',
+        visita: '#FF5733',
+        stampa: '#669999',
+        sopraluogo: '#7859C5',
+        meeting: '#4F7DE5',
+        delivery: '#4F8DF5'
+      }
+
+      setEvent({ eventType: newAlignment, eventColorType: colorMap[newAlignment] })
     }
-
-    setFieldEvent({ campo: 'eventType', valore: alignment })
-    setFieldEvent({ campo: 'colorEventType', valore: color })
   }
-
-  useEffect(() => {
-    setFieldEvent({ campo: 'eventType', valore: 'evento' })
-    setFieldEvent({ campo: 'colorEventType', valore: '#F39C12' })
-  }, [])
 
   return (
     <>
       <ToggleButtonGroup
-        value={event?.eventType ? event.eventType : 'evento'}
+        value={event.eventType ? event.eventType : 'evento'}
         exclusive
         sx={{ mb: 2 }}
         aria-label="text alignment"
       >
         <ToggleButton
           value="evento"
-          aria-label="centered"
+          aria-label="evento"
           onClick={() => handleToggleAlignment('evento')}
         >
           <Tooltip title="evento">
-            <EventIcon value="evento" />
+            <EventIcon />
           </Tooltip>
         </ToggleButton>
-
         <ToggleButton
-          value="matineè"
-          aria-label="left aligned"
-          onClick={() => handleToggleAlignment('matineè')}
+          value="matinee"
+          aria-label="matinee"
+          onClick={() => handleToggleAlignment('matinee')}
         >
-          <Tooltip title="matineè">
+          <Tooltip title="matinee">
             <SchoolIcon />
           </Tooltip>
         </ToggleButton>
-
         <ToggleButton
           value="prevendite"
-          aria-label="right aligned"
+          aria-label="prevendite"
           onClick={() => handleToggleAlignment('prevendite')}
         >
           <Tooltip title="prevendite">
             <SellIcon />
           </Tooltip>
         </ToggleButton>
-
         <ToggleButton
           value="promo"
-          aria-label="justified"
+          aria-label="promo"
           onClick={() => handleToggleAlignment('promo')}
         >
           <Tooltip title="promo">
             <DevicesOtherIcon />
           </Tooltip>
         </ToggleButton>
-
         <ToggleButton
           value="compleanni"
-          aria-label="justified"
+          aria-label="compleanni"
           onClick={() => handleToggleAlignment('compleanni')}
         >
           <Tooltip title="compleanni">
             <CelebrationIcon />
           </Tooltip>
         </ToggleButton>
-
         <ToggleButton
           value="extra"
-          aria-label="justified"
+          aria-label="extra"
           onClick={() => handleToggleAlignment('extra')}
         >
           <Tooltip title="extra">
             <RocketLaunchIcon />
           </Tooltip>
         </ToggleButton>
-
         <ToggleButton
           value="delivery"
-          aria-label="justified"
+          aria-label="delivery"
           onClick={() => handleToggleAlignment('delivery')}
         >
           <Tooltip title="delivery">
@@ -157,14 +115,15 @@ const ToggleEvent = () => {
         </ToggleButton>
       </ToggleButtonGroup>
       <ToggleButtonGroup
-        value={event?.eventType ? event.eventType : 'evento'}
+        value={event.eventType ? event.eventType : 'evento'}
         exclusive
+        onChange={handleToggleAlignment}
         sx={{ mb: 2 }}
         aria-label="text alignment"
       >
         <ToggleButton
           value="anteprima"
-          aria-label="justified"
+          aria-label="anteprima"
           onClick={() => handleToggleAlignment('anteprima')}
         >
           <Tooltip title="anteprima">
@@ -173,7 +132,7 @@ const ToggleEvent = () => {
         </ToggleButton>
         <ToggleButton
           value="maratona"
-          aria-label="justified"
+          aria-label="maratona"
           onClick={() => handleToggleAlignment('maratona')}
         >
           <Tooltip title="maratona">
@@ -182,7 +141,7 @@ const ToggleEvent = () => {
         </ToggleButton>
         <ToggleButton
           value="visita"
-          aria-label="justified"
+          aria-label="visita"
           onClick={() => handleToggleAlignment('visita')}
         >
           <Tooltip title="visita">
@@ -191,16 +150,16 @@ const ToggleEvent = () => {
         </ToggleButton>
         <ToggleButton
           value="stampa"
-          aria-label="justified"
+          aria-label="stampa"
           onClick={() => handleToggleAlignment('stampa')}
         >
-          <Tooltip title="evento stampa">
+          <Tooltip title="stampa">
             <PhotoCameraFrontIcon />
           </Tooltip>
         </ToggleButton>
         <ToggleButton
           value="sopraluogo"
-          aria-label="justified"
+          aria-label="sopraluogo"
           onClick={() => handleToggleAlignment('sopraluogo')}
         >
           <Tooltip title="sopraluogo">
@@ -209,7 +168,7 @@ const ToggleEvent = () => {
         </ToggleButton>
         <ToggleButton
           value="meeting"
-          aria-label="justified"
+          aria-label="meeting"
           onClick={() => handleToggleAlignment('meeting')}
         >
           <Tooltip title="meeting">

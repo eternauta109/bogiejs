@@ -8,18 +8,13 @@ import {
   OutlinedInput,
   MenuItem
 } from '@mui/material'
-import EventDataContext from '../../../store/EventDataContext'
-import { useEffect } from 'react'
-import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
+import { DateTimeRange } from './serviceEventType/Field'
+import useEventsStore from '../../../store/EventDataContext'
 
-export default function ClassicEvent({ upDate }) {
-  const { event, setFieldEvent, options } = EventDataContext()
+import { useEffect, useMemo } from 'react'
 
-  console.log('ClassicEvent: upDate:', upDate)
-  useEffect(() => {
-    setFieldEvent({ campo: 'eventType', valore: 'evento' })
-    setFieldEvent({ campo: 'colorEventType', valore: '#F39C12' })
-  }, [])
+export default function ClassicEvent() {
+  const { event, setFieldEvent, options, setEvent } = useEventsStore()
 
   //gestisco i cambiamenti del valore della divsions e aggiorno sia
   // lo stato che il colore relativo
@@ -35,7 +30,24 @@ export default function ClassicEvent({ upDate }) {
     })
     setFieldEvent({ campo: 'colorDivision', valore: division.color })
   }
+  useEffect(() => {
+    setEvent({
+      eventType: !event.evetType && 'evento',
+      eventColorType: !event.evetType && '#F39C12',
+      start: new Date(),
+      end: new Date(),
 
+      description: '',
+      division: '',
+      link: '',
+      note: ''
+    })
+    return () => {
+      console.log('lascio classic event da useffect con event=:', event)
+    }
+  }, [])
+
+  useMemo(() => console.log('event in calssic event', event), [event])
   return (
     <>
       <Box>
@@ -64,14 +76,7 @@ export default function ClassicEvent({ upDate }) {
           sx={{ mb: 2 }}
           onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
         />
-        <DateTimeRangePicker
-          onChange={(newDateRange) => {
-            console.log(newDateRange)
-            setFieldEvent({ campo: 'start', valore: newDateRange[0] })
-            setFieldEvent({ campo: 'end', valore: newDateRange[1] })
-          }}
-          value={event.start ? [event.start, event.end] : [new Date(), new Date()]}
-        />
+        <DateTimeRange />
 
         {options?.divisions && (
           <FormControl fullWidth sx={{ mt: 2 }}>
@@ -101,20 +106,8 @@ export default function ClassicEvent({ upDate }) {
           size="small"
           name="link"
           value={event?.link ? event.link : ''}
-          onChange={(link) => setFieldEvent({ campo: link.target.name, valore: link.target.value })}
+          onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
           rows={1}
-          sx={{ mt: 2, mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          label={`note: ${event.note ? event.note.length : 0}/${options.MAXNOTELENGTH}`}
-          inputProps={{ maxLength: options.MAXNOTELENGTH }}
-          variant="outlined"
-          multiline
-          name="note"
-          value={event?.note ? event.note : ''}
-          onChange={(note) => setFieldEvent({ campo: note.target.note, note: note.target.value })}
-          rows={4}
           sx={{ mt: 2, mb: 2 }}
         />
       </Box>

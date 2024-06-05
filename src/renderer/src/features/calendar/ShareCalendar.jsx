@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import ModalEvent from '../event/ModalEvent'
-
+import useEventsStore from '../../store/EventDataContext'
 import { Container, Grid, Switch, Button, FormGroup, FormControlLabel } from '@mui/material'
 import SchedulerComponent from '../scheduler/SchedulerComponent'
 import MyCalendar from './MyCalendar'
@@ -19,9 +19,11 @@ const ShareCalendar = () => {
   const [openNewEvent, setOpenNewEvent] = useState(false)
   const [upDate, setUpDate] = useState(false)
   const [checked, setChecked] = useState(false) //stato dello swith per visualizzare calendar/scheduler
+  const { initEvent } = useEventsStore()
 
   const handleOpenNewEvent = () => {
     setUpDate(false)
+
     setOpenNewEvent(true)
     // Imposta upDate a false quando viene aperto il modal
   }
@@ -39,7 +41,10 @@ const ShareCalendar = () => {
   }
   //^^^
 
-  const handleCloseNewEvent = () => setOpenNewEvent(false)
+  const handleCloseNewEvent = () => {
+    initEvent()
+    setOpenNewEvent(false)
+  }
 
   return (
     <Container maxWidth="xl" style={{ maxHeight: '900px' }}>
