@@ -1,8 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import ToggleEvent from './ToggleEvent'
 import { v4 as uuidv4 } from 'uuid'
-import ClassicEvent from './eventType/ClassicEvent'
-import MattineEvent from './eventType/MattineEvent'
 
 import '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker.css'
 import 'react-calendar/dist/Calendar.css'
@@ -19,9 +17,8 @@ import {
   TextField
 } from '@mui/material'
 
-//queste sono le funzioni che bho messo dentro i reducer che
-// vanno a lavorare con il db Level
-
+import ClassicEvent from './eventType/ClassicEvent'
+import MattineEvent from './eventType/MattineEvent'
 import useEventsStore from '../../store/EventDataContext'
 import Prevendite from './eventType/Prevendite'
 import Promo from './eventType/Promo'
@@ -60,10 +57,11 @@ function NewEvent({ handleClose, upDate }) {
     setEvents,
     initEvent,
     deleteEvent,
-    user
+    user,
+    options
   } = useEventsStore()
 
-  const options = async () => {
+  const getOptions = async () => {
     const getOpt = await window.api.getOptions()
     console.log('newEvent: options: getOptions:', getOpt)
     setOptions(getOpt)
@@ -187,7 +185,7 @@ function NewEvent({ handleClose, upDate }) {
 
   useEffect(() => {
     console.log('UPDATE', upDate)
-    options()
+    getOptions()
     console.log('user in new events useeffect', user)
     if (upDate) {
       console.log('evento.id esistente questo è l evento da aggiornare', event)
@@ -211,14 +209,6 @@ function NewEvent({ handleClose, upDate }) {
       <form onSubmit={onSubmit}>
         {!upDate && <ToggleEvent />}
 
-        <TextField
-          fullWidth
-          label="eventType"
-          disabled
-          value={event?.eventType ? event.eventType : ''}
-          name="eventType"
-          sx={{ mb: 2 }}
-        />
         {upDate && (
           <TextField
             fullWidth
@@ -226,7 +216,7 @@ function NewEvent({ handleClose, upDate }) {
             disabled
             value={event?.createdBy ? event.createdBy : ''}
             name="createdBy"
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, mt: 4 }}
           />
         )}
 
@@ -241,7 +231,7 @@ function NewEvent({ handleClose, upDate }) {
           value={event?.note ? event.note : ''}
           onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
           rows={4}
-          sx={{ mt: 2, mb: 2 }}
+          sx={{ mt: 4, mb: 2 }}
         />
         <FormControl fullWidth sx={{ my: 4 }}>
           <InputLabel id="owner">person in charge</InputLabel>

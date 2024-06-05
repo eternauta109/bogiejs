@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
-import { TextField, Box, InputAdornment, Typography, Stack } from '@mui/material'
+import { TextField, Box, InputAdornment, Typography } from '@mui/material'
 import useEventsStore from '../../../store/EventDataContext'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import MailOutlineIcon from '@mui/icons-material/MailOutline'
+
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
-import Groups2Icon from '@mui/icons-material/Groups2'
-import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone'
+
 import { useEffect, useMemo } from 'react'
 import PriceCheckIcon from '@mui/icons-material/PriceCheck'
 import VideocamTwoToneIcon from '@mui/icons-material/VideocamTwoTone'
+import { DateTimeRange } from './serviceEventType/Field'
 
 export default function Prevendite({ upDate }) {
   const { event, setFieldEvent, options, setEvent } = useEventsStore()
@@ -52,14 +51,7 @@ export default function Prevendite({ upDate }) {
           <Typography variant="h7" sx={{ mt: 2 }}>
             da aprire prevendite il
           </Typography>
-          <DateTimeRangePicker
-            onChange={(newDateRange) => {
-              console.log(newDateRange)
-              setFieldEvent({ campo: 'start', valore: newDateRange[0] })
-              setFieldEvent({ campo: 'end', valore: newDateRange[1] })
-            }}
-            value={event.start ? [event.start, event.end] : [new Date(), new Date()]}
-          />
+          <DateTimeRange />
         </Box>
 
         <Box sx={{ mt: 4 }}>
