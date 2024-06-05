@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import useEventsStore from '../../store/EventDataContext'
 import { FormControl, Container, TextField, Button } from '@mui/material'
+import SubAction from '../event/eventType/serviceEventType/SubAction'
 
 const NewTaskForm = ({ manager, onHandleClose }) => {
-  const { addTask, totalTasks, emptyTask, user } = useEventsStore()
-  const [newTask, setNewTask] = useState({ ...emptyTask })
+  const { addTask, totalTasks, user, task, setTask } = useEventsStore()
+
   const maxTitleLength = 30
   const maxDescriptionLength = 240
   const maxNoteLength = 160
@@ -14,9 +15,9 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     // Aggiungi qui la logica per gestire il submit del form
-    console.log('Form task submitted!', newTask, totalTasks)
+    console.log('Form task submitted!', task, totalTasks)
     const sendNewTaskInStore = {
-      ...newTask,
+      ...task,
       manager: manager,
       cinema: user.user.cinema,
       role: user.user.role,
@@ -32,14 +33,10 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
     onHandleClose()
     await window.api.addNewTask({ task: sendNewTaskInStore, totalTasks: totalTasks, upDate: false })
   }
-  console.log('Form submitted!', newTask, manager, totalTasks)
 
-  /*  useMemo(() => {
-    console.log("new task in use memo", newTask);
-    return () => {
-      setNewTask({ ...emptyTask });
-    };
-  }, [newTask]); */
+  useMemo(() => {
+    console.log('new task in use memo', task)
+  }, [task])
 
   return (
     <Container
@@ -50,7 +47,7 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
         overflowY: 'auto'
       }}
     >
-      {newTask && (
+      {task && (
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth>
             <TextField
@@ -59,42 +56,42 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
               disabled
               value={`new task for:  ${manager}`}
               name="task for"
-              onChange={(t) => setNewTask({ ...newTask, title: t.target.value })}
+              onChange={(t) => setTask({ ...task, title: t.target.value })}
               sx={{ mb: 2 }}
             />
             <TextField
               required
               fullWidth
-              label={`title: ${newTask.title.length}/${maxTitleLength}`}
+              label={`title: ${task.title ? task.title.length : 0}/${maxTitleLength}`}
               variant="outlined"
               inputProps={{ maxLength: maxTitleLength }}
-              value={newTask ? newTask.title : ''}
+              value={task ? task.title : ''}
               name="title"
-              onChange={(t) => setNewTask({ ...newTask, title: t.target.value })}
+              onChange={(t) => setTask({ ...task, title: t.target.value })}
               sx={{ mb: 2 }}
             />
 
             <TextField
               fullWidth
               variant="outlined"
-              label={`description: ${newTask.description.length}/${maxDescriptionLength}`}
+              label={`description: ${task.description ? task.description.length : 0}/${maxDescriptionLength}`}
               multiline
               inputProps={{ maxLength: maxDescriptionLength }}
               rows={4}
-              value={newTask ? newTask.description : ''}
+              value={task ? task.description : ''}
               name="description"
-              onChange={(t) => setNewTask({ ...newTask, description: t.target.value })}
+              onChange={(t) => setTask({ ...task, description: t.target.value })}
               sx={{ mb: 2 }}
             />
-
+            <SubAction subAction={task.subAction} />
             <TextField
               fullWidth
-              label={`note: ${newTask.note.length}/${maxNoteLength}`}
+              label={`note: ${task.note ? task.note.length : 0}/${maxNoteLength}`}
               variant="outlined"
               inputProps={{ maxLength: maxNoteLength }}
-              value={newTask ? newTask.note : ''}
+              value={task ? task.note : ''}
               name="note"
-              onChange={(t) => setNewTask({ ...newTask, note: t.target.value })}
+              onChange={(t) => setTask({ ...task, note: t.target.value })}
               sx={{ mb: 2 }}
             />
             <Button fullWidth variant="outlined" type="submit" color="secondary">

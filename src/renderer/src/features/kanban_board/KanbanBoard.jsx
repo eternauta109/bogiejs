@@ -9,12 +9,17 @@ import './KanbanBoard.css'
 import useEventsStore from '../../store/EventDataContext'
 
 const KanbanBoard = ({ managerName }) => {
-  const { tasks, setTasks } = useEventsStore()
+  const { tasks, setTasks, initTask } = useEventsStore()
   const [columns, setColumns] = useState({})
   const [openNewTask, setOpenNewTask] = useState(false)
 
-  const handleOpenNewTask = () => setOpenNewTask(true)
-  const handleCloseNewTask = () => setOpenNewTask(false)
+  const handleOpenNewTask = () => {
+    initTask()
+    setOpenNewTask(true)
+  }
+  const handleCloseNewTask = () => {
+    setOpenNewTask(false)
+  }
 
   const moveTask = async (taskId, targetStatus) => {
     const task = tasks.find((t) => t.id === taskId)

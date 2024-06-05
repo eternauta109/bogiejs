@@ -149,6 +149,19 @@ export const EventStoreContext = ({ children }) => {
     })
   }
 
+  const initTask = () => {
+    taskDispatch({
+      type: 'INIT_TASK'
+    })
+  }
+
+  const setTask = (task) => {
+    taskDispatch({
+      type: 'SET_TASK',
+      payload: task
+    })
+  }
+
   const addTask = (task) => {
     const newTasks = taskState.tasks.concat(task)
     taskDispatch({
@@ -185,6 +198,7 @@ export const EventStoreContext = ({ children }) => {
     //options
     options: optionsState,
     setOptions,
+
     //USER
     user: userState,
     setUser,
@@ -216,11 +230,13 @@ export const EventStoreContext = ({ children }) => {
     setFieldEvent,
 
     //TASK
-
     tasks: taskState.tasks,
+    task: taskState.newTask,
     totalTasks: taskState.totalTasks,
     emptyTask: initialTask.newTask,
     initialTask,
+    initTask,
+    setTask,
     addTask,
     upDateTask,
     deleteTask,

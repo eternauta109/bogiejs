@@ -12,7 +12,7 @@ export const initialTask = {
     note: '',
     title: '',
     manager: '',
-    laneId: null
+    subAction: []
   }
 }
 
@@ -26,8 +26,28 @@ const taskReducer = (state, action) => {
         tasks: payload.tasks,
         totalTasks: state.totalTasks + 1
       }
+
+    case 'SET_TASK':
+      console.log('taskReducer: SET_TASK: payload:', payload)
+      return {
+        ...state,
+        newTask: {
+          ...payload
+        }
+      }
+
+    case 'INIT_TASK':
+      console.log('taskReducer: INIT_TASK')
+      return {
+        ...state,
+        newTask: {
+          ...initialTask.newTask
+        }
+      }
+
     case 'UPDATE_TASK':
       return { ...state, tasks: payload.tasks }
+
     case 'DELETE_TASK': {
       // Filtra gli eventi rimuovendo quello con l'ID corrispondente
       const updatedTasks = state.tasks.filter((event) => event.id !== payload)

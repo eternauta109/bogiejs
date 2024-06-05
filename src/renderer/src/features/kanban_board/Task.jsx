@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useDrag } from 'react-dnd'
 import { useState } from 'react'
-import { Typography, Divider, IconButton, Slider, Grid } from '@mui/material'
+import { Typography, Divider, IconButton, Slider, Grid, Checkbox, Stack } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import DoneOutlineTwoToneIcon from '@mui/icons-material/DoneOutlineTwoTone'
 import useEventsStore from '../../store/EventDataContext'
@@ -27,6 +27,7 @@ const marks = [
 ]
 
 export default function Task({ id, task, status }) {
+  console.log(task)
   const [{ isDragging }, drag] = useDrag({
     type: 'TASK',
     item: { id },
@@ -80,8 +81,27 @@ export default function Task({ id, task, status }) {
       <Typography variant="h5">{task.title}</Typography>
 
       <div className="description">
-        <Typography variant="body1">{task.description}</Typography>
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          {task.description}
+        </Typography>
       </div>
+      <Divider sx={{ margin: '16px 0' }} />
+      <Typography variant="body2" color="white">
+        sotto-azioni
+      </Typography>
+      {task.subAction.map((e, key) => (
+        <Stack
+          direction="row"
+          spacing={2}
+          key={key}
+          justifyContent="space-between"
+          alignItems="center"
+          useFlexGap
+        >
+          <Typography variant="body2">{e.todo}</Typography>
+          <Checkbox />
+        </Stack>
+      ))}
 
       <Divider sx={{ margin: '16px 0' }} />
 
