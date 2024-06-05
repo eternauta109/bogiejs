@@ -144,7 +144,7 @@ export default function MattineEvent({ upDate }) {
           />
         </Stack>
 
-        <Typography variant="h7" sx={{ mt: 2 }}>
+        <Typography variant="body2" color="grey" sx={{ mt: 2 }}>
           quando
         </Typography>
         <DateTimeRange />

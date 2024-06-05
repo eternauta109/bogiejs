@@ -150,7 +150,6 @@ function NewEvent({ handleClose, upDate }) {
   }
 
   const RenderEventType = useCallback(() => {
-    console.log('event in useCallback: ', event)
     switch (event.eventType) {
       case 'evento':
         return <ClassicEvent />

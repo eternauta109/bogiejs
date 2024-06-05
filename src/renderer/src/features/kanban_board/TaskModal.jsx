@@ -1,35 +1,60 @@
 /* eslint-disable react/prop-types */
-
-import { Modal, Box } from '@mui/material/'
+import CloseIcon from '@mui/icons-material/Close'
+import { Box, Slide, Dialog, DialogTitle, Typography, IconButton } from '@mui/material/'
 import NewTaskForm from './NewTaskForm'
+import { forwardRef } from 'react'
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: '500px',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  borderRadius: '8px',
   boxShadow: 24,
   p: 4
 }
 
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />
+})
+
 const TaskModal = ({ manager, open, handleClose }) => {
   return (
     <>
-      <Modal
+      <Dialog
+        sx={{ top: '0' }}
         open={open}
-        onClose={() => {
-          handleClose()
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        TransitionComponent={Transition}
+        onClose={handleClose}
+        keepMounted
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
       >
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <Typography variant="h6">nuovo task: </Typography>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500]
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <Box sx={style}>
           <NewTaskForm manager={manager} onHandleClose={handleClose} />
         </Box>
-      </Modal>
+      </Dialog>
     </>
   )
 }

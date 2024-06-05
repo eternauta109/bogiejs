@@ -6,7 +6,8 @@ import {
   InputLabel,
   Select,
   OutlinedInput,
-  MenuItem
+  MenuItem,
+  Typography
 } from '@mui/material'
 import { DateTimeRange } from './serviceEventType/Field'
 import useEventsStore from '../../../store/EventDataContext'
@@ -76,6 +77,10 @@ export default function ClassicEvent() {
           sx={{ mb: 2 }}
           onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
         />
+
+        <Typography variant="body2" color="grey" sx={{ mt: 2 }}>
+          durata evento
+        </Typography>
         <DateTimeRange />
 
         {options?.divisions && (

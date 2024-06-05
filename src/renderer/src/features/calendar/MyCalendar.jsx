@@ -36,8 +36,6 @@ const localizer = dateFnsLocalizer({
 export default function Basic({ handleOpen }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
-  console.log('events in calendar', events)
-
   const { max, views } = useMemo(
     () => ({
       /*  max: dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours'), */
