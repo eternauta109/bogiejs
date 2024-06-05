@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material'
+import { ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material'
 import EventIcon from '@mui/icons-material/Event'
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility'
 import CelebrationIcon from '@mui/icons-material/Celebration'
@@ -44,10 +44,13 @@ const ToggleEvent = () => {
 
   return (
     <>
+      <Typography variant="body2" color="grey">
+        scegli il tipo di evento
+      </Typography>
       <ToggleButtonGroup
         value={event.eventType ? event.eventType : 'evento'}
         exclusive
-        sx={{ mb: 2 }}
+        sx={{ mb: 1 }}
         aria-label="text alignment"
       >
         <ToggleButton
@@ -114,11 +117,11 @@ const ToggleEvent = () => {
           </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>
+
       <ToggleButtonGroup
         value={event.eventType ? event.eventType : 'evento'}
         exclusive
-        onChange={handleToggleAlignment}
-        sx={{ mb: 2 }}
+        sx={{ mb: 4 }}
         aria-label="text alignment"
       >
         <ToggleButton

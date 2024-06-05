@@ -9,8 +9,6 @@ export const DateTimeRange = () => {
         console.log(newDateRange)
         setEvent({
           ...event,
-          startDate: newDateRange[0],
-          endDate: newDateRange[1],
           start: newDateRange[0],
           end: newDateRange[1]
         })

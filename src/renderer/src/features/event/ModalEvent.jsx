@@ -25,7 +25,7 @@ const style = {
 
 // eslint-disable-next-line react/prop-types
 const ModalEvent = ({ open, handleClose, upDate }) => {
-  const { initEvent } = useEventsStore()
+  const { initEvent, event } = useEventsStore()
 
   const handleDialogClose = () => {
     handleClose()
@@ -46,7 +46,9 @@ const ModalEvent = ({ open, handleClose, upDate }) => {
       <DialogTitle
         sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
       >
-        <Typography variant="h6">{upDate ? 'Update Event' : 'New Event'}</Typography>
+        <Typography variant="h6">
+          {upDate ? `aggiorna: ${event.eventType}` : `nuovo evento: ${event.eventType}`}
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={handleDialogClose}

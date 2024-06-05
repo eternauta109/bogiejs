@@ -3,10 +3,11 @@ import { TextField, Box, InputAdornment, Typography, Stack } from '@mui/material
 import useEventsStore from '../../../store/EventDataContext'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
-import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker'
-import Groups2Icon from '@mui/icons-material/Groups2'
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone'
+import Groups2Icon from '@mui/icons-material/Groups2'
+
 import { useEffect, useMemo } from 'react'
+import { DateTimeRange } from './serviceEventType/Field'
 
 export default function MattineEvent({ upDate }) {
   const { event, setFieldEvent, options, setEvent } = useEventsStore()
@@ -146,14 +147,7 @@ export default function MattineEvent({ upDate }) {
         <Typography variant="h7" sx={{ mt: 2 }}>
           quando
         </Typography>
-        <DateTimeRangePicker
-          onChange={(newDateRange) => {
-            console.log(newDateRange)
-            setFieldEvent({ campo: 'start', valore: newDateRange[0] })
-            setFieldEvent({ campo: 'end', valore: newDateRange[1] })
-          }}
-          value={event.start ? [event.start, event.end] : [new Date(), new Date()]}
-        />
+        <DateTimeRange />
       </Box>
     </>
   )
