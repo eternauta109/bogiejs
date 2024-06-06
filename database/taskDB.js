@@ -150,7 +150,7 @@ async function taskExists(key) {
 // se devo aggiungere l'task e aumentare totaltasks in caso non esista,
 // o aggiornare un task e non aumentare totaltasks in caso esista.
 async function insertTask(value) {
-  console.log('task in insertOrUpdatetask in db:', value)
+  console.log('task in insertOrUpdatetask in db:', value.task.subAction)
   const serializetask = JSON.stringify({
     ...value.task,
     start: convertDateToString(value.task.start)
@@ -161,13 +161,14 @@ async function insertTask(value) {
     await connect() // Connessione al database
     if (await taskExists(value.task.id)) {
       // Se l'tasko esiste già, non aggiorno totaltasks
+      console.log('task  updated successfully.')
       await db.put(value.task.id, serializetask) // Aggiornamento dell'tasko nel database
     } else {
       // Se l'tasko non esiste, incremento totaltasks
       await db.put('totalTasks', value.totalTasks + 1) // Aggiornamento di totaltasks
       await db.put(value.task.id, serializetask) // Inserimento dell'tasko nel database
+      console.log('task insertedsuccessfully.')
     }
-    console.log('task inserted or updated successfully.')
   } catch (error) {
     console.error('Error inserting or updating task:', error)
     throw error // Gestione dell'errore

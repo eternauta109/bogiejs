@@ -23,13 +23,13 @@ const ToggleEvent = () => {
     console.log('toggleAlignment', newAlignment)
     if (newAlignment !== null) {
       const colorMap = {
-        evento: '#F39C12',
+        evento: '#E6E6FA',
         matinee: '#7DCEA0',
         prevendite: '#BB8FCE',
         promo: '#AAB7B8',
         compleanni: '#448AFF',
-        extra: '#EF5350',
-        anteprima: '#43B5A2',
+        extra: '#FAFAD2',
+        anteprima: '#00FF00',
         maratona: '#A67FB8',
         visita: '#FF5733',
         stampa: '#669999',

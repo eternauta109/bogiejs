@@ -26,6 +26,7 @@ const KanbanBoard = ({ managerName }) => {
     if (!task || task.status === targetStatus) return // Controlla se il task esiste e se il nuovo stato è diverso
 
     const taskAggiornato = { ...task, status: targetStatus }
+    console.log('Ho spostato questo task:', taskAggiornato)
     try {
       await window.api.addNewTask({ task: taskAggiornato })
       const updatedTasks = tasks.map((t) => (t.id === taskId ? taskAggiornato : t))
@@ -140,13 +141,7 @@ const Column = ({ columnId, name, items, moveTask }) => {
       </h2>
       <div className="droppable-col">
         {items.map((item, index) => (
-          <Task
-            key={index}
-            id={item.id}
-            task={item}
-            status={item.status}
-            onHandleCardDelete={() => {}}
-          />
+          <Task key={index} id={item.id} taskFromParent={item} status={item.status} />
         ))}
       </div>
     </div>
