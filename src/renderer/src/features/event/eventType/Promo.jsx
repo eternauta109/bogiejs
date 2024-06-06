@@ -17,6 +17,7 @@ export default function Promo({ upDate }) {
       setEvent({
         ...event,
         title: '',
+        subAction: [],
         description: '',
         gadget: '',
         whereGadget: '',

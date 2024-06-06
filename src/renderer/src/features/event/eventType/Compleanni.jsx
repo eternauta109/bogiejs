@@ -18,6 +18,7 @@ export default function Compleanni({ upDate }) {
       setEvent({
         ...event,
         title: '',
+        subAction: [],
         referent: '',
         email: '',
         phone: 0,

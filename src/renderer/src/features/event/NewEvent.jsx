@@ -1,7 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import ToggleEvent from './ToggleEvent'
 import { v4 as uuidv4 } from 'uuid'
-
 import '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker.css'
 import 'react-calendar/dist/Calendar.css'
 import 'react-clock/dist/Clock.css'
@@ -31,6 +30,7 @@ import Visita from './eventType/Visita'
 import Stampa from './eventType/Stampa'
 import Sopraluogo from './eventType/Sopraluogo'
 import Meeting from './eventType/Meeting'
+import SubAction from './eventType/serviceEventType/SubAction'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -232,6 +232,8 @@ function NewEvent({ handleClose, upDate }) {
           rows={4}
           sx={{ mt: 4, mb: 2 }}
         />
+
+        <SubAction type="event" />
         <FormControl fullWidth sx={{ my: 4 }}>
           <InputLabel id="owner">person in charge</InputLabel>
           <Select

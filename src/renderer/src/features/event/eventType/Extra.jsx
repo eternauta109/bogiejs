@@ -18,6 +18,7 @@ export default function Extra({ upDate }) {
       setEvent({
         ...event,
         title: '',
+        subAction: [],
         referent: '',
         screen: 0,
         priceCard: '',

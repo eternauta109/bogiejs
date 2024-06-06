@@ -83,7 +83,7 @@ const NewTaskForm = ({ manager, onHandleClose }) => {
               onChange={(t) => setTask({ ...task, description: t.target.value })}
               sx={{ mb: 2 }}
             />
-            <SubAction subAction={task.subAction} />
+            <SubAction type="task" />
             <TextField
               fullWidth
               label={`note: ${task.note ? task.note.length : 0}/${maxNoteLength}`}

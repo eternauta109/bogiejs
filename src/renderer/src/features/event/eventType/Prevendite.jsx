@@ -22,6 +22,7 @@ export default function Prevendite({ upDate }) {
         title: '',
         referent: '',
         screen: 0,
+        subAction: [],
         priceCard: '',
         start: new Date(),
         end: new Date(),
