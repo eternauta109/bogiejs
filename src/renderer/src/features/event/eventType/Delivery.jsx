@@ -18,7 +18,7 @@ export default function Delivery({ upDate }) {
         ...event,
         title: '',
         description: '',
-
+        subAction: [],
         start: new Date(),
         end: new Date()
       })

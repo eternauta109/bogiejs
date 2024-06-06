@@ -23,6 +23,7 @@ export default function MattineEvent({ upDate }) {
         phone: 0,
         start: new Date(),
         end: new Date(),
+        subAction: [],
         number: 0,
         amount: 0
       })

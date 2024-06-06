@@ -15,7 +15,7 @@ export default function Visita({ upDate }) {
         ...event,
         title: '',
         description: '',
-
+        subAction: [],
         start: new Date(),
         end: new Date()
       })

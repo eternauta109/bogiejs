@@ -37,7 +37,7 @@ export default function ClassicEvent() {
       eventColorType: !event.evetType && '#F39C12',
       start: new Date(),
       end: new Date(),
-
+      subAction: [],
       description: '',
       division: '',
       link: '',

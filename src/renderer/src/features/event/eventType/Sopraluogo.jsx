@@ -15,7 +15,7 @@ export default function Sopraluogo({ upDate }) {
         ...event,
         title: '',
         description: '',
-
+        subAction: [],
         start: new Date(),
         end: new Date()
       })
