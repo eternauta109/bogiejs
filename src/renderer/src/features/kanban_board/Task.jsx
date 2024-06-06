@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useDrag } from 'react-dnd'
-import { useState } from 'react'
-import { Typography, Divider, IconButton, Slider, Grid, Checkbox, Stack } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Typography, Divider, IconButton, Slider, Grid } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import DoneOutlineTwoToneIcon from '@mui/icons-material/DoneOutlineTwoTone'
 import useEventsStore from '../../store/EventDataContext'
 import './task.css'
+import CheckBox from './SubActionCheck'
 
 function valuetext(value) {
   return `${value}%`
@@ -26,8 +27,7 @@ const marks = [
   }
 ]
 
-export default function Task({ id, task, status }) {
-  console.log(task)
+export default function Task({ id, taskFromParent, status }) {
   const [{ isDragging }, drag] = useDrag({
     type: 'TASK',
     item: { id },
@@ -36,10 +36,10 @@ export default function Task({ id, task, status }) {
     })
   })
 
-  const [perc, setPerc] = useState(task.percent)
+  const [perc, setPerc] = useState(taskFromParent.percent)
   const [visible, setVisible] = useState(false)
 
-  const { upDateTask, user, deleteTask } = useEventsStore()
+  const { upDateTask, user, deleteTask, task } = useEventsStore()
 
   const onPercentChange = async (event, newValue) => {
     setPerc(newValue)
@@ -56,7 +56,7 @@ export default function Task({ id, task, status }) {
 
   const onConfirmPercentChange = async () => {
     console.log(perc)
-    const newTask = { ...task, percent: perc }
+    const newTask = { ...taskFromParent, percent: perc }
     setVisible(false)
     try {
       await window.api.addNewTask({ task: newTask, upDate: true })
@@ -65,11 +65,28 @@ export default function Task({ id, task, status }) {
       console.log('task: onpercentchange:', error)
     }
   }
+  function calculatePercent() {
+    console.log(taskFromParent)
+    console.log(taskFromParent.subAction)
+    const total = taskFromParent.subAction.length
+    const completed = taskFromParent.subAction.filter((subAction) => subAction.checked).length
+    const result = (completed / total) * 100
+    console.log(result)
+    return result
+  }
+
+  useEffect(() => {
+    // Questo effetto viene eseguito quando `task` cambia
+    console.log('Il task è cambiato', task)
+  }, [task])
+
+  useEffect(() => {
+    taskFromParent.subAction.length > 0 && setPerc(calculatePercent())
+  }, [taskFromParent.subAction.length])
 
   return (
     <div ref={drag} className={`draggable-item ${status} ${isDragging ? 'dragging' : ''}`}>
-      <Typography variant="h8">Task di: {task.manager}</Typography>
-
+      <Typography variant="h8">Task di: {taskFromParent.manager}</Typography>
       <IconButton
         size="small"
         onClick={() => onHandleCardDelete(id, status)}
@@ -77,35 +94,22 @@ export default function Task({ id, task, status }) {
       >
         <CloseIcon />
       </IconButton>
-
-      <Typography variant="h5">{task.title}</Typography>
-
+      <Divider sx={{ margin: '16px 0' }} />
+      <Typography variant="h5">{taskFromParent.title}</Typography>
       <div className="description">
         <Typography variant="body1" sx={{ mb: 4 }}>
-          {task.description}
+          {taskFromParent.description}
         </Typography>
       </div>
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="body2" color="white">
         sotto-azioni
       </Typography>
-      {task.subAction.map((e, key) => (
-        <Stack
-          direction="row"
-          spacing={2}
-          key={key}
-          justifyContent="space-between"
-          alignItems="center"
-          useFlexGap
-        >
-          <Typography variant="body2">{e.todo}</Typography>
-          <Checkbox />
-        </Stack>
-      ))}
-
+      {taskFromParent.subAction && <CheckBox task={taskFromParent} />}
       <Divider sx={{ margin: '16px 0' }} />
-
-      <Typography variant="subtitle1">Percentuale di avanzamento</Typography>
+      <Typography variant="body2" color="green">
+        Percentuale di avanzamento
+      </Typography>
 
       <Grid container spacing={1}>
         <Grid item xs={10}>
@@ -114,7 +118,7 @@ export default function Task({ id, task, status }) {
             onChange={onPercentChange}
             getAriaValueText={valuetext}
             valueLabelDisplay="auto"
-            value={perc}
+            value={taskFromParent.subAction.length > 0 ? calculatePercent() : perc}
             step={10}
             color="secondary"
             marks={marks}
@@ -123,7 +127,7 @@ export default function Task({ id, task, status }) {
           />
         </Grid>
         <Grid item xs={2}>
-          {visible && (
+          {visible && taskFromParent.subAction.length === 0 && (
             <IconButton aria-label="confirm" onClick={onConfirmPercentChange}>
               <DoneOutlineTwoToneIcon style={{ color: 'green' }} />
             </IconButton>
@@ -132,8 +136,7 @@ export default function Task({ id, task, status }) {
       </Grid>
 
       <Divider sx={{ margin: '16px 0' }} />
-
-      <Typography variant="caption">Assegnato da: {task.createdBy}</Typography>
+      <Typography variant="caption">Assegnato da: {taskFromParent.createdBy}</Typography>
     </div>
   )
 }

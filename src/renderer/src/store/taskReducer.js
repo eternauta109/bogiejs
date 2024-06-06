@@ -46,7 +46,7 @@ const taskReducer = (state, action) => {
       }
 
     case 'UPDATE_TASK':
-      return { ...state, tasks: payload.tasks }
+      return { ...state, tasks: [...payload.tasks] }
 
     case 'DELETE_TASK': {
       // Filtra gli eventi rimuovendo quello con l'ID corrispondente

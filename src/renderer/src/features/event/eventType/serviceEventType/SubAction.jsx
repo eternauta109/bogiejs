@@ -12,7 +12,7 @@ export default function SubAction() {
   const addSubAction = () => {
     const newSubAction = {
       todo: '',
-      check: false
+      checked: false
     }
     setTask({ ...task, subAction: [...task.subAction, newSubAction] })
   }
@@ -69,6 +69,7 @@ export default function SubAction() {
             id="input-with-icon-textfield"
             label={`azione ${key + 1}`}
             fullWidth
+            inputProps={{ maxLength: 40 }}
             value={el.todo}
             onChange={(e) => handleChange(key, e)}
             name="subAction"
