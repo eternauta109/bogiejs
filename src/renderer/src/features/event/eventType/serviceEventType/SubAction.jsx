@@ -2,32 +2,36 @@
 import useEventsStore from '../../../../store/EventDataContext'
 import { Box, Typography, IconButton, TextField, InputAdornment } from '@mui/material'
 import LibraryAddTwoToneIcon from '@mui/icons-material/LibraryAddTwoTone'
-
+import RocketIcon from '@mui/icons-material/Rocket'
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 import { useEffect } from 'react'
+import SubActionCheck from './SubActionCheck'
 
-export default function SubAction({ type }) {
-  const { task, setTask, event, setEvent } = useEventsStore()
-  console.log(type)
+export default function SubAction({ type, upDate, fakeTask }) {
+  const { task, setTask, upDateTask, upDateEvent, event, setEvent } = useEventsStore()
+  console.log(upDate)
   const getStateAndSetter = (type) => {
     switch (type) {
       case 'task':
-        return { state: task, setState: setTask }
+        return { state: upDate ? fakeTask : task, setState: setTask, upDateState: upDateTask }
       case 'event':
-        return { state: event, setState: setEvent }
+        return { state: event, setState: setEvent, upDateState: upDateEvent }
       default:
         throw new Error(`Unknown type: ${type}`)
     }
   }
 
-  const { state, setState } = getStateAndSetter(type)
+  const { state, setState, upDateState } = getStateAndSetter(type)
 
   const addSubAction = () => {
     const newSubAction = {
       todo: '',
       checked: false
     }
+
     setState({ ...state, subAction: [...state.subAction, newSubAction] })
+    upDateState(state, state.id)
   }
 
   const deleteSubAction = (index) => {
@@ -68,6 +72,7 @@ export default function SubAction({ type }) {
           <LibraryAddTwoToneIcon />
         </IconButton>
       </Box>
+
       {state.subAction &&
         state.subAction.map((el, key) => (
           <Box
@@ -89,20 +94,27 @@ export default function SubAction({ type }) {
               name="subAction"
               sx={{}}
               InputProps={{
-                startAdornment: <InputAdornment position="start"></InputAdornment>
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {el.checked ? <RocketLaunchIcon /> : <RocketIcon />}
+                  </InputAdornment>
+                )
               }}
               variant="standard"
             />
-
-            <IconButton
-              aria-label="add"
-              onClick={() => deleteSubAction(key)}
-              sx={{
-                color: (theme) => theme.palette.grey[500]
-              }}
-            >
-              <HighlightOffTwoToneIcon />
-            </IconButton>
+            {!upDate ? (
+              <IconButton
+                aria-label="add"
+                onClick={() => deleteSubAction(key)}
+                sx={{
+                  color: (theme) => theme.palette.grey[500]
+                }}
+              >
+                <HighlightOffTwoToneIcon />
+              </IconButton>
+            ) : (
+              <SubActionCheck state={state} setState={setState} type={type} obj={el} index={key} />
+            )}
           </Box>
         ))}
     </Box>
