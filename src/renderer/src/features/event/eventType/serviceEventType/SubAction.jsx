@@ -63,7 +63,7 @@ export default function SubAction({ type, upDate, fakeTask }) {
           aggiungi una sub-action:
         </Typography>
         <IconButton
-          aria-label="close"
+          aria-label="addSubAction"
           onClick={addSubAction}
           sx={{
             color: (theme) => theme.palette.grey[500]

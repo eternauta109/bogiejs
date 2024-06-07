@@ -16,7 +16,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-const TaskModal = ({ manager, open, handleClose }) => {
+const TaskModal = ({ manager, open, handleClose, upDate }) => {
   return (
     <>
       <Dialog
@@ -52,7 +52,7 @@ const TaskModal = ({ manager, open, handleClose }) => {
           </IconButton>
         </DialogTitle>
         <Box sx={style}>
-          <NewTaskForm manager={manager} onHandleClose={handleClose} />
+          <NewTaskForm manager={manager} onHandleClose={handleClose} upDate={upDate} />
         </Box>
       </Dialog>
     </>

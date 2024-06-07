@@ -12,11 +12,19 @@ const KanbanBoard = ({ managerName }) => {
   const { tasks, setTasks, initTask } = useEventsStore()
   const [columns, setColumns] = useState({})
   const [openNewTask, setOpenNewTask] = useState(false)
+  const [upDate, setUpDate] = useState()
 
   const handleOpenNewTask = () => {
     initTask()
+    setUpDate(false)
     setOpenNewTask(true)
   }
+
+  const handleOpenOldTask = () => {
+    setUpDate(true)
+    setOpenNewTask(true)
+  }
+
   const handleCloseNewTask = () => {
     setOpenNewTask(false)
   }
@@ -119,16 +127,22 @@ const KanbanBoard = ({ managerName }) => {
               name={column.name}
               items={column.items}
               moveTask={moveTask}
+              handleOpenOldTask={handleOpenOldTask}
             />
           ))}
         </div>
       </DnDContext>
-      <TaskModal manager={managerName} open={openNewTask} handleClose={handleCloseNewTask} />
+      <TaskModal
+        manager={managerName}
+        open={openNewTask}
+        handleClose={handleCloseNewTask}
+        upDate={upDate}
+      />
     </Box>
   )
 }
 
-const Column = ({ columnId, name, items, moveTask }) => {
+const Column = ({ columnId, name, items, moveTask, handleOpenOldTask }) => {
   const [, drop] = useDrop({
     accept: 'TASK',
     drop: (item) => moveTask(item.id, columnId)
@@ -141,7 +155,13 @@ const Column = ({ columnId, name, items, moveTask }) => {
       </h2>
       <div className="droppable-col">
         {items.map((item, index) => (
-          <Task key={index} id={item.id} taskFromParent={item} status={item.status} />
+          <Task
+            key={index}
+            id={item.id}
+            taskFromParent={item}
+            status={item.status}
+            handleOpenOldTask={handleOpenOldTask}
+          />
         ))}
       </div>
     </div>
