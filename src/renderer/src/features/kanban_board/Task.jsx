@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useDrag } from 'react-dnd'
 import { useEffect, useState } from 'react'
-import { Typography, Divider, IconButton, Slider, Grid } from '@mui/material'
+import { Typography, Divider, IconButton, Slider, Grid, Stack, Box } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import DoneOutlineTwoToneIcon from '@mui/icons-material/DoneOutlineTwoTone'
 import useEventsStore from '../../store/EventDataContext'
+import LaunchIcon from '@mui/icons-material/Launch'
 import './task.css'
 
 import SubAction from './../event/eventType/serviceEventType/SubAction'
@@ -28,7 +29,7 @@ const marks = [
   }
 ]
 
-export default function Task({ id, taskFromParent, status }) {
+export default function Task({ id, taskFromParent, status, handleOpenOldTask }) {
   const [{ isDragging }, drag] = useDrag({
     type: 'TASK',
     item: { id },
@@ -40,7 +41,7 @@ export default function Task({ id, taskFromParent, status }) {
   const [perc, setPerc] = useState(taskFromParent.percent)
   const [visible, setVisible] = useState(false)
 
-  const { upDateTask, user, deleteTask, task } = useEventsStore()
+  const { upDateTask, user, deleteTask, task, setTask } = useEventsStore()
 
   const onPercentChange = async (event, newValue) => {
     setPerc(newValue)
@@ -85,6 +86,12 @@ export default function Task({ id, taskFromParent, status }) {
     taskFromParent.subAction.length > 0 && setPerc(calculatePercent())
   }, [taskFromParent.subAction.length])
 
+  const openOldTask = () => {
+    console.log('click')
+    setTask(taskFromParent)
+    handleOpenOldTask()
+  }
+
   return (
     <div ref={drag} className={`draggable-item ${status} ${isDragging ? 'dragging' : ''}`}>
       <Typography variant="h8">Task di: {taskFromParent.manager}</Typography>
@@ -97,15 +104,18 @@ export default function Task({ id, taskFromParent, status }) {
       </IconButton>
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="h5">{taskFromParent.title}</Typography>
-      <div className="description">
+      <Box sx={{ maxHeight: 100, maxWidth: '100%', overflowX: 'auto' }}>
         <Typography variant="body1" sx={{ mb: 4 }}>
           {taskFromParent.description}
         </Typography>
-      </div>
+      </Box>
+
       <Divider sx={{ margin: '16px 0' }} />
 
       {taskFromParent.subAction && (
-        <SubAction type="task" fakeTask={taskFromParent} upDate={true} />
+        <Box sx={{ maxHeight: 200, maxWidth: '100%', overflowX: 'auto' }}>
+          <SubAction type="task" fakeTask={taskFromParent} upDate={true} />
+        </Box>
       )}
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="body2" color="green">
@@ -137,7 +147,24 @@ export default function Task({ id, taskFromParent, status }) {
       </Grid>
 
       <Divider sx={{ margin: '16px 0' }} />
-      <Typography variant="caption">Assegnato da: {taskFromParent.createdBy}</Typography>
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="center"
+        useFlexGap
+      >
+        <Typography variant="caption">Assegnato da: {taskFromParent.createdBy}</Typography>
+        <IconButton
+          aria-label="close"
+          sx={{
+            color: (theme) => theme.palette.grey[500]
+          }}
+          onClick={() => openOldTask()}
+        >
+          <LaunchIcon />
+        </IconButton>
+      </Stack>
     </div>
   )
 }
