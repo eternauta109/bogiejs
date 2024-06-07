@@ -233,7 +233,8 @@ function NewEvent({ handleClose, upDate }) {
           sx={{ mt: 4, mb: 2 }}
         />
 
-        <SubAction type="event" />
+        <SubAction type="event" upDate={upDate} />
+
         <FormControl fullWidth sx={{ my: 4 }}>
           <InputLabel id="owner">person in charge</InputLabel>
           <Select
