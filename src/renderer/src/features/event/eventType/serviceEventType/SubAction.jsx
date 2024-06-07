@@ -10,7 +10,7 @@ import SubActionCheck from './SubActionCheck'
 
 export default function SubAction({ type, upDate, fakeTask }) {
   const { task, setTask, upDateTask, upDateEvent, event, setEvent } = useEventsStore()
-  console.log(upDate)
+  console.log('type, upDate, fakeTask', type, upDate, fakeTask)
   const getStateAndSetter = (type) => {
     switch (type) {
       case 'task':

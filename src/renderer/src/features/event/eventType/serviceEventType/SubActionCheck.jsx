@@ -18,9 +18,7 @@ export default function SubActionCheck({ state, setState, type, obj, index }) {
         case 'task':
           await window.api.addNewTask({ task: newObj, upDate: true })
           break
-        case 'event':
-          await window.api.addNewEvent({ event: newObj, upDate: true })
-          break
+
         default:
           console.log('nessun oggetto tipo rilevato')
           break

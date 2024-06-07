@@ -6,7 +6,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import DoneOutlineTwoToneIcon from '@mui/icons-material/DoneOutlineTwoTone'
 import useEventsStore from '../../store/EventDataContext'
 import './task.css'
-import CheckBox from './SubActionCheck'
+
+import SubAction from './../event/eventType/serviceEventType/SubAction'
 
 function valuetext(value) {
   return `${value}%`
@@ -102,10 +103,10 @@ export default function Task({ id, taskFromParent, status }) {
         </Typography>
       </div>
       <Divider sx={{ margin: '16px 0' }} />
-      <Typography variant="body2" color="white">
-        sotto-azioni
-      </Typography>
-      {taskFromParent.subAction && <CheckBox task={taskFromParent} />}
+
+      {taskFromParent.subAction && (
+        <SubAction type="task" fakeTask={taskFromParent} upDate={true} />
+      )}
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="body2" color="green">
         Percentuale di avanzamento
