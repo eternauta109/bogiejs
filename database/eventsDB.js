@@ -96,6 +96,7 @@ function connect() {
       if (err) {
         reject(err)
       } else {
+        console.log("db event connesso")
         resolve()
       }
     })
