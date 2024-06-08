@@ -68,18 +68,16 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
     }
   }
   function calculatePercent() {
-    console.log(taskFromParent)
-    console.log(taskFromParent.subAction)
     const total = taskFromParent.subAction.length
     const completed = taskFromParent.subAction.filter((subAction) => subAction.checked).length
     const result = (completed / total) * 100
-    console.log(result)
+
     return result
   }
 
   useEffect(() => {
     // Questo effetto viene eseguito quando `task` cambia
-    console.log('Il task è cambiato', task)
+    /* console.log('Il task è cambiato', task) */
   }, [task])
 
   useEffect(() => {
