@@ -42,9 +42,9 @@ function convertStringToDate(dateString) {
 //funzione che restituisce tutto il db
 async function getAllEvents() {
   const allEvents = []
+  await connect()
   const totEvents = await query('totalEvents')
   try {
-    await connect()
     for await (const [key, value] of db.iterator()) {
       if (key !== 'totalEvents') {
         const parsedEvent = JSON.parse(value)
@@ -96,7 +96,7 @@ function connect() {
       if (err) {
         reject(err)
       } else {
-        console.log("db event connesso")
+        console.log('db event connesso')
         resolve()
       }
     })
@@ -164,8 +164,7 @@ async function deleteThisEvent(eventId) {
 }
 
 //non so
-function query(key) {
-  connect()
+async function query(key) {
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
       if (err) {
