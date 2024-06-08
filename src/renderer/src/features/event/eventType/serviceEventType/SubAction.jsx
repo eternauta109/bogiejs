@@ -29,26 +29,38 @@ export default function SubAction({ type, upDate, fakeTask }) {
       todo: '',
       checked: false
     }
-
-    setState({ ...state, subAction: [...state.subAction, newSubAction] })
-    upDateState(state, state.id)
+    if (state.subAction) {
+      setState({
+        ...state,
+        subAction: [...state.subAction, newSubAction]
+      })
+      upDateState(state, state.id)
+    } else {
+      setState({
+        ...state,
+        subAction: [newSubAction]
+      })
+      upDateState(state, state.id)
+    }
   }
 
   const deleteSubAction = (index) => {
     const updatedSubActions = state.subAction.filter((_, i) => i !== index)
     setState({ ...state, subAction: updatedSubActions })
+    upDateState(state, state.id)
   }
 
-  const handleChange = (index, event) => {
+  const handleActionTaextChange = (index, event) => {
     const updatedSubActions = state.subAction.map((subAction, i) =>
       i === index ? { ...subAction, todo: event.target.value } : subAction
     )
     setState({ ...state, subAction: updatedSubActions })
+    upDateState(state, state.id)
   }
 
   useEffect(() => {
     console.log('type, upDate, fakeTask', type, upDate, fakeTask)
-  }, [])
+  }, [upDate])
 
   useEffect(() => {
     console.log(`subAction: ${type}: `, state)
@@ -68,7 +80,7 @@ export default function SubAction({ type, upDate, fakeTask }) {
         </Typography>
         <IconButton
           aria-label="addSubAction"
-          onClick={() => addSubAction()}
+          onClick={addSubAction}
           sx={{
             color: (theme) => theme.palette.grey[500]
           }}
@@ -94,7 +106,7 @@ export default function SubAction({ type, upDate, fakeTask }) {
               fullWidth
               inputProps={{ maxLength: 40 }}
               value={el.todo}
-              onChange={(e) => handleChange(key, e)}
+              onChange={(e) => handleActionTaextChange(key, e)}
               name="subAction"
               sx={{}}
               InputProps={{

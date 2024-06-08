@@ -13,6 +13,7 @@ const NewTaskForm = ({ manager, onHandleClose, upDate }) => {
   const maxNoteLength = 160
 
   const handleSubmit = async (event) => {
+    console.log('on submit new task', upDate)
     event.preventDefault()
     if (upDate) {
       upDateTask(task, task.id)
@@ -49,7 +50,7 @@ const NewTaskForm = ({ manager, onHandleClose, upDate }) => {
   }, [task])
 
   useEffect(() => {
-    console.log(upDate)
+    console.log('newTask', upDate)
   }, [])
 
   return (
