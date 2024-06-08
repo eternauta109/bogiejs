@@ -10,7 +10,7 @@ import SubActionCheck from './SubActionCheck'
 
 export default function SubAction({ type, upDate, fakeTask }) {
   const { task, setTask, upDateTask, upDateEvent, event, setEvent } = useEventsStore()
-  console.log('type, upDate, fakeTask', type, upDate, fakeTask)
+
   const getStateAndSetter = (type) => {
     switch (type) {
       case 'task':
@@ -47,6 +47,10 @@ export default function SubAction({ type, upDate, fakeTask }) {
   }
 
   useEffect(() => {
+    console.log('type, upDate, fakeTask', type, upDate, fakeTask)
+  }, [])
+
+  useEffect(() => {
     console.log(`subAction: ${type}: `, state)
   }, [state, type])
 
@@ -64,7 +68,7 @@ export default function SubAction({ type, upDate, fakeTask }) {
         </Typography>
         <IconButton
           aria-label="addSubAction"
-          onClick={addSubAction}
+          onClick={() => addSubAction()}
           sx={{
             color: (theme) => theme.palette.grey[500]
           }}
