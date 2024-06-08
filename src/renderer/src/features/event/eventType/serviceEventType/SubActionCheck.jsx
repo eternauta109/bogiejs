@@ -16,6 +16,7 @@ export default function SubActionCheck({ state, setState, type, obj, index }) {
     try {
       switch (type) {
         case 'task':
+          console.log('oggetto tipo rilevato:', type)
           await window.api.addNewTask({ task: newObj, upDate: true })
           break
 
