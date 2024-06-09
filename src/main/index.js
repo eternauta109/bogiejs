@@ -248,9 +248,9 @@ ipcMain.handle('getSingleTask', async (event, taskId) => {
 ipcMain.handle('insertTopic', async (event, args) => {
   console.log('MAIN: insertTopic: topic da inserire in db', args)
   await insertTopic(args)
-  const stateTopics = await getAllTopics()
+
   await addNotifyManagers({ typeNotify: 'topic', obj: args.topic })
-  return stateTopics
+
   /* await readAllTopics(); */
 })
 

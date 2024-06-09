@@ -38,7 +38,7 @@ const ToggleEvent = () => {
         delivery: '#4F8DF5'
       }
 
-      setEvent({ eventType: newAlignment, eventColorType: colorMap[newAlignment] })
+      setEvent({ eventType: newAlignment, colorEventType: colorMap[newAlignment] })
     }
   }
 

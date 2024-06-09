@@ -13,7 +13,9 @@ import {
   Button,
   OutlinedInput,
   Select,
-  TextField
+  TextField,
+  InputAdornment,
+  IconButton
 } from '@mui/material'
 
 import ClassicEvent from './eventType/ClassicEvent'
@@ -30,6 +32,7 @@ import Visita from './eventType/Visita'
 import Stampa from './eventType/Stampa'
 import Sopraluogo from './eventType/Sopraluogo'
 import Meeting from './eventType/Meeting'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import SubAction from './eventType/serviceEventType/SubAction'
 
 const ITEM_HEIGHT = 48
@@ -182,6 +185,16 @@ function NewEvent({ handleClose, upDate }) {
     }
   }, [event.eventType])
 
+  const openLink = (url) => {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      // Se il link è un URL Internet, aprilo in un browser esterno
+      window.api.shell.openExternal(url)
+    } else {
+      // Se il link è un percorso di file locale, apri il file
+      window.api.shell.openPath(url)
+    }
+  }
+
   useEffect(() => {
     console.log('UPDATE', upDate)
     getOptions()
@@ -234,6 +247,32 @@ function NewEvent({ handleClose, upDate }) {
         />
 
         <SubAction type="event" upDate={upDate} />
+        <TextField
+          fullWidth
+          label="link egnyte"
+          variant="outlined"
+          size="small"
+          name="link"
+          value={event?.link ? event.link : ''}
+          onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
+          rows={1}
+          sx={{ mt: 2, mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                {event?.link && (
+                  <IconButton
+                    onClick={() => openLink(event.link)}
+                    edge="end"
+                    aria-label="open link"
+                  >
+                    <OpenInNewIcon />
+                  </IconButton>
+                )}
+              </InputAdornment>
+            )
+          }}
+        />
 
         <FormControl fullWidth sx={{ my: 4 }}>
           <InputLabel id="owner">person in charge</InputLabel>
