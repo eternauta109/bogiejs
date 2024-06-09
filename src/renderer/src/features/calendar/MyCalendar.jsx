@@ -63,10 +63,14 @@ export default function Basic({ handleOpen }) {
   }
 
   useEffect(() => {
+    console.log('useeffect dopo aggiunta event')
+  }, [events])
+
+  useEffect(() => {
     getEventsFromDb()
-    console.log('calendar effect triggered')
+    console.log('calendar effect triggered to take evetns from db')
     return () => {}
-  }, [events.length])
+  }, [])
 
   return (
     <div className="calendarContainer">

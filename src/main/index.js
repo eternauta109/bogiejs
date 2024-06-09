@@ -187,8 +187,9 @@ ipcMain.handle('deleteThisNotify', async (event, args) => {
 //icp electron che inserisce un nuovo evento
 ipcMain.handle('addNewEvent', async (event, args) => {
   console.log('MAIN: evento da inserire in db', args)
-  await addNotifyManagers({ typeNotify: 'event', obj: args.event })
+
   await insertEvent(args)
+  await addNotifyManagers({ typeNotify: 'event', obj: args.event })
   /* await readAllEvents(); */
 })
 
