@@ -50,11 +50,11 @@ const MenuProps = {
 function NewEvent({ handleClose, upDate }) {
   const {
     event,
+    events,
     setFieldEvent,
     addTask,
-    addEvent,
-    setOptions,
     totalEvents,
+    setOptions,
     totalTasks,
     upDateEvent,
     setEvents,
@@ -95,6 +95,7 @@ function NewEvent({ handleClose, upDate }) {
           manager: event.manager,
           description: event.description,
           label: user.user.userName,
+          subAction: event.subAction ? event.subAction : [],
           status: 'newtask'
         }
         addTask(newTask)
@@ -109,37 +110,33 @@ function NewEvent({ handleClose, upDate }) {
         id: 'event-' + uuidv4()
       }
 
-      addEvent(prepareEvent)
-
+      setEvents({ events: [...events, prepareEvent], totalEvents })
       await window.api.addNewEvent({ event: prepareEvent, totalEvents })
 
       if (event.eventType === 'prevendite') {
-        console.log('lancia!!!')
-        const dobleEvent = {
-          ...event,
-          cinema: user.user.cinema,
-          role: user.user.role,
-          area: user.user.area,
-          createdBy: user.user.userName,
-          start: event.startOpen,
-          surrogato: true,
-          end: event.endOpen,
-          id: 'event-' + uuidv4()
-        }
-        addEvent(dobleEvent)
-        await window.api.addNewEvent({ event: dobleEvent, totalEvents })
-        await getEventsFromDb()
+        await insertDuble()
       }
 
       handleClose()
     }
   }
 
-  const getEventsFromDb = async () => {
-    console.log('getEventsFromDb triggerato')
-    const result = await window.api.getAllEvents()
-    console.log('result get events from db', result)
-    setEvents(result)
+  const insertDuble = async () => {
+    console.log('lancia!!!')
+    const dobleEvent = {
+      ...event,
+      cinema: user.user.cinema,
+      role: user.user.role,
+      area: user.user.area,
+      createdBy: user.user.userName,
+      start: event.startOpen,
+      surrogato: true,
+      end: event.endOpen,
+      id: 'event-' + uuidv4()
+    }
+
+    setEvents({ events: [...events, dobleEvent], totalEvents })
+    await window.api.addNewEvent({ event: dobleEvent, totalEvents })
   }
 
   //questa funzione andra a cancellare l'event. qui upDate deve essere sicuramente true,

@@ -12,8 +12,7 @@ const SchedulerComponent = ({ handleOpen }) => {
   const [transformedEvents, setTransformedEvents] = useState([])
   const { events, setEvent } = useEventsStore()
 
-  const hexToRgba = (hex, alpha, event) => {
-    console.log(hex, event)
+  const hexToRgba = (hex, alpha) => {
     let r = 0,
       g = 0,
       b = 0
@@ -53,7 +52,7 @@ const SchedulerComponent = ({ handleOpen }) => {
         }
       }
 
-      const bgColor = hexToRgba(colorEventType, 0.5, event)
+      const bgColor = hexToRgba(colorEventType, 0.5)
 
       groupedData[eventType].data.push({
         id,
