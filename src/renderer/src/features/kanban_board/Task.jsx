@@ -45,6 +45,7 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
 
   const onPercentChange = async (event, newValue) => {
     setPerc(newValue)
+
     setVisible(true)
   }
 
@@ -77,12 +78,12 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
 
   useEffect(() => {
     // Questo effetto viene eseguito quando `task` cambia
-    /* console.log('Il task è cambiato', task) */
-  }, [task])
+    console.log('Il task è cambiato', task, visible)
+  }, [task, perc])
 
   useEffect(() => {
-    taskFromParent.subAction.length > 0 && setPerc(calculatePercent())
-  }, [taskFromParent.subAction.length])
+    taskFromParent.subAction?.length > 0 && setPerc(calculatePercent())
+  }, [taskFromParent.subAction?.length])
 
   const openOldTask = () => {
     console.log('click')
@@ -108,12 +109,13 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
         </Typography>
       </Box>
 
-      <Divider sx={{ margin: '16px 0' }} />
-
       {taskFromParent.subAction && (
-        <Box sx={{ maxHeight: 200, maxWidth: '100%', overflowX: 'auto' }}>
-          <SubAction type="task" fakeTask={taskFromParent} upDate={true} />
-        </Box>
+        <>
+          <Divider sx={{ margin: '16px 0' }} />
+          <Box sx={{ maxHeight: 200, maxWidth: '100%', overflowX: 'auto' }}>
+            <SubAction type="task" fakeTask={taskFromParent} upDate={true} />
+          </Box>
+        </>
       )}
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="body2" color="green">
@@ -127,7 +129,7 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
             onChange={onPercentChange}
             getAriaValueText={valuetext}
             valueLabelDisplay="auto"
-            value={taskFromParent.subAction.length > 0 ? calculatePercent() : perc}
+            value={taskFromParent.subAction?.length > 0 ? calculatePercent() : perc}
             step={10}
             color="secondary"
             marks={marks}
@@ -136,7 +138,7 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
           />
         </Grid>
         <Grid item xs={2}>
-          {visible && taskFromParent.subAction.length === 0 && (
+          {visible && (!taskFromParent.subAction || taskFromParent.subAction.length === 0) && (
             <IconButton aria-label="confirm" onClick={onConfirmPercentChange}>
               <DoneOutlineTwoToneIcon style={{ color: 'green' }} />
             </IconButton>

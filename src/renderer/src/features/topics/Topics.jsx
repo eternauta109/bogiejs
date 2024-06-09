@@ -29,7 +29,7 @@ const priorityTypes = [
 
 function EditToolbar(props) {
   const { setRowModesModel } = props
-  const { totalTopics, emptyTopic, user, setTopics } = useEventsStore()
+  const { totalTopics, emptyTopic, user, addTopic } = useEventsStore()
 
   const handleClick = async (e) => {
     console.log('inserisco nuovo topic vuoto', totalTopics)
@@ -44,9 +44,9 @@ function EditToolbar(props) {
       area: user.user.area,
       cinema: user.user.cinema
     }
-    const newTopicsAfterAddTopic = await window.api.insertTopic({ topic: newTopic, totalTopics })
-    console.log('added topic in DB: ', newTopicsAfterAddTopic)
-    setTopics(newTopicsAfterAddTopic)
+    await window.api.insertTopic({ topic: newTopic, totalTopics })
+
+    addTopic(newTopic)
     /* const getTopicsFromDB = await getTopics();
       console.log("getTopicsFromDb result:", getTopicsFromDB);
       setTopics(getTopicsFromDB); */

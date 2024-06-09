@@ -34,7 +34,7 @@ export default function ClassicEvent() {
   useEffect(() => {
     setEvent({
       eventType: !event.evetType && 'evento',
-      eventColorType: !event.evetType && '#F39C12',
+      colorEventType: !event.evetType && '#F39C12',
       start: new Date(),
       end: new Date(),
       subAction: [],
@@ -104,17 +104,6 @@ export default function ClassicEvent() {
             </Select>
           </FormControl>
         )}
-        <TextField
-          fullWidth
-          label="link egnyte"
-          variant="outlined"
-          size="small"
-          name="link"
-          value={event?.link ? event.link : ''}
-          onChange={(e) => setFieldEvent({ campo: e.target.name, valore: e.target.value })}
-          rows={1}
-          sx={{ mt: 2, mb: 2 }}
-        />
       </Box>
     </>
   )
