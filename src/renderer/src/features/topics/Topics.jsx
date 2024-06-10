@@ -94,6 +94,8 @@ const Topics = () => {
   }
 
   const handleCancelClick = (id) => async () => {
+    console.log('handleCancelClick')
+    deleteTopic(id)
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true }
