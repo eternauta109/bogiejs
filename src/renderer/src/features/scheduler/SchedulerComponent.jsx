@@ -13,17 +13,18 @@ const SchedulerComponent = ({ handleOpen }) => {
   const { events, setEvent } = useEventsStore()
 
   const hexToRgba = (hex, alpha) => {
+    const k = 16
     let r = 0,
       g = 0,
       b = 0
     if (hex.length === 4) {
-      r = parseInt(hex[1] + hex[1], 16)
-      g = parseInt(hex[2] + hex[2], 16)
-      b = parseInt(hex[3] + hex[3], 16)
+      r = parseInt(hex[1] + hex[1], k)
+      g = parseInt(hex[2] + hex[2], k)
+      b = parseInt(hex[3] + hex[3], k)
     } else if (hex.length === 7) {
-      r = parseInt(hex[1] + hex[2], 16)
-      g = parseInt(hex[3] + hex[4], 16)
-      b = parseInt(hex[5] + hex[6], 16)
+      r = parseInt(hex[1] + hex[2], k)
+      g = parseInt(hex[3] + hex[4], k)
+      b = parseInt(hex[5] + hex[6], k)
     }
     return `rgba(${r},${g},${b},${alpha})`
   }
@@ -52,7 +53,7 @@ const SchedulerComponent = ({ handleOpen }) => {
         }
       }
 
-      const bgColor = hexToRgba(colorEventType, 0.5)
+      const bgColor = hexToRgba(colorEventType, 0.7)
 
       groupedData[eventType].data.push({
         id,

@@ -75,18 +75,22 @@ export default function SubAction({ type, upDate, fakeTask }) {
           justifyContent: 'space-between'
         }}
       >
-        <Typography variant="body2" color="green" sx={{ flexGrow: 1 }}>
-          aggiungi una sub-action:
-        </Typography>
-        <IconButton
-          aria-label="addSubAction"
-          onClick={addSubAction}
-          sx={{
-            color: (theme) => theme.palette.grey[500]
-          }}
-        >
-          <LibraryAddTwoToneIcon />
-        </IconButton>
+        {!fakeTask && (
+          <>
+            <Typography variant="body2" color="green" sx={{ flexGrow: 1 }}>
+              aggiungi una sub-action:
+            </Typography>
+            <IconButton
+              aria-label="addSubAction"
+              onClick={addSubAction}
+              sx={{
+                color: (theme) => theme.palette.grey[500]
+              }}
+            >
+              <LibraryAddTwoToneIcon />
+            </IconButton>
+          </>
+        )}
       </Box>
 
       {state.subAction &&
