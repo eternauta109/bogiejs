@@ -7,6 +7,7 @@ import DoneOutlineTwoToneIcon from '@mui/icons-material/DoneOutlineTwoTone'
 import useEventsStore from '../../store/EventDataContext'
 import LaunchIcon from '@mui/icons-material/Launch'
 import './task.css'
+import { styled } from '@mui/system'
 
 import SubAction from './../event/eventType/serviceEventType/SubAction'
 
@@ -28,6 +29,23 @@ const marks = [
     label: '100%'
   }
 ]
+
+const ScrollableBox = styled(Box)({
+  '&::-webkit-scrollbar': {
+    height: '8px', // Altezza della barra di scorrimento orizzontale
+    width: '8px' // Larghezza della barra di scorrimento verticale
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#888', // Colore del pollice della barra di scorrimento
+    borderRadius: '4px' // Arrotondamento del pollice
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: '#555' // Colore del pollice della barra di scorrimento quando hover
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f1f1' // Colore della traccia della barra di scorrimento
+  }
+})
 
 export default function Task({ id, taskFromParent, status, handleOpenOldTask }) {
   const [{ isDragging }, drag] = useDrag({
@@ -103,11 +121,11 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
       </IconButton>
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="h5">{taskFromParent.title}</Typography>
-      <Box sx={{ maxHeight: 100, maxWidth: '100%', overflowX: 'auto' }}>
+      <ScrollableBox sx={{ maxHeight: 100, maxWidth: '100%', overflowX: 'auto' }}>
         <Typography variant="body1" sx={{ mb: 4 }}>
           {taskFromParent.description}
         </Typography>
-      </Box>
+      </ScrollableBox>
 
       {taskFromParent.subAction && (
         <>
