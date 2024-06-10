@@ -265,7 +265,6 @@ ipcMain.handle('getAllTopics', async () => {
 ipcMain.handle('deleteThisTopic', async (event, topicId) => {
   console.log('deleteThisTopic', topicId)
   await deleteThisTopic(topicId)
-  return await getAllTopics()
 })
 
 //ICP PER OPZIONI
