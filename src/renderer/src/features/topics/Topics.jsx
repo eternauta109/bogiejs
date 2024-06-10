@@ -44,7 +44,7 @@ function EditToolbar(props) {
       area: user.user.area,
       cinema: user.user.cinema
     }
-    await window.api.insertTopic({ topic: newTopic, totalTopics })
+    /* await window.api.insertTopic({ topic: newTopic, totalTopics }) */
 
     addTopic(newTopic)
     /* const getTopicsFromDB = await getTopics();

@@ -12,7 +12,7 @@ import {
 import { DateTimeRange } from './serviceEventType/Field'
 import useEventsStore from '../../../store/EventDataContext'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
 export default function ClassicEvent() {
   const { event, setFieldEvent, options, setEvent } = useEventsStore()
@@ -48,7 +48,7 @@ export default function ClassicEvent() {
     }
   }, [])
 
-  useMemo(() => console.log('event in calssic event', event), [event])
+  /* useMemo(() => console.log('event in calssic event', event), [event]) */
   return (
     <>
       <Box>
