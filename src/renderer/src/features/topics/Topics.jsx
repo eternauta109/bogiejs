@@ -67,7 +67,7 @@ function EditToolbar(props) {
 }
 
 const Topics = () => {
-  const { topics, upDateTopic, setTopics, user } = useEventsStore()
+  const { topics, upDateTopic, setTopics, user, deleteTopic, totalTopics } = useEventsStore()
   const [optionsState, setOptionsState] = useState({})
   const [rowModesModel, setRowModesModel] = useState({})
 
@@ -89,8 +89,8 @@ const Topics = () => {
 
   const handleDeleteClick = (id) => async () => {
     console.log('cancello un topic', id)
-    const topicsAfterDelete = await window.api.deleteThisTopic({ id })
-    setTopics(topicsAfterDelete)
+    await window.api.deleteThisTopic({ id })
+    deleteTopic(id)
   }
 
   const handleCancelClick = (id) => async () => {
@@ -104,7 +104,7 @@ const Topics = () => {
     console.log('processRowUpDate', newRow)
     const updatedRow = { ...newRow, isNew: false }
     upDateTopic(updatedRow, newRow.id)
-    await window.api.insertTopic({ topic: updatedRow })
+    await window.api.insertTopic({ topic: updatedRow, totalTopics })
     return updatedRow
   }
 
@@ -334,6 +334,10 @@ const Topics = () => {
     console.log('Topics: getTopics da useeffect:', result)
     setTopics(newResult)
   }
+
+  useEffect(() => {
+    console.log('topics: useeefect: topics a l variare di lunghezza: ', topics)
+  }, [topics.length])
 
   useEffect(() => {
     getOptions()
