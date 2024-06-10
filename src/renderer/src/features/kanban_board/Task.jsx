@@ -130,9 +130,9 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
       {taskFromParent.subAction && (
         <>
           <Divider sx={{ margin: '16px 0' }} />
-          <Box sx={{ maxHeight: 200, maxWidth: '100%', overflowX: 'auto' }}>
+          <ScrollableBox sx={{ maxHeight: 200, maxWidth: '100%', overflowX: 'auto' }}>
             <SubAction type="task" fakeTask={taskFromParent} upDate={true} />
-          </Box>
+          </ScrollableBox>
         </>
       )}
       <Divider sx={{ margin: '16px 0' }} />
