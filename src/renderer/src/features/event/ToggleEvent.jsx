@@ -26,16 +26,16 @@ const ToggleEvent = () => {
         evento: '#E6E6FA',
         matinee: '#7DCEA0',
         prevendite: '#BB8FCE',
-        promo: '#AAB7B8',
+        promo: '#5F6060',
         compleanni: '#448AFF',
         extra: '#FAFAD2',
         anteprima: '#00FF00',
         maratona: '#A67FB8',
         visita: '#FF5733',
         stampa: '#669999',
-        sopraluogo: '#7859C5',
+        sopraluogo: '#003300',
         meeting: '#4F7DE5',
-        delivery: '#4F8DF5'
+        delivery: '#663300'
       }
 
       setEvent({ eventType: newAlignment, colorEventType: colorMap[newAlignment] })

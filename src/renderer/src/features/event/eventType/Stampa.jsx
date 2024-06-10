@@ -38,7 +38,6 @@ export default function Stampa({ upDate }) {
           }}
         />
         <TextField
-          required
           fullWidth
           multiline
           rows={4}

@@ -41,7 +41,6 @@ export default function Promo({ upDate }) {
         }}
       />
       <TextField
-        required
         fullWidth
         rows={4}
         multiline
