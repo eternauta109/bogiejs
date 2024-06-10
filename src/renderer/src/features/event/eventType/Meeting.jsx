@@ -38,7 +38,6 @@ export default function Meeting({ upDate }) {
           }}
         />
         <TextField
-          required
           fullWidth
           multiline
           rows={4}
