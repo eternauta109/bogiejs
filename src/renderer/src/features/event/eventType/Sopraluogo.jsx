@@ -38,7 +38,6 @@ export default function Sopraluogo({ upDate }) {
           }}
         />
         <TextField
-          required
           fullWidth
           multiline
           rows={4}

@@ -80,6 +80,24 @@ function NewEvent({ handleClose, upDate }) {
 
     if (upDate) {
       upDateEvent(event, event.id)
+      if (event.manager) {
+        const newTask = {
+          id: 'task-' + uuidv4(),
+          role: user.user.role,
+          area: user.user.area,
+          createdBy: user.user.userName,
+          title: event.title,
+          start: new Date(),
+          cinema: user.user.cinema,
+          manager: event.manager,
+          description: event.description,
+          label: user.user.userName,
+          subAction: event.subAction ? event.subAction : [],
+          status: 'newtask'
+        }
+        addTask(newTask)
+        await window.api.addNewTask({ task: newTask, totalTasks, upDate: true })
+      }
       handleClose()
       await window.api.addNewEvent({ event, totalEvents })
     } else {
