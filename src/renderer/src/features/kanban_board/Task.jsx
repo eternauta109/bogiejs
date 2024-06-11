@@ -47,7 +47,7 @@ const ScrollableBox = styled(Box)({
   }
 })
 
-export default function Task({ id, taskFromParent, status, handleOpenOldTask }) {
+export default function Task({ id, taskFromParent, status, handleOpenOldTask, expanse }) {
   const [{ isDragging }, drag] = useDrag({
     type: 'TASK',
     item: { id },
@@ -121,13 +121,15 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask }) 
       </IconButton>
       <Divider sx={{ margin: '16px 0' }} />
       <Typography variant="h5">{taskFromParent.title}</Typography>
-      <ScrollableBox sx={{ maxHeight: 100, maxWidth: '100%', overflowX: 'auto' }}>
-        <Typography variant="body1" sx={{ mb: 4 }}>
-          {taskFromParent.description}
-        </Typography>
-      </ScrollableBox>
+      {!expanse && (
+        <ScrollableBox sx={{ maxHeight: 100, maxWidth: '100%', overflowX: 'auto' }}>
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            {taskFromParent.description}
+          </Typography>
+        </ScrollableBox>
+      )}
 
-      {taskFromParent.subAction && (
+      {taskFromParent.subAction && !expanse && (
         <>
           <Divider sx={{ margin: '16px 0' }} />
           <ScrollableBox sx={{ maxHeight: 200, maxWidth: '100%', overflowX: 'auto' }}>
