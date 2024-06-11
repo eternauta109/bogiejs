@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd'
 import Task from './Task'
 import DnDContext from './DnDContext'
 import TaskModal from './TaskModal'
-import { Button, Box } from '@mui/material'
+import { Button, Box, Switch, FormControlLabel } from '@mui/material'
 import './KanbanBoard.css'
 import useEventsStore from '../../store/EventDataContext'
 
@@ -13,6 +13,7 @@ const KanbanBoard = ({ managerName }) => {
   const [columns, setColumns] = useState({})
   const [openNewTask, setOpenNewTask] = useState(false)
   const [upDate, setUpDate] = useState()
+  const [expanse, setExpanse] = useState(false)
 
   const handleOpenNewTask = () => {
     initTask()
@@ -96,7 +97,7 @@ const KanbanBoard = ({ managerName }) => {
     }
 
     setColumns(initialColumns)
-  }, [managerName, tasks])
+  }, [managerName, tasks, expanse])
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -118,6 +119,19 @@ const KanbanBoard = ({ managerName }) => {
           +
         </Button>
       )}
+      <FormControlLabel
+        value={expanse ? 'comprimi' : 'espandi'}
+        control={
+          <Switch
+            checked={expanse}
+            onChange={(e) => setExpanse(e.target.checked)}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+        }
+        label={!expanse ? 'comprimi' : 'espandi'}
+        labelPlacement="start"
+      />
+
       <DnDContext>
         <div className="kanban-board">
           {Object.entries(columns).map(([columnId, column]) => (
@@ -128,6 +142,7 @@ const KanbanBoard = ({ managerName }) => {
               items={column.items}
               moveTask={moveTask}
               handleOpenOldTask={handleOpenOldTask}
+              expanse={expanse}
             />
           ))}
         </div>
@@ -142,7 +157,7 @@ const KanbanBoard = ({ managerName }) => {
   )
 }
 
-const Column = ({ columnId, name, items, moveTask, handleOpenOldTask }) => {
+const Column = ({ columnId, name, items, moveTask, handleOpenOldTask, expanse }) => {
   const [, drop] = useDrop({
     accept: 'TASK',
     drop: (item) => moveTask(item.id, columnId)
@@ -160,6 +175,7 @@ const Column = ({ columnId, name, items, moveTask, handleOpenOldTask }) => {
             id={item.id}
             taskFromParent={item}
             status={item.status}
+            expanse={expanse}
             handleOpenOldTask={handleOpenOldTask}
           />
         ))}
