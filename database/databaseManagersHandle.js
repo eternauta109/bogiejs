@@ -125,11 +125,7 @@ async function iteratorForAddNotify(obj, newNotify) {
             (obj.createdBy !== value.userName && obj.cinema === value.cinema)
           break
         default:
-          console.log('manager inserisce notifica:', obj, value)
-          shouldAddNotification =
-            obj.createdBy !== value.userName &&
-            obj.cinema === value.cinema &&
-            value.role !== 'areamanager'
+          shouldAddNotification = obj.createdBy !== value.userName && obj.cinema === value.cinema
           break
       }
 
