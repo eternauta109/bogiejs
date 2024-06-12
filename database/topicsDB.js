@@ -16,9 +16,12 @@ function createDbTopics() {
     if (err) {
       console.log('db topics non esistente, lo creo')
       try {
+        await connect()
         await populateDatabase()
       } catch (error) {
         console.log(error)
+      } finally {
+        await close()
       }
     } else {
       console.log('topicsDB: createDbTopics: db topics esiste gia')
@@ -54,29 +57,27 @@ function convertStringToDate(dateString) {
 
 //funzione che restituisce tutto il db
 async function getAllTopics() {
-  console.log('Reading all topics from database...')
+  console.log('getAllTopics: Reading all topics from database...')
   await connect()
   const alltopics = []
-
+  const tottopics = await query('totalTopics')
   try {
-    const tottopics = await query('totalTopics')
     console.log('dopo query')
     for await (const [key, value] of db.iterator()) {
       if (key !== 'totalTopics') {
-        console.log('parsedtopic', value)
         const parsedtopic = await JSON.parse(value)
         parsedtopic.dateStart = convertStringToDate(parsedtopic.dateStart)
 
         alltopics.push(parsedtopic)
       }
     }
-    console.log('cosa sto manadando da getAllTopics', alltopics, tottopics)
-    return { topics: alltopics, totalTopics: tottopics }
   } catch (error) {
     console.log('errore durante il recupero dei dai dal db topics', error)
   } finally {
     await close()
   }
+  console.log('cosa sto manadando da getAllTopics', alltopics, tottopics)
+  return { topics: alltopics, totalTopics: tottopics }
 }
 
 // funzione che legge tutto il database
@@ -84,11 +85,17 @@ async function readAllTopics() {
   console.log('Database topics letto!')
   await connect()
   const results = []
-  for await (const [key, value] of db.iterator()) {
-    results.push({ key, value })
+  try {
+    for await (const [key, value] of db.iterator()) {
+      results.push({ key, value })
+    }
+    console.log('satmapa di tutto il db topics', results)
+  } catch (error) {
+    throw new Error('topicsDb: readAllTopics: error:', error)
+  } finally {
+    await close()
   }
-  console.log('satmapa di tutto il db topics', results)
-  await close()
+
   return results
 }
 
@@ -144,7 +151,9 @@ async function insertTopic(value) {
     console.log('topic inserted or updated successfully.')
   } catch (error) {
     console.error('Error inserting or updating topic:', error)
-    throw error // Gestione dell'errore
+    throw new Error(error) // Gestione dell'errore
+  } finally {
+    await close()
   }
 }
 

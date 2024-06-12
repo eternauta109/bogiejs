@@ -183,6 +183,7 @@ async function getAllTopics() {
     console.log('preload: getAllTopics: result', returnTopics)
     return returnTopics
   } catch (error) {
+    console.error('errore:', error)
     throw new Error('errore in preload getAllTopics:', error)
   }
 }

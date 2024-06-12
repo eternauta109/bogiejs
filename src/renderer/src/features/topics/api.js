@@ -3,10 +3,14 @@
 //topics si azzera a ogni ricarica della pagina
 export const getTopicsFromDb = async () => {
   console.log('apiTopics: getTopicsFromDb triggerato')
-  const result = await window.api.getAllTopics()
-  const sortedResult = result.topics.sort((a, b) => b.id - a.id)
-  console.log('apiTopics: getTopicsFromDb: result:', sortedResult)
-  return { topics: sortedResult, totalTopics: result.totalTopics }
+  try {
+    const result = await window.api.getAllTopics()
+    const sortedResult = result.topics.sort((a, b) => b.id - a.id)
+    console.log('apiTopics: getTopicsFromDb: result:', sortedResult)
+    return { topics: sortedResult, totalTopics: result.totalTopics }
+  } catch (error) {
+    console.log('apiTopics: getTopicsFromDb: error:', console.error(error))
+  }
 }
 
 export const getOptionsFromDb = async () => {

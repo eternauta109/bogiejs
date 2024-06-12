@@ -142,7 +142,7 @@ async function insertEvent(value) {
     console.log('Event inserted or updated successfully.')
   } catch (error) {
     console.error('Error inserting or updating event:', error)
-    throw error // Gestione dell'errore
+    throw new Error(error) // Gestione dell'errore
   } finally {
     await close() // Chiusura della connessione al database
   }
