@@ -1,7 +1,7 @@
 .draggable-item {
     position: relative;
     padding: 16px;
-    background: linear-gradient(135deg, #368ef3, #e9a422);
+    background: linear-gradient(135deg, #7FB3D5, #85929E);
     border-radius: 16px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s, box-shadow 0.3s;

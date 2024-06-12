@@ -101,7 +101,7 @@ async function getAllTasks(managerName) {
   } finally {
     await close()
   }
-  console.log('cosa sto manadando da getAllTasks', allTasks, totalTasks)
+  /*  console.log('cosa sto manadando da getAllTasks', allTasks, totalTasks) */
   return { tasks: allTasks, totalTasks: totalTasks }
 }
 

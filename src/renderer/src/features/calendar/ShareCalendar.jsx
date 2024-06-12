@@ -5,6 +5,7 @@ import useEventsStore from '../../store/EventDataContext'
 import { Container, Grid, Switch, Button, FormGroup, FormControlLabel } from '@mui/material'
 import SchedulerComponent from '../scheduler/SchedulerComponent'
 import MyCalendar from './MyCalendar'
+import './calendar.css'
 
 const roundButtonStyle = {
   borderRadius: '10%',
@@ -47,7 +48,7 @@ const ShareCalendar = () => {
   }
 
   return (
-    <Container maxWidth="xl" style={{ maxHeight: '900px' }}>
+    <Container maxWidth="xl" style={{ width: '100%', height: '100vh' }}>
       <Grid container spacing={1} alignItems="center" justifyContent="center">
         <Grid item xs={12} md={11}>
           {!checked ? (
