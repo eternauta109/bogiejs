@@ -44,12 +44,7 @@ function EditToolbar(props) {
       area: user.user.area,
       cinema: user.user.cinema
     }
-    /* await window.api.insertTopic({ topic: newTopic, totalTopics }) */
-
     addTopic(newTopic)
-    /* const getTopicsFromDB = await getTopics();
-      console.log("getTopicsFromDb result:", getTopicsFromDB);
-      setTopics(getTopicsFromDB); */
 
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -78,23 +73,19 @@ const Topics = () => {
   }
 
   const handleEditClick = (id) => () => {
-    console.log('quiii')
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } })
   }
 
   const handleSaveClick = (id) => () => {
-    console.log('che succede', id, rowModesModel)
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
   }
 
   const handleDeleteClick = (id) => async () => {
-    console.log('cancello un topic', id)
     await window.api.deleteThisTopic({ id })
     deleteTopic(id)
   }
 
   const handleCancelClick = (id) => async () => {
-    console.log('handleCancelClick')
     deleteTopic(id)
     setRowModesModel({
       ...rowModesModel,
@@ -103,7 +94,6 @@ const Topics = () => {
   }
 
   const processRowUpdate = async (newRow) => {
-    console.log('processRowUpDate', newRow)
     const updatedRow = { ...newRow, isNew: false }
     upDateTopic(updatedRow, newRow.id)
     await window.api.insertTopic({ topic: updatedRow, totalTopics })
@@ -111,13 +101,10 @@ const Topics = () => {
   }
 
   const handleRowModesModelChange = (newRowModesModel) => {
-    console.log('handleRowModesModelChange', newRowModesModel)
     setRowModesModel(newRowModesModel)
   }
 
-  // Funzione per gestire l'evento di cambio di stato dei checkbox
   const handleCheckboxChange = (rowId, managerName) => {
-    // Troviamo la riga corrispondente a rowId
     const updatedRow = topics.find((row) => row.id === rowId)
 
     if (updatedRow) {
@@ -125,26 +112,20 @@ const Topics = () => {
         ? updatedRow.managers.filter((manager) => manager !== managerName)
         : [...updatedRow.managers, managerName]
       const upTopic = { ...updatedRow, managers: updatedManagers }
-      // Aggiorna lo stato dell'elemento con la funzione upDateTopic
       upDateTopic(upTopic, rowId)
       return upTopic
     }
   }
 
-  // Funzione per gestire il clic su un link nella cella del datagrid
   const handleLinkClick = (event, rowData) => {
-    event.preventDefault() // Impedisci il comportamento predefinito del link
-    console.log(rowData)
+    event.preventDefault()
     if (rowData.value.startsWith('http://') || rowData.value.startsWith('https://')) {
-      // Se il link è un URL Internet, aprilo in un browser esterno
       window.api.shell.openExternal(rowData.value)
     } else {
-      // Se il link è un percorso di file locale, apri il file
       window.api.shell.openPath(rowData.value)
     }
   }
 
-  // COLUMNS ================================================
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
@@ -190,17 +171,14 @@ const Topics = () => {
     {
       field: 'typeDocument',
       headerName: 'documento',
-      //type: 'number',
       width: 110,
       editable: true,
       type: 'singleSelect',
       valueOptions: optionsState.docTypes
     },
-
     {
       field: 'priority',
       headerName: 'priorità',
-      //type: 'number',
       width: 110,
       editable: true,
       type: 'singleSelect',
@@ -209,7 +187,6 @@ const Topics = () => {
     {
       field: 'link',
       headerName: 'link',
-      //type: 'number',
       width: 110,
       editable: true,
       renderCell: (params) =>
@@ -226,7 +203,6 @@ const Topics = () => {
           </Typography>
         ) : null
     },
-
     ...user.managersName.map((manager) => ({
       field: manager,
       headerName: manager,
@@ -245,7 +221,6 @@ const Topics = () => {
         />
       )
     })),
-
     {
       field: 'tmVeto',
       headerName: 'Tm Veto',
@@ -253,7 +228,6 @@ const Topics = () => {
         <Switch
           checked={params.row.tmVeto}
           onChange={(e) => {
-            console.log('switch', params.row)
             const newVetoState = { ...params.row, tmVeto: e.target.checked }
             upDateTopic(newVetoState, params.row.id)
             setRowModesModel({
@@ -264,11 +238,9 @@ const Topics = () => {
         />
       )
     },
-
     {
       field: 'note',
       headerName: 'note',
-      //type: 'number',
       width: 110,
       editable: true
     },
@@ -283,43 +255,41 @@ const Topics = () => {
 
         if (isInEditMode) {
           return [
-            <>
-              <GridActionsCellItem
-                icon={<SaveIcon />}
-                label="Save"
-                sx={{
-                  color: 'primary.main'
-                }}
-                onClick={handleSaveClick(id)}
-              />
-              ,
-              <GridActionsCellItem
-                icon={<CancelIcon />}
-                label="Cancel"
-                className="textPrimary"
-                onClick={handleCancelClick(id)}
-                color="inherit"
-              />
-            </>
+            <GridActionsCellItem
+              key={id}
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{ color: 'green' }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              key={id}
+              icon={<CancelIcon />}
+              label="Cancel"
+              sx={{ color: 'red' }}
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />
           ]
         }
 
         return [
-          <>
-            <GridActionsCellItem
-              icon={<EditIcon />}
-              label="Edit"
-              className="textPrimary"
-              onClick={handleEditClick(id)}
-              color="inherit"
-            />
-            <GridActionsCellItem
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={handleDeleteClick(id)}
-              color="inherit"
-            />
-          </>
+          <GridActionsCellItem
+            key={id}
+            icon={<EditIcon />}
+            label="Edit"
+            sx={{ color: 'blue' }}
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            key={id}
+            icon={<DeleteIcon />}
+            label="Delete"
+            sx={{ color: 'red' }}
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />
         ]
       }
     }
@@ -333,13 +303,8 @@ const Topics = () => {
   const getTopics = async () => {
     const result = await getTopicsFromDb()
     const newResult = result !== undefined ? result : { topics: [], totalTopics: 0 }
-    console.log('Topics: getTopics da useeffect:', result)
     setTopics(newResult)
   }
-
-  useEffect(() => {
-    console.log('topics: useeefect: topics a l variare di lunghezza: ', topics)
-  }, [topics.length])
 
   useEffect(() => {
     getOptions()
@@ -357,11 +322,29 @@ const Topics = () => {
         },
         '& .textPrimary': {
           color: 'text.primary'
+        },
+        '& .MuiDataGrid-root': {
+          border: '1px solid #ccc',
+          borderRadius: '10px'
+        },
+        '& .MuiDataGrid-cell': {
+          borderBottom: '1px solid #eee'
+        },
+        '& .MuiDataGrid-columnsContainer': {
+          backgroundColor: '#fafafa'
+        },
+        '& .MuiDataGrid-columnHeaders': {
+          backgroundColor: '#f5f5f5',
+          color: '#333',
+          fontWeight: 'bold'
+        },
+        '& .MuiDataGrid-footerContainer': {
+          backgroundColor: '#f5f5f5'
         }
       }}
     >
       <DataGrid
-        rows={topics ? topics : ''}
+        rows={topics ? topics : []}
         columns={columns}
         editMode="row"
         onProcessRowUpdateError={(error) =>
@@ -372,10 +355,10 @@ const Topics = () => {
         onRowEditStop={handleRowEditStop}
         getRowHeight={() => 'auto'}
         processRowUpdate={processRowUpdate}
-        slots={{
-          toolbar: EditToolbar
+        components={{
+          Toolbar: EditToolbar
         }}
-        slotProps={{
+        componentsProps={{
           toolbar: { setRowModesModel }
         }}
       />

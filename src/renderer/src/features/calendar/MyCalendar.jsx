@@ -8,13 +8,9 @@ import getDay from 'date-fns/getDay'
 import enUS from 'date-fns/locale/en-US'
 import useEventsStore from '../../store/EventDataContext'
 
-/* import { getEvents } from '../../store/eventsReducer' */
-
 import { Calendar, Views, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-
-/* const localizer = dayjsLocalizer(dayjs); */
-// impostazione del formato data
+import './calendar.css'
 
 const locales = {
   'en-US': enUS
@@ -28,33 +24,22 @@ const localizer = dateFnsLocalizer({
   locales
 })
 
-/**
- * We are defaulting the localizer here because we are using this same
- * example on the main 'About' page in Storybook
- */
-
 export default function Basic({ handleOpen }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
   const { max, views } = useMemo(
     () => ({
-      /*  max: dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours'), */
-      views: Object.keys(Views).map((k) => Views[k])
+      views: [Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA] // Remove 'WORK_WEEK' from here
     }),
     []
   )
 
-  //funzione che gestisce la riapertura di un evento sul calendario.
-  //upDate in questo caso è settata a true dal componete padre
   const onSelectEvent = (event) => {
     console.log('onSelectEvent', event)
     setEvent(event)
     handleOpen()
   }
 
-  //funzione asincrona che prende gli events dal db con una funzione
-  // sotto eventsReducer attenzione ch ein modalita dev
-  //events si azzera a ogni ricarica della pagina
   const getEventsFromDb = async () => {
     console.log('getEventsFromDb triggerato')
     const result = await window.api.getAllEvents()
@@ -72,6 +57,11 @@ export default function Basic({ handleOpen }) {
     return () => {}
   }, [])
 
+  const eventStyleGetter = (event) => {
+    const backgroundColor = event.colorEventType
+    return { style: { backgroundColor } }
+  }
+
   return (
     <div className="calendarContainer">
       {events && (
@@ -85,11 +75,18 @@ export default function Basic({ handleOpen }) {
           selectable={true}
           step={60}
           views={views}
-          onSelectEvent={(event) => onSelectEvent(event)}
-          /* onSelectSlot={handleSelect} */
-          eventPropGetter={(event) => {
-            const backgroundColor = event.colorEventType
-            return { style: { backgroundColor } }
+          onSelectEvent={onSelectEvent}
+          eventPropGetter={eventStyleGetter}
+          components={{
+            month: {
+              dateHeader: ({ label }) => <span>{label}</span> // Custom component to show more events in month view
+            },
+            event: ({ event }) => (
+              <span>
+                <strong>{event.title}</strong>
+                {event.desc && ':  ' + event.desc}
+              </span>
+            )
           }}
         />
       )}

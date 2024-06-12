@@ -2,7 +2,17 @@
 
 import Modal from '@mui/material/Modal'
 import useEventsStore from '../../store/EventDataContext'
-import { Box, Card, CardActions, CardContent, Button, Typography } from '@mui/material'
+import {
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Typography,
+  IconButton,
+  Divider
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { useEffect } from 'react'
 
 const style = {
@@ -10,13 +20,14 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
-  maxHeight: 600,
+  width: '80%',
+  maxWidth: 600,
+  maxHeight: '80%',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  borderRadius: 2,
   boxShadow: 24,
   overflowY: 'auto',
-  p: 5
+  p: 4
 }
 
 export const Notify = ({ onHandleClose, open, notify }) => {
@@ -29,6 +40,7 @@ export const Notify = ({ onHandleClose, open, notify }) => {
     deleteNotify(newNotify)
     console.log('user aggiornato', user)
   }
+
   useEffect(() => {
     if (notify.length === 0) {
       onHandleClose()
@@ -36,38 +48,48 @@ export const Notify = ({ onHandleClose, open, notify }) => {
   }, [notify, onHandleClose])
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={() => {
-          onHandleClose()
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {notify?.map((value, key) => (
-            <Card key={key} sx={{ minWidth: 275, mb: 2 }}>
-              <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  hai ricevuto la seguente notifica:
-                </Typography>
-
-                <Typography>{value.notify}</Typography>
-                <CardActions>
-                  <Button
-                    onClick={(e) => handleCancelNotify(e, value.id)}
-                    size="small"
-                    color="secondary"
-                  >
-                    chiudi
-                  </Button>
-                </CardActions>
-              </CardContent>
-            </Card>
-          ))}
+    <Modal
+      open={open}
+      onClose={() => {
+        onHandleClose()
+      }}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h6" component="h2">
+            Notifiche
+          </Typography>
+          <IconButton onClick={onHandleClose}>
+            <CloseIcon />
+          </IconButton>
         </Box>
-      </Modal>
-    </>
+        <Divider sx={{ mb: 2 }} />
+        {notify?.map((value, key) => (
+          <Card key={key} sx={{ mb: 2, boxShadow: 3, borderRadius: 2 }}>
+            <CardContent>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                Hai ricevuto la seguente notifica:
+              </Typography>
+              <Typography variant="body2" component="p" sx={{ mb: 2 }}>
+                {value.notify}
+              </Typography>
+              <CardActions>
+                <Button
+                  onClick={(e) => handleCancelNotify(e, value.id)}
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<CloseIcon />}
+                >
+                  Chiudi
+                </Button>
+              </CardActions>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    </Modal>
   )
 }

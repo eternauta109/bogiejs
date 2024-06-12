@@ -57,7 +57,7 @@ function convertStringToDate(dateString) {
 
 //funzione che restituisce tutto il db
 async function getAllTopics() {
-  console.log('getAllTopics: Reading all topics from database...')
+  console.log('topicsDb: getAllTopics: Reading all topics from database...')
   await connect()
   const alltopics = []
   const tottopics = await query('totalTopics')
@@ -76,7 +76,7 @@ async function getAllTopics() {
   } finally {
     await close()
   }
-  console.log('cosa sto manadando da getAllTopics', alltopics, tottopics)
+  /* console.log('cosa sto manadando da getAllTopics', alltopics, tottopics) */
   return { topics: alltopics, totalTopics: tottopics }
 }
 

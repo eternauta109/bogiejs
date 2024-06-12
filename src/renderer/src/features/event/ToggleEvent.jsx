@@ -16,28 +16,27 @@ import Groups2Icon from '@mui/icons-material/Groups2'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import useEventsStore from '../../store/EventDataContext'
 
+const colorMap = {
+  evento: '#FD102B',
+  matinee: '#7DCEA0',
+  prevendite: '#BB8FCE',
+  promo: '#F5B041 ',
+  compleanni: '#448AFF',
+  extra: '#FAFAD2',
+  anteprima: '#42C67B',
+  maratona: '#4EF9F4',
+  visita: '#FF5733',
+  stampa: '#669999',
+  sopraluogo: '#F7DC6F',
+  meeting: '#4291C6 ',
+  delivery: '#C49E97'
+}
 const ToggleEvent = () => {
   const { event, setEvent } = useEventsStore()
 
   const handleToggleAlignment = (newAlignment) => {
     console.log('toggleAlignment', newAlignment)
     if (newAlignment !== null) {
-      const colorMap = {
-        evento: '#E6E6FA',
-        matinee: '#7DCEA0',
-        prevendite: '#BB8FCE',
-        promo: '#5F6060',
-        compleanni: '#448AFF',
-        extra: '#FAFAD2',
-        anteprima: '#00FF00',
-        maratona: '#A67FB8',
-        visita: '#FF5733',
-        stampa: '#669999',
-        sopraluogo: '#003300',
-        meeting: '#4F7DE5',
-        delivery: '#663300'
-      }
-
       setEvent({ eventType: newAlignment, colorEventType: colorMap[newAlignment] })
     }
   }
@@ -53,69 +52,22 @@ const ToggleEvent = () => {
         sx={{ mb: 1 }}
         aria-label="text alignment"
       >
-        <ToggleButton
-          value="evento"
-          aria-label="evento"
-          onClick={() => handleToggleAlignment('evento')}
-        >
-          <Tooltip title="evento">
-            <EventIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="matinee"
-          aria-label="matinee"
-          onClick={() => handleToggleAlignment('matinee')}
-        >
-          <Tooltip title="matinee">
-            <SchoolIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="prevendite"
-          aria-label="prevendite"
-          onClick={() => handleToggleAlignment('prevendite')}
-        >
-          <Tooltip title="prevendite">
-            <SellIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="promo"
-          aria-label="promo"
-          onClick={() => handleToggleAlignment('promo')}
-        >
-          <Tooltip title="promo">
-            <DevicesOtherIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="compleanni"
-          aria-label="compleanni"
-          onClick={() => handleToggleAlignment('compleanni')}
-        >
-          <Tooltip title="compleanni">
-            <CelebrationIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="extra"
-          aria-label="extra"
-          onClick={() => handleToggleAlignment('extra')}
-        >
-          <Tooltip title="extra">
-            <RocketLaunchIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="delivery"
-          aria-label="delivery"
-          onClick={() => handleToggleAlignment('delivery')}
-        >
-          <Tooltip title="delivery">
-            <LocalShippingIcon />
-          </Tooltip>
-        </ToggleButton>
+        {Object.keys(colorMap)
+          .slice(0, 7)
+          .map((type) => (
+            <ToggleButton
+              key={type}
+              value={type}
+              aria-label={type}
+              sx={{
+                backgroundColor: colorMap[type],
+                '&.Mui-selected': { backgroundColor: colorMap[type], opacity: 0.7 }
+              }}
+              onClick={() => handleToggleAlignment(type)}
+            >
+              <Tooltip title={type}>{getIcon(type)}</Tooltip>
+            </ToggleButton>
+          ))}
       </ToggleButtonGroup>
 
       <ToggleButtonGroup
@@ -124,63 +76,58 @@ const ToggleEvent = () => {
         sx={{ mb: 4 }}
         aria-label="text alignment"
       >
-        <ToggleButton
-          value="anteprima"
-          aria-label="anteprima"
-          onClick={() => handleToggleAlignment('anteprima')}
-        >
-          <Tooltip title="anteprima">
-            <MovieCreationIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="maratona"
-          aria-label="maratona"
-          onClick={() => handleToggleAlignment('maratona')}
-        >
-          <Tooltip title="maratona">
-            <DirectionsRunIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="visita"
-          aria-label="visita"
-          onClick={() => handleToggleAlignment('visita')}
-        >
-          <Tooltip title="visita">
-            <LocalAirportIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="stampa"
-          aria-label="stampa"
-          onClick={() => handleToggleAlignment('stampa')}
-        >
-          <Tooltip title="stampa">
-            <PhotoCameraFrontIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="sopraluogo"
-          aria-label="sopraluogo"
-          onClick={() => handleToggleAlignment('sopraluogo')}
-        >
-          <Tooltip title="sopraluogo">
-            <SettingsAccessibilityIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          value="meeting"
-          aria-label="meeting"
-          onClick={() => handleToggleAlignment('meeting')}
-        >
-          <Tooltip title="meeting">
-            <Groups2Icon />
-          </Tooltip>
-        </ToggleButton>
+        {Object.keys(colorMap)
+          .slice(7)
+          .map((type) => (
+            <ToggleButton
+              key={type}
+              value={type}
+              aria-label={type}
+              sx={{
+                backgroundColor: colorMap[type],
+                '&.Mui-selected': { backgroundColor: colorMap[type], opacity: 0.7 }
+              }}
+              onClick={() => handleToggleAlignment(type)}
+            >
+              <Tooltip title={type}>{getIcon(type)}</Tooltip>
+            </ToggleButton>
+          ))}
       </ToggleButtonGroup>
     </>
   )
+}
+
+const getIcon = (type) => {
+  switch (type) {
+    case 'evento':
+      return <EventIcon />
+    case 'matinee':
+      return <SchoolIcon />
+    case 'prevendite':
+      return <SellIcon />
+    case 'promo':
+      return <DevicesOtherIcon />
+    case 'compleanni':
+      return <CelebrationIcon />
+    case 'extra':
+      return <RocketLaunchIcon />
+    case 'delivery':
+      return <LocalShippingIcon />
+    case 'anteprima':
+      return <MovieCreationIcon />
+    case 'maratona':
+      return <DirectionsRunIcon />
+    case 'visita':
+      return <LocalAirportIcon />
+    case 'stampa':
+      return <PhotoCameraFrontIcon />
+    case 'sopraluogo':
+      return <SettingsAccessibilityIcon />
+    case 'meeting':
+      return <Groups2Icon />
+    default:
+      return null
+  }
 }
 
 export default ToggleEvent

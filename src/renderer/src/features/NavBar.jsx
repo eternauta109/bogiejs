@@ -15,20 +15,21 @@ import {
   Container,
   Avatar,
   Tooltip,
-  MenuItem
+  MenuItem,
+  Button
 } from '@mui/material'
 import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsIcon from '@mui/icons-material/Notifications'
-
-import eyeIcon from '../assets/bigeye2.ico'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import TopicIcon from '@mui/icons-material/Topic'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import eyeIcon from '../assets/bigeye2.ico'
 
 import useEventsStore from '../store/EventDataContext'
 import { useNavigate } from 'react-router-dom'
 import { Message } from './messages/Message'
-
-const pages = ['Calendario', 'Lavagna', 'Topics', 'dashboard']
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -40,6 +41,14 @@ function NavBar() {
   const handleOpenMessageModal = () => setOpenMessgaeModal(true)
   const handleCloseMessageModal = () => setOpenMessgaeModal(false)
   const { user, logOut } = useEventsStore()
+
+  const pages = [
+    { name: 'Calendario', icon: <CalendarTodayIcon /> },
+    { name: 'Lavagna', icon: <DashboardIcon /> },
+    { name: 'Topics', icon: <TopicIcon /> },
+
+    ...(user.user.role === 'tm' ? [{ name: 'dashboard', icon: <DashboardIcon /> }] : [])
+  ]
 
   const settings = [`name: ${user.user.userName}`, `role: ${user.user.role}`]
 
@@ -66,7 +75,6 @@ function NavBar() {
   }
 
   function stringAvatar(name) {
-    console.log(name)
     const firstLetter = name[0]
     const lastLetter = name[name.length - 1]
     return {
@@ -85,7 +93,6 @@ function NavBar() {
   }
 
   const handleCloseNavMenu = (e, page) => {
-    console.log('menu toggle', page)
     switch (page) {
       case 'Topics':
         navigate('/topics')
@@ -96,7 +103,6 @@ function NavBar() {
       case 'Calendario':
         navigate('/calendar')
         break
-
       case 'dashboard':
         navigate('/dashboard')
         break
@@ -116,33 +122,56 @@ function NavBar() {
   }
 
   const MenuElement = ({ page }) => {
-    switch (page) {
+    switch (page.name) {
       case 'dashboard':
         if (user.user.role === 'tm') {
           return (
-            <MenuItem onClick={(e) => handleCloseNavMenu(e, page)}>
-              <ListItemText primary={page} />
+            <MenuItem onClick={(e) => handleCloseNavMenu(e, page.name)}>
+              {page.icon}
+              <ListItemText primary={page.name} />
             </MenuItem>
           )
         }
 
         break
-      // Gestisci tutti gli altri casi
       default:
         return (
-          <MenuItem onClick={(e) => handleCloseNavMenu(e, page)}>
-            <ListItemText primary={page} />
+          <MenuItem onClick={(e) => handleCloseNavMenu(e, page.name)}>
+            {page.icon}
+            <ListItemText primary={page.name} />
           </MenuItem>
         )
     }
   }
 
   return (
-    <AppBar position="static" sx={{ mb: '20px', bgcolor: '#689F38' }}>
+    <AppBar
+      position="static"
+      sx={{
+        mb: '20px',
+        background: 'linear-gradient(45deg, #3498DB 30%, #58D68D 90%)',
+        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        borderRadius: '10px'
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box width={50} height={50} paddingRight={2}>
-            <img src={eyeIcon} alt="icoEye" style={{ width: '100%', height: '100%' }} />
+          <Box
+            width={50}
+            height={50}
+            paddingRight={2}
+            sx={{
+              '&:hover': {
+                transform: 'rotate(360deg)',
+                transition: 'transform 0.5s ease-in-out'
+              }
+            }}
+          >
+            <img
+              src={eyeIcon}
+              alt="icoEye"
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
           </Box>
 
           <Typography
@@ -215,25 +244,43 @@ function NavBar() {
           >
             BigEye
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
             {pages.map((page, key) => (
-              <MenuElement page={page} key={key} />
+              <Button
+                key={key}
+                onClick={(e) => handleCloseNavMenu(e, page.name)}
+                startIcon={page.icon}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  mx: 2,
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    transform: 'scale(1.1)',
+                    transition: 'transform 0.3s ease-in-out'
+                  }
+                }}
+              >
+                {page.name}
+              </Button>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <IconButton onClick={handleOpenModal} sx={{ mr: 1 }}>
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+            <IconButton onClick={handleOpenModal} sx={{ mr: 1, color: 'inherit' }}>
               <Badge badgeContent={user.user.notification.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton onClick={handleOpenMessageModal}>
+            <IconButton onClick={handleOpenMessageModal} sx={{ color: 'inherit' }}>
               <Badge color="secondary" sx={{ mr: 1 }}>
                 <MailIcon />
               </Badge>
             </IconButton>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Tooltip title="user">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, ml: 2 }}>
                 <Avatar {...stringAvatar(user.user.userName)} />
               </IconButton>
             </Tooltip>
@@ -270,4 +317,5 @@ function NavBar() {
     </AppBar>
   )
 }
+
 export default NavBar

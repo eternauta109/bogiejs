@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd'
 import Task from './Task'
 import DnDContext from './DnDContext'
 import TaskModal from './TaskModal'
-import { Button, Box, Switch, FormControlLabel } from '@mui/material'
+import { Button, Box, Switch, FormControlLabel, Stack } from '@mui/material'
 import './KanbanBoard.css'
 import useEventsStore from '../../store/EventDataContext'
 
@@ -101,37 +101,38 @@ const KanbanBoard = ({ managerName }) => {
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {managerName !== 'all' && (
-        <Button
-          variant="contained"
-          sx={{
-            mt: 2,
-            mb: 2,
-            borderRadius: '50%',
-            backgroundColor: 'orange',
-            color: 'white',
-            width: '40px',
-            height: '40px',
-            minWidth: 'unset'
-          }}
-          onClick={handleOpenNewTask}
-        >
-          +
-        </Button>
-      )}
-      <FormControlLabel
-        value={expanse ? 'comprimi' : 'espandi'}
-        control={
-          <Switch
-            checked={expanse}
-            onChange={(e) => setExpanse(e.target.checked)}
-            inputProps={{ 'aria-label': 'controlled' }}
-          />
-        }
-        label={!expanse ? 'comprimi' : 'espandi'}
-        labelPlacement="start"
-      />
-
+      <Stack direction="row" spacing={2} sx={{ my: 2 }}>
+        {managerName !== 'all' && (
+          <Button
+            variant="contained"
+            sx={{
+              mt: 2,
+              mb: 2,
+              borderRadius: '50%',
+              backgroundColor: 'orange',
+              color: 'white',
+              width: '40px',
+              height: '40px',
+              minWidth: 'unset'
+            }}
+            onClick={handleOpenNewTask}
+          >
+            +
+          </Button>
+        )}
+        <FormControlLabel
+          value={expanse ? 'comprimi' : 'espandi'}
+          control={
+            <Switch
+              checked={expanse}
+              onChange={(e) => setExpanse(e.target.checked)}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          }
+          label={!expanse ? 'comprimi' : 'espandi'}
+          labelPlacement="start"
+        />
+      </Stack>
       <DnDContext>
         <div className="kanban-board">
           {Object.entries(columns).map(([columnId, column]) => (
