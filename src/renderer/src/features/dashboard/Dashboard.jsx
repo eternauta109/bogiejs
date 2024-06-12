@@ -13,7 +13,11 @@ import {
   IconButton,
   MenuItem,
   InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  Tabs,
+  Tab,
+  Card,
+  CardContent
 } from '@mui/material'
 import useEventsStore from '../../store/EventDataContext'
 import { v4 as uuidv4 } from 'uuid'
@@ -32,7 +36,8 @@ const Dashboard = () => {
   })
   const [managersList, setManagersList] = useState([])
   const [optionsState, setOptionsState] = useState({})
-  const [newOpts, setNewOpts] = useState()
+  const [newOpts, setNewOpts] = useState('')
+  const [tabValue, setTabValue] = useState(0)
 
   const { user, setUsersName } = useEventsStore()
 
@@ -48,6 +53,16 @@ const Dashboard = () => {
     console.log('nominativi di ritorno in dashboard', cinemaNamesReturn)
     setManagersList([...cinemaNamesReturn])
     setUsersName(cinemaNamesReturn)
+    // Reset newUser state to prevent uncontrolled input warning
+    setNewUser({
+      userName: '',
+      role: '',
+      notification: [],
+      password: '',
+      isAuth: false,
+      id: '',
+      cinema: ''
+    })
   }
 
   useMemo(() => {
@@ -66,9 +81,12 @@ const Dashboard = () => {
     setOptionsState({ ...options })
   }
 
-  const onAddOptions = (e, tipo) => {
+  const onAddOptions = async (e, tipo) => {
     e.preventDefault()
     console.log(newOpts, tipo)
+    const updatedOptions = await window.api.addOption({ tipo, value: newOpts })
+    setOptionsState({ ...optionsState, [tipo]: updatedOptions })
+    setNewOpts('')
   }
 
   const onHandleDeleteUser = async (e, manager) => {
@@ -84,27 +102,29 @@ const Dashboard = () => {
     awaytGetAllManagers()
     awaytGetAllOptions()
     console.log('useEffect')
-
-    return () => {}
   }, [managersList.length])
 
-  return (
-    <Container
-      sx={{
-        padding: 2,
-        justifyContent: 'center'
-      }}
-    >
-      <Stack spacing={2} direction="column">
-        <Box>
-          <Stack spacing={2} direction="row" sx={{ height: '400px' }}>
-            <form onSubmit={onHandleSubmit}>
-              <Stack spacing={3}>
-                <Typography>Inserisci un manager</Typography>
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue)
+  }
 
+  return (
+    <Container sx={{ padding: 2, justifyContent: 'center' }}>
+      <Tabs value={tabValue} onChange={handleTabChange} centered>
+        <Tab label="Gestione Manager" />
+        <Tab label="Opzioni" />
+      </Tabs>
+      {tabValue === 0 && (
+        <Card variant="outlined" sx={{ mt: 4 }}>
+          <CardContent>
+            <Typography variant="h6" mb={2}>
+              Inserisci un Manager
+            </Typography>
+            <form onSubmit={onHandleSubmit}>
+              <Stack spacing={2}>
                 <TextField
                   required
-                  label="user name"
+                  label="Username"
                   variant="outlined"
                   name="userName"
                   value={newUser.userName}
@@ -117,10 +137,10 @@ const Dashboard = () => {
                     labelId="role"
                     name="role"
                     input={<OutlinedInput label="role" />}
-                    value={newUser?.role ? newUser.role : ''}
+                    value={newUser.role}
                     onChange={(role) => setNewUser({ ...newUser, role: role.target.value })}
                   >
-                    <MenuItem value={''}>none</MenuItem>
+                    <MenuItem value="">none</MenuItem>
                     <MenuItem value="am">am</MenuItem>
                     <MenuItem value="jm">jm</MenuItem>
                     <MenuItem value="tl">tl</MenuItem>
@@ -128,53 +148,56 @@ const Dashboard = () => {
                 </FormControl>
                 <TextField
                   required
-                  label="pin"
+                  label="PIN"
                   variant="outlined"
                   name="password"
                   value={newUser.password}
                   onChange={(psw) => setNewUser({ ...newUser, password: psw.target.value })}
-                  helperText="consiglio: 4 cifre sono piu che sufficenti"
+                  helperText="Consiglio: 4 cifre sono più che sufficienti"
                 />
-                <TextField disabled label="cinema" value={user.user.cinema} />
+                <TextField disabled label="Cinema" value={user.user.cinema} />
                 <Button variant="outlined" type="submit" color="secondary">
                   Inserisci user
                 </Button>
               </Stack>
             </form>
-
-            <Stack sx={{ width: 300 }}>
-              <Typography>Manager attivi</Typography>
-              <List sx={{ overflowY: 'auto' }}>
-                {managersList?.map((manager, key) => (
-                  <ListItem
-                    key={key}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={(e) => onHandleDeleteUser(e, manager)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    }
-                  >
-                    <Box>
-                      <Typography>{manager.userName}</Typography>
-                      <TextField disabled value={manager.password} variant="filled"></TextField>
-                    </Box>
-                  </ListItem>
-                ))}
-              </List>
-            </Stack>
-          </Stack>
-        </Box>
-        <Box>
-          <Stack spacing={2} direction="column" sx={{ mt: 10 }}>
-            <Typography>OPTIONS</Typography>
+            <Typography variant="h6" mt={4}>
+              Manager Attivi
+            </Typography>
+            <List sx={{ overflowY: 'auto', maxHeight: 300 }}>
+              {managersList?.map((manager, key) => (
+                <ListItem
+                  key={key}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={(e) => onHandleDeleteUser(e, manager)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  }
+                >
+                  <Box>
+                    <Typography>{manager.userName}</Typography>
+                    <TextField disabled value={manager.password} variant="filled" />
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </CardContent>
+        </Card>
+      )}
+      {tabValue === 1 && (
+        <Card variant="outlined" sx={{ mt: 4 }}>
+          <CardContent>
+            <Typography variant="h6" mb={2}>
+              Opzioni
+            </Typography>
             <Stack spacing={5} direction="row" sx={{ justifyContent: 'center' }}>
               <Box component="form" noValidate onSubmit={(e) => onAddOptions(e, 'topicType')}>
                 <Stack sx={{ width: 300, height: 300 }}>
-                  <Typography>argomenti topic</Typography>
+                  <Typography>Argomenti Topic</Typography>
                   <List sx={{ overflowY: 'auto' }}>
                     {optionsState?.topicType?.map((topic, key) => (
                       <ListItem
@@ -190,58 +213,52 @@ const Dashboard = () => {
                     ))}
                   </List>
                   <Stack direction={'row'}>
-                    <Box>
-                      <TextField
-                        sx={{ width: 300 }}
-                        value={newOpts}
-                        onChange={(e) => setNewOpts(e.target.value)}
-                      />
-                      <Button type="submit">add</Button>
-                    </Box>
+                    <TextField
+                      sx={{ width: 300 }}
+                      value={newOpts}
+                      onChange={(e) => setNewOpts(e.target.value)}
+                    />
+                    <Button type="submit">Add</Button>
                   </Stack>
                 </Stack>
               </Box>
               <Box>
                 <Stack sx={{ width: 300 }}>
-                  <Typography>tipi di dcoc</Typography>
-                  <List sx={{ overflowY: 'auto' }}>
+                  <Typography>Tipi di Documenti</Typography>
+                  <Stack sx={{ overflowY: 'auto' }}>
                     {optionsState?.docTypes?.map((doc, key) => (
                       <ListItem
                         sx={{ mt: 2 }}
                         key={key}
                         secondaryAction={
-                          <IconButton
-                            edge="end"
-                            aria-label="delete"
-                            /* onClick={(e) => onHandleDeleteUser(e, manager)} */
-                          >
+                          <IconButton edge="end" aria-label="delete">
                             <Typography>{doc.value}</Typography>
                             <DeleteIcon />
                           </IconButton>
                         }
                       />
                     ))}
-                  </List>
+                  </Stack>
                   <Stack direction={'row'}>
-                    <TextField sx={{ width: 300 }} onChange={(e) => setNewOpts(e.target.value)} />
-                    <Button>add</Button>
+                    <TextField
+                      sx={{ width: 300 }}
+                      value={newOpts}
+                      onChange={(e) => setNewOpts(e.target.value)}
+                    />
+                    <Button onClick={(e) => onAddOptions(e, 'docTypes')}>Add</Button>
                   </Stack>
                 </Stack>
               </Box>
               <Box>
                 <Stack sx={{ width: 300, height: 300 }}>
-                  <Typography>reparti</Typography>
+                  <Typography>Reparti</Typography>
                   <List sx={{ overflowY: 'auto' }}>
                     {optionsState?.divisions?.map((doc, key) => (
                       <ListItem
                         sx={{ mt: 2 }}
                         key={key}
                         secondaryAction={
-                          <IconButton
-                            edge="end"
-                            aria-label="delete"
-                            /* onClick={(e) => onHandleDeleteUser(e, manager)} */
-                          >
+                          <IconButton edge="end" aria-label="delete">
                             <Typography>{doc.nameDivision}</Typography>
                             <DeleteIcon />
                           </IconButton>
@@ -250,15 +267,19 @@ const Dashboard = () => {
                     ))}
                   </List>
                   <Stack direction={'row'}>
-                    <TextField sx={{ width: 300 }} />
-                    <Button>add</Button>
+                    <TextField
+                      sx={{ width: 300 }}
+                      value={newOpts}
+                      onChange={(e) => setNewOpts(e.target.value)}
+                    />
+                    <Button onClick={(e) => onAddOptions(e, 'divisions')}>Add</Button>
                   </Stack>
                 </Stack>
               </Box>
             </Stack>
-          </Stack>
-        </Box>
-      </Stack>
+          </CardContent>
+        </Card>
+      )}
     </Container>
   )
 }

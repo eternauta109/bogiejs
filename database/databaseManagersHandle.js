@@ -182,6 +182,7 @@ async function deleteThisManager(user) {
 
     return [...managersName]
   } catch (error) {
+    console.error('errorrre', error)
     throw new Error('db delete user:', error)
   } finally {
     await close()
