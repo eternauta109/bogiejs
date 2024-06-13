@@ -11,6 +11,7 @@ import {
   MenuItem,
   FormControl,
   Button,
+  Box,
   OutlinedInput,
   Select,
   TextField,
@@ -314,16 +315,18 @@ function NewEvent({ handleClose, upDate }) {
           {upDate ? 'updates' : 'save'}
         </Button>
         {upDate && (
-          <Button
-            variant="contained"
-            color="error"
-            sx={{ mt: 6 }}
-            onClick={(e) => {
-              onDelete(e, event.id)
-            }}
-          >
-            Delete This Event
-          </Button>
+          <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 6 }}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ mt: 6 }}
+              onClick={(e) => {
+                onDelete(e, event.id)
+              }}
+            >
+              Delete This Event
+            </Button>
+          </Box>
         )}
       </form>
     </Container>

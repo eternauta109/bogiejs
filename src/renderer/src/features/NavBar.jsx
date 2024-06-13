@@ -26,7 +26,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import TopicIcon from '@mui/icons-material/Topic'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import eyeIcon from '../assets/bigeye2.ico'
-
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import useEventsStore from '../store/EventDataContext'
 import { useNavigate } from 'react-router-dom'
 import { Message } from './messages/Message'
@@ -47,7 +47,7 @@ function NavBar() {
     { name: 'Lavagna', icon: <DashboardIcon /> },
     { name: 'Topics', icon: <TopicIcon /> },
 
-    ...(user.user.role === 'tm' ? [{ name: 'dashboard', icon: <DashboardIcon /> }] : [])
+    ...(user.user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
   ]
 
   const settings = [`name: ${user.user.userName}`, `role: ${user.user.role}`]
@@ -122,26 +122,12 @@ function NavBar() {
   }
 
   const MenuElement = ({ page }) => {
-    switch (page.name) {
-      case 'dashboard':
-        if (user.user.role === 'tm') {
-          return (
-            <MenuItem onClick={(e) => handleCloseNavMenu(e, page.name)}>
-              {page.icon}
-              <ListItemText primary={page.name} />
-            </MenuItem>
-          )
-        }
-
-        break
-      default:
-        return (
-          <MenuItem onClick={(e) => handleCloseNavMenu(e, page.name)}>
-            {page.icon}
-            <ListItemText primary={page.name} />
-          </MenuItem>
-        )
-    }
+    return (
+      <MenuItem onClick={(e) => handleCloseNavMenu(e, page.name)}>
+        {page.icon}
+        <ListItemText primary={page.name} />
+      </MenuItem>
+    )
   }
 
   return (

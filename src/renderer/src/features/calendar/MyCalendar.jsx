@@ -5,21 +5,29 @@ import format from 'date-fns/format'
 import parse from 'date-fns/parse'
 import startOfWeek from 'date-fns/startOfWeek'
 import getDay from 'date-fns/getDay'
-import enUS from 'date-fns/locale/en-US'
+/* import enUS from 'date-fns/locale/en-US' */
+import it from 'date-fns/locale/it'
 import useEventsStore from '../../store/EventDataContext'
 
 import { Calendar, Views, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import './calendar.css'
 
-const locales = {
+/* const locales = {
   'en-US': enUS
+} */
+
+const locales = {
+  it: it
 }
 
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek,
+  startOfWeek: (date) => {
+    const day = getDay(date)
+    return day === 5 ? date : startOfWeek(date, { weekStartsOn: 5 }) // Start week on Friday
+  },
   getDay,
   locales
 })
