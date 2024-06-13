@@ -73,6 +73,7 @@ function createWindow() {
     width: width,
     height: height,
     show: false,
+    icon: join(__dirname, '../../resources/icon.png'),
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
