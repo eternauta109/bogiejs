@@ -101,13 +101,14 @@ async function getAllOptions() {
   await connect()
   try {
     value = await query('config')
+    console.log('leggo tutto il db options:')
   } catch (err) {
     console.error('Errore in fase di estrazione options:', err)
     throw err
   } finally {
     await close()
   }
-  console.log('leggo tutto il db options:', value)
+
   return value
 }
 
