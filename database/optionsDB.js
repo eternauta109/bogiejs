@@ -1,97 +1,53 @@
 const { Level } = require('level')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs').promises
+const { app } = require('electron')
+const fsConstants = require('fs').constants
 
 const dbName = 'options'
-
-const { app } = require('electron')
 const isBuild = process.env.NODE_ENV === 'production'
 const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
-
-const db = new Level(dbPath, { valueEncoding: 'json' })
+let db
 
 // Funzione per creare il database se non esiste
-function createDbOptions() {
-  fs.access(dbPath, fs.constants.F_OK, async (err) => {
-    if (err) {
-      console.log('db options non esistente, lo creo')
-
-      try {
-        await connect()
-        await populateDatabase()
-      } catch (error) {
-        console.log(error)
-      } finally {
-        await close()
-      }
-    } else {
-      console.log('db option esistente')
+async function createDbOptions() {
+  try {
+    await fs.access(dbPath, fsConstants.F_OK)
+    console.log(`db ${dbName} gia esistente`)
+  } catch (err) {
+    console.log(`db ${dbName} non esistente, lo creo:`)
+    try {
+      db = new Level(dbPath, { valueEncoding: 'json' })
+      await populateDatabase()
+    } catch (error) {
+      console.error(`errore in fase di creazione db ${dbName}:`, error)
+      throw error
     }
-  })
+  }
+  return dbPath
 }
 
-// Funzione per popolare il database
 async function populateDatabase() {
-  // Inserisci i manager nel database (assumendo che dbMan sia l'istanza del database creato)
   const setOptions = {
     MAXTITLELENGTH: 40,
     MAXDESCRIPTIONLENGTH: 240,
     MAXNOTELENGTH: 140,
     divisions: [
-      {
-        nameDivision: 'marketing',
-        color: '#F39C12'
-      },
-      {
-        nameDivision: 'operations',
-        color: '#7DCEA0'
-      },
-      {
-        nameDivision: 'pricing',
-        color: '#BB8FCE'
-      },
-      {
-        nameDivision: 'facilities',
-        color: '#AAB7B8'
-      },
-      {
-        nameDivision: 'screencontent',
-        color: '#448AFF'
-      },
-      {
-        nameDivision: 'actionpoint',
-        color: '#EF5350'
-      },
-      {
-        nameDivision: 'brief',
-        color: '#90A4AE'
-      }
+      { nameDivision: 'marketing', color: '#F39C12' },
+      { nameDivision: 'operations', color: '#7DCEA0' },
+      { nameDivision: 'pricing', color: '#BB8FCE' },
+      { nameDivision: 'facilities', color: '#AAB7B8' },
+      { nameDivision: 'screencontent', color: '#448AFF' },
+      { nameDivision: 'actionpoint', color: '#EF5350' },
+      { nameDivision: 'brief', color: '#90A4AE' }
     ],
     eventType: [
-      {
-        type: 'evento',
-        color: '#F39C12'
-      },
-      {
-        type: 'matineè',
-        color: '#7DCEA0'
-      },
-      {
-        type: 'prevendite',
-        color: '#BB8FCE'
-      },
-      {
-        type: 'promo',
-        color: '#AAB7B8'
-      },
-      {
-        type: 'compleanni',
-        color: '#448AFF'
-      },
-      {
-        type: 'extra',
-        color: '#EF5350'
-      }
+      { type: 'evento', color: '#F39C12' },
+      { type: 'matineè', color: '#7DCEA0' },
+      { type: 'prevendite', color: '#BB8FCE' },
+      { type: 'promo', color: '#AAB7B8' },
+      { type: 'compleanni', color: '#448AFF' },
+      { type: 'extra', color: '#EF5350' }
     ],
     topicType: [
       { value: 'none', label: 'none' },
@@ -126,36 +82,37 @@ async function populateDatabase() {
       { value: 'health', label: 'health and safety' }
     ]
   }
+
   await connect()
   try {
     await db.put('config', setOptions)
     console.log('Database options popolato con successo!')
   } catch (error) {
-    throw new Error('populate database  options', error)
+    console.error('Errore in fase di popolamento options:', error)
+    throw error
   } finally {
     await close()
   }
 }
 
-//funzione che restituisce tutto il db
 async function getAllOptions() {
   console.log('leggo tutto il db options')
+  await createDbOptions() // Ensure DB is created
+  let value
   await connect()
   try {
-    const value = await db.get('config')
-
-    return value
+    value = await query('config')
   } catch (err) {
-    throw new Error('errore in fase di estraggo options', err)
+    console.error('Errore in fase di estrazione options:', err)
+    throw err
   } finally {
     await close()
   }
+  console.log('leggo tutto il db options:', value)
+  return value
 }
 
-//non so
-// eslint-disable-next-line no-unused-vars
-function query(key) {
-  connect()
+async function query(key) {
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
       if (err) {
@@ -167,7 +124,6 @@ function query(key) {
   })
 }
 
-//funzione che connette al db
 function connect() {
   return new Promise((resolve, reject) => {
     db.open((err) => {
@@ -181,7 +137,6 @@ function connect() {
   })
 }
 
-//funzione che chiude il db e fa un log di conferma chiusura
 function close() {
   return new Promise((resolve, reject) => {
     db.close((err) => {

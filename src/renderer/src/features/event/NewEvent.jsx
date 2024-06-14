@@ -66,10 +66,14 @@ function NewEvent({ handleClose, upDate }) {
   } = useEventsStore()
 
   const getOptions = async () => {
-    const getOpt = await window.api.getOptions()
-    console.log('newEvent: options: getOptions:', getOpt)
-    setOptions(getOpt)
-    return getOpt
+    console.log('getOptions triggerato')
+    try {
+      const getOpt = await window.api.getOptions()
+      console.log('newEvent: options: getOptions:', getOpt)
+      setOptions(getOpt)
+    } catch (error) {
+      console.error('NewEvent: getOptions: Error fetching getOptions:', error)
+    }
   }
 
   //funzione di submit. qua succedono un sacco di cose.
@@ -80,7 +84,6 @@ function NewEvent({ handleClose, upDate }) {
     e.preventDefault()
 
     if (upDate) {
-      upDateEvent(event, event.id)
       if (event.manager) {
         const newTask = {
           id: 'task-' + uuidv4(),
@@ -96,11 +99,22 @@ function NewEvent({ handleClose, upDate }) {
           subAction: event.subAction ? event.subAction : [],
           status: 'newtask'
         }
-        addTask(newTask)
-        await window.api.addNewTask({ task: newTask, totalTasks, upDate: true })
+
+        try {
+          await window.api.addNewTask({ task: newTask, totalTasks, upDate: true })
+          addTask(newTask)
+        } catch (error) {
+          console.error('NewEvent: onSubmitNewEvent: Error fetching upDate task:', error)
+        }
+      }
+
+      try {
+        await window.api.addNewEvent({ event, totalEvents })
+        upDateEvent(event, event.id)
+      } catch (error) {
+        console.error('NewEvent: onSubmitNewEvent: Error fetching upDate event:', error)
       }
       handleClose()
-      await window.api.addNewEvent({ event, totalEvents })
     } else {
       if (event.manager) {
         const newTask = {
@@ -117,9 +131,15 @@ function NewEvent({ handleClose, upDate }) {
           subAction: event.subAction ? event.subAction : [],
           status: 'newtask'
         }
-        addTask(newTask)
-        await window.api.addNewTask({ task: newTask, totalTasks, upDate: true })
+
+        try {
+          await window.api.addNewTask({ task: newTask, totalTasks, upDate: true })
+          addTask(newTask)
+        } catch (error) {
+          console.error('NewEvent: onSubmitNewEvent: Error fetching new task:', error)
+        }
       }
+
       const prepareEvent = {
         ...event,
         cinema: user.user.cinema,
@@ -129,8 +149,12 @@ function NewEvent({ handleClose, upDate }) {
         id: 'event-' + uuidv4()
       }
 
-      setEvents({ events: [...events, prepareEvent], totalEvents })
-      await window.api.addNewEvent({ event: prepareEvent, totalEvents })
+      try {
+        await window.api.addNewEvent({ event: prepareEvent, totalEvents })
+        setEvents({ events: [...events, prepareEvent], totalEvents })
+      } catch (error) {
+        console.error('NewEvent: onSubmitNewEvent: Error fetching new event:', error)
+      }
 
       if (event.eventType === 'prevendite') {
         await insertDuble()
@@ -154,8 +178,12 @@ function NewEvent({ handleClose, upDate }) {
       id: 'event-' + uuidv4()
     }
 
-    setEvents({ events: [...events, dobleEvent], totalEvents })
-    await window.api.addNewEvent({ event: dobleEvent, totalEvents })
+    try {
+      await window.api.addNewEvent({ event: dobleEvent, totalEvents })
+      setEvents({ events: [...events, dobleEvent], totalEvents })
+    } catch (error) {
+      console.error('NewEvent: onSubmitNewEvent: Error fetching insertDouble event:', error)
+    }
   }
 
   //questa funzione andra a cancellare l'event. qui upDate deve essere sicuramente true,
@@ -163,9 +191,13 @@ function NewEvent({ handleClose, upDate }) {
   //sia dallo store che dal db
   const onDelete = async (e, idToCancel) => {
     e.preventDefault()
-    deleteEvent(idToCancel)
+    try {
+      await window.api.removeEvent(idToCancel)
+      deleteEvent(idToCancel)
+    } catch (error) {
+      console.error('NewEvent: onDelete new event: Error fetching delete event:', error)
+    }
     handleClose()
-    await window.api.removeEvent(idToCancel)
   }
 
   const RenderEventType = useCallback(() => {

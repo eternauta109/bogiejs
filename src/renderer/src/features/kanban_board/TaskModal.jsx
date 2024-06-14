@@ -37,7 +37,7 @@ const TaskModal = ({ manager, open, handleClose, upDate }) => {
             alignItems: 'center'
           }}
         >
-          <Typography variant="h6">nuovo task: </Typography>
+          <Typography variant="body1">nuovo task: </Typography>
           <IconButton
             aria-label="close"
             onClick={handleClose}

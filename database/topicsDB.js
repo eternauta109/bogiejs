@@ -1,32 +1,30 @@
 const { Level } = require('level')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs').promises
+const fsConstants = require('fs').constants
+const { app } = require('electron')
 
 const dbName = 'topics'
-
-const { app } = require('electron')
 const isBuild = process.env.NODE_ENV === 'production'
 const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
-
-const db = new Level(dbPath, { valueEncoding: 'json' })
+let db
 
 // Funzione per creare il database se non esiste
-function createDbTopics() {
-  fs.access(dbPath, fs.constants.F_OK, async (err) => {
-    if (err) {
-      console.log('db topics non esistente, lo creo')
-      try {
-        await connect()
-        await populateDatabase()
-      } catch (error) {
-        console.log(error)
-      } finally {
-        await close()
-      }
-    } else {
-      console.log('topicsDB: createDbTopics: db topics esiste gia')
+async function createDbTopics() {
+  try {
+    await fs.access(dbPath, fsConstants.F_OK)
+    console.log(`db ${dbName} gia esistente`)
+  } catch (err) {
+    console.log(`db ${dbName} non esistente, lo creo:`)
+    try {
+      db = new Level(dbPath, { valueEncoding: 'json' })
+      await populateDatabase()
+    } catch (error) {
+      console.error(`errore in fase di creazione db ${dbName}:`, error)
+      throw error
     }
-  })
+  }
+  return dbPath
 }
 
 // Funzione per popolare il database
@@ -35,7 +33,6 @@ async function populateDatabase() {
   await connect()
   try {
     await db.put('totalTopics', 0)
-    await readAllTopics()
     console.log('Database topics popolato con successo!')
   } catch (error) {
     console.error('Error populating topics database:', error)
@@ -55,33 +52,47 @@ function convertStringToDate(dateString) {
   return new Date(dateString)
 }
 
-//funzione che restituisce tutto il db
+// Funzione che restituisce tutto il db
 async function getAllTopics() {
+  await createDbTopics() // Ensure DB is created
   console.log('topicsDb: getAllTopics: Reading all topics from database...')
+  const allTopics = []
   await connect()
-  const alltopics = []
-  const tottopics = await query('totalTopics')
+  let totalTopics
   try {
-    console.log('dopo query')
+    totalTopics = await query('totalTopics')
+  } catch (error) {
+    if (error.notFound) {
+      console.warn('totalTopics key not found, initializing to 0.')
+      totalTopics = 0
+    } else {
+      console.error('Error fetching totalTopics:', error)
+      throw error
+    }
+  }
+
+  try {
     for await (const [key, value] of db.iterator()) {
       if (key !== 'totalTopics') {
-        const parsedtopic = await JSON.parse(value)
-        parsedtopic.dateStart = convertStringToDate(parsedtopic.dateStart)
-
-        alltopics.push(parsedtopic)
+        const parsedTopic = await JSON.parse(value)
+        parsedTopic.dateStart = convertStringToDate(parsedTopic.dateStart)
+        allTopics.push(parsedTopic)
       }
     }
+    console.log('topicsDB: getAllTopics: ho caricato array topics')
   } catch (error) {
-    console.log('errore durante il recupero dei dai dal db topics', error)
+    console.error('topicsDB: getAllTopics: Error fetching topics', error)
+    throw error
   } finally {
     await close()
   }
-  /* console.log('cosa sto manadando da getAllTopics', alltopics, tottopics) */
-  return { topics: alltopics, totalTopics: tottopics }
+  console.log('topicsDB: getAllTopics: rimando oggetto topics, totalTopics')
+  return { topics: allTopics, totalTopics: totalTopics }
 }
 
-// funzione che legge tutto il database
+// Funzione che legge tutto il database
 async function readAllTopics() {
+  await createDbTopics() // Ensure DB is created
   console.log('Database topics letto!')
   await connect()
   const results = []
@@ -91,15 +102,15 @@ async function readAllTopics() {
     }
     console.log('satmapa di tutto il db topics', results)
   } catch (error) {
-    throw new Error('topicsDb: readAllTopics: error:', error)
+    console.error('topicsDB: readAllTopics: Error readAllTopics', error)
+    throw error
   } finally {
     await close()
   }
-
   return results
 }
 
-//funzione che connette al db
+// Funzione che connette al db
 function connect() {
   return new Promise((resolve, reject) => {
     db.open((err) => {
@@ -112,57 +123,54 @@ function connect() {
   })
 }
 
-// Funzione per controllare se un topico esiste nel database
-// mi servirà quando aggiungo un nuovo topic per capire
-// se aumentare o no totaltopics
+// Funzione per controllare se un topic esiste nel database
 async function topicExists(key) {
   console.log('topicExists', key)
   try {
-    const value = await db.get(key) // Recupero il valore dell'topico
-    return value !== undefined // Ritorno true se l'topico esiste, altrimenti false
+    const value = await db.get(key) // Recupero il valore del topic
+    return value !== undefined // Ritorno true se il topic esiste, altrimenti false
   } catch (error) {
-    // Se si verifica un errore, l'topico non esiste
+    // Se si verifica un errore, il topic non esiste
     return false
   }
 }
 
-// Funzione per inserire o aggiornare un  topico nel database
-//in questa funzione controllo se un topic esiste gia, per capire
-// se devo aggiungere l'topic e aumentare totaltopics in caso non esista,
-// o aggiornare un topic e non aumentare totaltopics in caso esista.
+// Funzione per inserire o aggiornare un topic nel database
 async function insertTopic(value) {
   console.log('topic in insertOrUpdatetopic in db:', value)
-  const serializetopic = JSON.stringify({
+  const serializedTopic = JSON.stringify({
     ...value.topic,
     dateStart: convertDateToString(value.topic.dateStart)
   })
+  await createDbTopics() // Ensure DB is created
+  await connect()
   try {
-    await connect() // Connessione al database
     if (await topicExists(value.topic.id)) {
       console.log('topic already exists', value.topic)
-      // Se l'topico esiste già, non aggiorno totaltopics
-      await db.put(value.topic.id, serializetopic) // Aggiornamento dell'topico nel database
+      // Se il topic esiste già, non aggiorno totalTopics
+      await db.put(value.topic.id, serializedTopic) // Aggiornamento del topic nel database
     } else {
       console.log('topic not exists')
-      // Se l'topico non esiste, incremento totaltopics
-      await db.put('totalTopics', value.totalTopics + 1) // Aggiornamento di totaltopics
-      await db.put(value.topic.id, serializetopic) // Inserimento dell'topico nel database
+      // Se il topic non esiste, incremento totalTopics
+      await db.put('totalTopics', value.totalTopics + 1) // Aggiornamento di totalTopics
+      await db.put(value.topic.id, serializedTopic) // Inserimento del topic nel database
     }
     console.log('topic inserted or updated successfully.')
   } catch (error) {
     console.error('Error inserting or updating topic:', error)
-    throw new Error(error) // Gestione dell'errore
+    throw error // Gestione dell'errore
   } finally {
     await close()
   }
 }
 
-//qui ricevo un topicId e lo elimino
+// Funzione per eliminare un topic
 async function deleteThisTopic(topicId) {
+  await createDbTopics() // Ensure DB is created
   console.log('Deleting topic id: ', topicId)
+  await connect()
   try {
-    await connect() // Connessione al database
-    await db.del(topicId.id) // Elimina l'topico utilizzando l'ID come chiave
+    await db.del(topicId) // Elimina il topic utilizzando l'ID come chiave
     console.log('topic deleted successfully.')
   } catch (error) {
     console.error('Error deleting topic:', error)
@@ -172,8 +180,9 @@ async function deleteThisTopic(topicId) {
   }
 }
 
-//non so
+// Funzione per eseguire una query sul database
 async function query(key) {
+  await createDbTopics() // Ensure DB is created
   await connect()
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
@@ -186,7 +195,8 @@ async function query(key) {
     })
   })
 }
-//funzione che chiude il db e fa un log di conferma chiusura
+
+// Funzione che chiude il db e fa un log di conferma chiusura
 function close() {
   return new Promise((resolve, reject) => {
     db.close((err) => {
@@ -203,7 +213,6 @@ function close() {
 module.exports = {
   insertTopic,
   createDbTopics,
-
   readAllTopics,
   getAllTopics,
   deleteThisTopic
