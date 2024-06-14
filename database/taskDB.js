@@ -18,7 +18,6 @@ async function createDbTasks() {
   } catch (err) {
     console.log(`db ${dbName} non esistente, lo creo:`)
     try {
-      db = new Level(dbPath, { valueEncoding: 'json' })
       await populateDatabase()
     } catch (error) {
       console.error(`errore in fase di creazione db ${dbName}:`, error)
@@ -121,20 +120,6 @@ async function getAllTasks(managerName) {
   return { tasks: allTasks, totalTasks: totTasks }
 }
 
-// Funzione che connette al db
-function connect() {
-  return new Promise((resolve, reject) => {
-    db = new Level(dbPath, { valueEncoding: 'json' })
-    db.open((err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
-    })
-  })
-}
-
 // Funzione per controllare se un task esiste nel database
 async function taskExists(key) {
   console.log('taskExists', key)
@@ -200,6 +185,20 @@ async function query(key) {
         reject(err)
       } else {
         resolve(value)
+      }
+    })
+  })
+}
+
+// Funzione che connette al db
+function connect() {
+  return new Promise((resolve, reject) => {
+    db = new Level(dbPath, { valueEncoding: 'json' })
+    db.open((err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
       }
     })
   })

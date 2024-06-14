@@ -17,7 +17,6 @@ async function createDbTopics() {
   } catch (err) {
     console.log(`db ${dbName} non esistente, lo creo:`)
     try {
-      db = new Level(dbPath, { valueEncoding: 'json' })
       await populateDatabase()
     } catch (error) {
       console.error(`errore in fase di creazione db ${dbName}:`, error)
@@ -113,6 +112,7 @@ async function readAllTopics() {
 // Funzione che connette al db
 function connect() {
   return new Promise((resolve, reject) => {
+    db = new Level(dbPath, { valueEncoding: 'json' })
     db.open((err) => {
       if (err) {
         reject(err)
@@ -182,8 +182,6 @@ async function deleteThisTopic(topicId) {
 
 // Funzione per eseguire una query sul database
 async function query(key) {
-  await createDbTopics() // Ensure DB is created
-  await connect()
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
       if (err) {

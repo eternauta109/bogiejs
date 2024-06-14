@@ -17,7 +17,6 @@ async function createDbOptions() {
   } catch (err) {
     console.log(`db ${dbName} non esistente, lo creo:`)
     try {
-      db = new Level(dbPath, { valueEncoding: 'json' })
       await populateDatabase()
     } catch (error) {
       console.error(`errore in fase di creazione db ${dbName}:`, error)
@@ -126,6 +125,7 @@ async function query(key) {
 
 function connect() {
   return new Promise((resolve, reject) => {
+    db = new Level(dbPath, { valueEncoding: 'json' })
     db.open((err) => {
       if (err) {
         reject(err)
