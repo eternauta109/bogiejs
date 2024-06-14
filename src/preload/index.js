@@ -104,7 +104,8 @@ async function getAllEvents() {
     const result = await ipcRenderer.invoke('getEvents')
     return result
   } catch (error) {
-    throw new Error('errore in preload getAllEvents:', error)
+    console.error('Errore in preload getAllEvents:', error)
+    throw error
   }
 }
 //aggiungi evento e aggiorna notifica ai colleghi
@@ -113,7 +114,8 @@ async function addNewEvent(args) {
     const result = await ipcRenderer.invoke('addNewEvent', args)
     return result
   } catch (error) {
-    throw new Error('errore in preload addNewEvent:', error)
+    console.error('Errore in preload addNewEvent:', error)
+    throw error
   }
 }
 
@@ -122,7 +124,8 @@ async function removeEvent(args) {
     const result = await ipcRenderer.invoke('removeEvent', args)
     return result
   } catch (error) {
-    throw new Error('errore in preload removeEvent:', error)
+    console.error('Errore in preload removeEvent:', error)
+    throw error
   }
 }
 
@@ -132,7 +135,8 @@ async function addNewTask(args) {
   try {
     return await ipcRenderer.invoke('addNewTask', args)
   } catch (error) {
-    throw new Error('errore in preload addNewTask:', error)
+    console.error('Errore in preload addNewTask:', error)
+    throw error
   }
 }
 //estrai tutte le tasks
@@ -142,7 +146,8 @@ async function getAllTasks(managerName) {
     console.log('preload: getAllTask: result', result)
     return result
   } catch (error) {
-    throw new Error('errore in preload addNewTask:', error)
+    console.error('Errore in preload getAllTasks:', error)
+    throw error
   }
 }
 
@@ -153,7 +158,8 @@ async function getSingleTask(id) {
     console.log('preload: getSingleTask: result', result)
     return result
   } catch (error) {
-    throw new Error('errore in preload getSingleTask:', error)
+    console.error('Errore in preload getSingleTask:', error)
+    throw error
   }
 }
 
@@ -163,7 +169,8 @@ async function removeTask(args) {
     const result = await ipcRenderer.invoke('removeTask', args)
     return result
   } catch (error) {
-    throw new Error('errore in preload addNewTask:', error)
+    console.error('Errore in preload removeTask:', error)
+    throw error
   }
 }
 
@@ -173,18 +180,19 @@ async function insertTopic(args) {
   try {
     return await ipcRenderer.invoke('insertTopic', args)
   } catch (error) {
-    throw new Error('errore in preload insertTopic:', error)
+    console.error('Errore in preload insertTopic:', error)
+    throw error
   }
 }
 //leggi tutti i topics
 async function getAllTopics() {
   try {
     const returnTopics = await ipcRenderer.invoke('getAllTopics')
-    console.log('preload: getAllTopics: result', returnTopics)
+
     return returnTopics
   } catch (error) {
-    console.error('errore:', error)
-    throw new Error('errore in preload getAllTopics:', error)
+    console.error('Errore in preload getAllTopics:', error)
+    throw error
   }
 }
 //elimina un topic
@@ -193,7 +201,8 @@ async function deleteThisTopic(args) {
     const result = await ipcRenderer.invoke('deleteThisTopic', args)
     return result
   } catch (error) {
-    throw new Error('errore in preload deleteThisTopic:', error)
+    console.error('Errore in preload deleteThisTopic:', error)
+    throw error
   }
 }
 
@@ -202,9 +211,10 @@ async function deleteThisTopic(args) {
 async function getOptions() {
   try {
     const returnOptions = await ipcRenderer.invoke('getOptions')
-    console.log('preload options', returnOptions)
+
     return returnOptions
   } catch (error) {
-    throw new Error('errore in preload getOptions:', error)
+    console.error('Errore in preload getOptions:', error)
+    throw error
   }
 }

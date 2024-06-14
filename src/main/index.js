@@ -3,6 +3,7 @@ import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { initializeIpcHandlers } from './ipcHandlers'
 
 ipcMain.handle('getPath', async () => {
   const appPath = await app.getAppPath()
@@ -10,38 +11,11 @@ ipcMain.handle('getPath', async () => {
   return app.getAppPath()
 })
 
-const {
-  createDbUser,
-  addNewUser,
-  getManagerByCredentials,
-  addNotifyManagers,
-  deleteThisNotify,
-  getAllManagers,
-  deleteThisManager
-} = require('../../database/databaseManagersHandle')
-
-const {
-  createDbEvents,
-  insertEvent,
-  getAllEvents,
-  deleteThisEvent
-} = require('../../database/eventsDB')
-
-const {
-  createDbTasks,
-  insertTask,
-  getAllTasks,
-  deleteThisTask,
-  getSingleTask
-} = require('../../database/taskDB')
-
-const {
-  createDbTopics,
-  insertTopic,
-  getAllTopics,
-  deleteThisTopic
-} = require('../../database/topicsDB')
-const { getAllOptions, createDbOptions } = require('../../database/optionsDB')
+const { createDbUser } = require('../../database/databaseManagersHandle')
+const { createDbEvents } = require('../../database/eventsDB')
+const { createDbTasks } = require('../../database/taskDB')
+const { createDbTopics } = require('../../database/topicsDB')
+const { createDbOptions } = require('../../database/optionsDB')
 
 async function createAllDb() {
   try {
@@ -107,6 +81,7 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
+  initializeIpcHandlers(ipcMain)
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -137,150 +112,3 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-
-//ICP PER GESTIRE I MANAGERS
-
-//icp per creare un nuovo user
-ipcMain.handle('addNewUser', async (event, args) => {
-  console.log('main addNewUSer args ', args)
-  return await addNewUser({ ...args })
-})
-
-//icp per cancellare user
-ipcMain.handle('deleteThisManager', async (event, args) => {
-  return await deleteThisManager(args)
-})
-
-//icp per prendere tutti i managers che appartengono al cinema
-ipcMain.handle('getAllManagers', async (event, args) => {
-  console.log('main getAllManagers', args)
-  return await getAllManagers(args)
-})
-
-//icp per cercare sul db managers chi si sta loggando
-ipcMain.handle('login', async (event, args) => {
-  const returnManager = await getManagerByCredentials(args.userName, args.password)
-  console.log('manager ipcMain del main', returnManager)
-  return returnManager
-  /* await mainWindow.webContents.send('returnManager', returnManager) */
-  // Gestisci le credenziali di accesso qui
-  // Esegui l'autenticazione, interagisci con il database, ecc.
-})
-
-//icp electron che restituisce un array con tutti i nomi dei managers
-/* ipcMain.on('send:managersName', async () => {
-  const managers = await getAllManagersName()  
-  await mainWindow.webContents.send('managersName', managers)
-}) */
-
-//icp che restituisce un array di notifiche aggiornate dopo aver cancellato
-//quella appena letta. con questo andrò a aggionare lo stato di user
-ipcMain.handle('deleteThisNotify', async (event, args) => {
-  console.log(
-    'sono in main e mando questa notifica da cancellare al lla funzione che gestisce il db manager',
-    args
-  )
-  return await deleteThisNotify(args)
-})
-
-//ICP PER GESTIRE GLI EVENTI
-
-//icp electron che inserisce un nuovo evento
-ipcMain.handle('addNewEvent', async (event, args) => {
-  console.log('MAIN: evento da inserire in db', args)
-
-  await insertEvent(args)
-  await addNotifyManagers({ typeNotify: 'event', obj: args.event })
-  /* await readAllEvents(); */
-})
-
-//icp che restituisce tutti gli events. mi serve per caricare events alla primo avvio
-//viene letta dal reducers eventi che va a modificare events nel calendar
-ipcMain.handle('getEvents', async () => {
-  /* console.log("argomenti di send:getEvents", args); */
-  return await getAllEvents()
-})
-
-//icp che elimina un event dal db event
-ipcMain.handle('removeEvent', async (event, eventId) => {
-  /* console.log("send:eventToDelete", eventId); */
-  await deleteThisEvent(eventId)
-  /* await readAllEvents(); */
-})
-
-//ICP PER GESTIRE I TASK
-
-//icp electron che inserisce o aggiorna  task
-ipcMain.handle('addNewTask', async (event, args) => {
-  console.log('MAIN: task da inserire in db', args)
-  await insertTask(args)
-  if (!args.upDate) {
-    await addNotifyManagers({ typeNotify: 'task', obj: args.task })
-  }
-  /* await readAllTasks(); */
-})
-
-//icp che restituitopicsce tutti gli tasks. mi serve per caricare events alla primo avvio
-//viene letta dal reducers tasks
-ipcMain.handle('getAllTasks', async (event, managerName) => {
-  /*   console.log("argomenti di send:getTasks", args); */
-  const stateTasks = await getAllTasks(managerName)
-  return stateTasks
-})
-
-//icp che elimina un event dal db task
-ipcMain.handle('removeTask', async (event, taskId) => {
-  /* console.log("send:taskToDelete", taskId); */
-  await deleteThisTask(taskId)
-  /* await readAllTasks(); */
-})
-
-ipcMain.handle('getSingleTask', async (event, taskId) => {
-  /* console.log("send:taskToDelete", taskId); */
-  const result = await getSingleTask(taskId)
-
-  return result
-  /* await readAllTasks(); */
-})
-
-//ICP PER GESTIRE I TOPICS
-
-//icp electron che inserisce o aggiorna un topic
-ipcMain.handle('insertTopic', async (event, args) => {
-  console.log('MAIN: insertTopic: topic da inserire in db', args)
-  await insertTopic(args)
-
-  await addNotifyManagers({ typeNotify: 'topic', obj: args.topic })
-
-  /* await readAllTopics(); */
-})
-
-//icp che restituisce tutti i topics.
-//viene letta dal reducers topicsS
-ipcMain.handle('getAllTopics', async () => {
-  console.log('main: getAllTopics')
-  return await getAllTopics()
-})
-
-//icp che elimina un event dal db topics
-ipcMain.handle('deleteThisTopic', async (event, topicId) => {
-  console.log('deleteThisTopic', topicId)
-  await deleteThisTopic(topicId)
-})
-
-//ICP PER OPZIONI
-//icp che restituisce tutti le opt.
-//viene letta dal reducers options
-ipcMain.handle('getOptions', async (event, args) => {
-  /* console.log('getOptions', args) */
-  try {
-    const stateOptions = await getAllOptions()
-    return stateOptions
-  } catch (error) {
-    console.log('Main: getOptions: error:', error)
-  }
-
-  /* console.log('stateOptions in main', stateOptions) */
-
-  /* await readAllTopics(); */
-})

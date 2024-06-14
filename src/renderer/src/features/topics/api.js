@@ -9,7 +9,7 @@ export const getTopicsFromDb = async () => {
     console.log('apiTopics: getTopicsFromDb: result:', sortedResult)
     return { topics: sortedResult, totalTopics: result.totalTopics }
   } catch (error) {
-    console.log('apiTopics: getTopicsFromDb: error:', console.error(error))
+    console.error('apiTopics: getTopicsFromDb: error:', error)
   }
 }
 
@@ -20,6 +20,6 @@ export const getOptionsFromDb = async () => {
     console.log('options function loading', getOpt)
     return { ...getOpt }
   } catch (error) {
-    throw new Error(error)
+    console.error('apiTopics: getOptionsFromDb: error:', error)
   }
 }

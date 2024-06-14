@@ -1,45 +1,45 @@
 const { Level } = require('level')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs').promises
+const fsConstants = require('fs').constants
+const { app } = require('electron')
 
 const dbName = 'tasks'
-
-const { app } = require('electron')
 const isBuild = process.env.NODE_ENV === 'production'
 const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
 
-const db = new Level(dbPath, { valueEncoding: 'json' })
+let db
 
 // Funzione per creare il database se non esiste
-function createDbTasks() {
-  fs.access(dbPath, fs.constants.F_OK, async (err) => {
-    if (err) {
-      console.log('db tasks non esistente, lo creo')
-
-      try {
-        await connect()
-        await populateDatabase()
-      } catch (error) {
-        console.log(error)
-      }
-    } else {
-      console.log('db tasks esistente lo leggo')
-      try {
-        /* await readAllTasks(); */
-      } catch (error) {
-        console.log('try catch', error)
-      }
+async function createDbTasks() {
+  try {
+    await fs.access(dbPath, fsConstants.F_OK)
+    console.log(`db ${dbName} gia esistente`)
+  } catch (err) {
+    console.log(`db ${dbName} non esistente, lo creo:`)
+    try {
+      db = new Level(dbPath, { valueEncoding: 'json' })
+      await populateDatabase()
+    } catch (error) {
+      console.error(`errore in fase di creazione db ${dbName}:`, error)
+      throw error
     }
-  })
+  }
+  return dbPath
 }
 
 // Funzione per popolare il database
 async function populateDatabase() {
   await connect()
-  // Inserisci i manager nel database (assumendo che dbMan sia l'istanza del database creato)
-  await db.put('totalTasks', 0)
-  await close()
-  console.log('Database task inizializzato con successo!')
+  try {
+    await db.put('totalTasks', 0)
+    console.log('Database task inizializzato con successo!')
+  } catch (error) {
+    console.error('Error populating database:', error)
+    throw error
+  } finally {
+    await close()
+  }
 }
 
 // Funzione per convertire le date in formato stringa ISO
@@ -52,33 +52,47 @@ function convertStringToDate(dateString) {
   return new Date(dateString)
 }
 
-//funzione che restituisce un task del db
+// Funzione che restituisce un task del db
 async function getSingleTask(idTask) {
+  await createDbTasks() // Ensure DB is created
   await connect()
   try {
-    console.log('taskDB: getSingleTask: siamo nel try', idTask)
+    console.log('taskDB: getSingleTask: siamo nel try per leggere il task.id:', idTask)
     const result = await query(idTask)
-    const parsedtask = JSON.parse(result)
-    parsedtask.start = convertStringToDate(parsedtask.start)
-    console.log('tasksDb: getSingleTask; result della query:', parsedtask)
-    return parsedtask
+    const parsedTask = JSON.parse(result)
+    parsedTask.start = convertStringToDate(parsedTask.start)
+    console.log('tasksDb: getSingleTask; result della query:', parsedTask)
+    return parsedTask
   } catch (error) {
-    throw new Error(error)
+    console.error('taskDB: getSingleTask: Error fetching getSingleTask:', error)
+    throw error
   } finally {
     await close()
   }
 }
-//funzione che restituisce tutto il db
+
+// Funzione che restituisce tutto il db
 async function getAllTasks(managerName) {
+  await createDbTasks() // Ensure DB is created
+  console.log('tasksDb: getAllTasks')
+  const allTasks = []
   await connect()
-  console.log('leggo tutto il db tasks di:', managerName)
-  /* await readAllTasks(); */
-  let allTasks = []
-  const totalTasks = await query('totalTasks')
+  let totTasks
+  try {
+    totTasks = await query('totalTasks')
+  } catch (error) {
+    if (error.notFound) {
+      console.warn('totalTasks key not found, initializing to 0.')
+      totTasks = 0
+    } else {
+      console.error('Error fetching totalTasks:', error)
+      throw error
+    }
+  }
+
   try {
     if (managerName === 'all') {
       // Recupera tutti i task
-
       for await (const [key, value] of db.iterator()) {
         if (key !== 'totalTasks') {
           const parsedTask = JSON.parse(value)
@@ -95,32 +109,22 @@ async function getAllTasks(managerName) {
           allTasks.push(parsedTask)
         }
       }
+      console.log('tasksDB: getAllTasks: ho caricato array tasks')
     }
   } catch (error) {
-    console.log('errore durante il recupero dei dai dal db tasks', error)
+    console.error('tasksDB: getAllTasks: Error fetching getAllTask:', error)
+    throw error
   } finally {
     await close()
   }
-  /*  console.log('cosa sto manadando da getAllTasks', allTasks, totalTasks) */
-  return { tasks: allTasks, totalTasks: totalTasks }
+  console.log('tasksDB: getAllTasks: rimando oggetto tasks, totalTasks')
+  return { tasks: allTasks, totalTasks: totTasks }
 }
 
-// funzione che legge tutto il database
-async function readAllTasks() {
-  console.log('Database tasks letto!')
-  await connect()
-  const results = []
-  for await (const [key, value] of db.iterator()) {
-    results.push({ key, value })
-  }
-  console.log('satmapa di tutto il db tasks', results)
-  await close()
-  return results
-}
-
-//funzione che connette al db
+// Funzione che connette al db
 function connect() {
   return new Promise((resolve, reject) => {
+    db = new Level(dbPath, { valueEncoding: 'json' })
     db.open((err) => {
       if (err) {
         reject(err)
@@ -131,58 +135,54 @@ function connect() {
   })
 }
 
-// Funzione per controllare se un tasko esiste nel database
-// mi servirà quando aggiungo un nuovo task per capire
-// se aumentare o no totaltasks
+// Funzione per controllare se un task esiste nel database
 async function taskExists(key) {
   console.log('taskExists', key)
   try {
-    const value = await db.get(key) // Recupero il valore dell'tasko
-    return value !== undefined // Ritorno true se l'tasko esiste, altrimenti false
+    const value = await db.get(key) // Recupero il valore del task
+    return value !== undefined // Ritorno true se il task esiste, altrimenti false
   } catch (error) {
-    // Se si verifica un errore, l'tasko non esiste
+    // Se si verifica un errore, il task non esiste
     return false
   }
 }
 
-// Funzione per inserire o aggiornare un  tasko nel database
-//in questa funzione controllo se un task esiste gia, per capire
-// se devo aggiungere l'task e aumentare totaltasks in caso non esista,
-// o aggiornare un task e non aumentare totaltasks in caso esista.
+// Funzione per inserire o aggiornare un task nel database
 async function insertTask(value) {
   console.log('task in insertOrUpdatetask in db:', value.task.subAction)
-  const serializetask = JSON.stringify({
+  const serializedTask = JSON.stringify({
     ...value.task,
     start: convertDateToString(value.task.start)
-    /* end: convertDateToString(value.task.end), */
   })
 
+  await createDbTasks() // Ensure DB is created
+  await connect()
   try {
-    await connect() // Connessione al database
     if (await taskExists(value.task.id)) {
-      // Se l'tasko esiste già, non aggiorno totaltasks
-      console.log('task  updated successfully.')
-      await db.put(value.task.id, serializetask) // Aggiornamento dell'tasko nel database
+      // Se il task esiste già, non aggiorno totalTasks
+      console.log('task updated successfully in db task.')
+      await db.put(value.task.id, serializedTask) // Aggiornamento del task nel database
     } else {
-      // Se l'tasko non esiste, incremento totaltasks
-      await db.put('totalTasks', value.totalTasks + 1) // Aggiornamento di totaltasks
-      await db.put(value.task.id, serializetask) // Inserimento dell'tasko nel database
-      console.log('task insertedsuccessfully.')
+      // Se il task non esiste, incremento totalTasks
+      await db.put('totalTasks', value.totalTasks + 1) // Aggiornamento di totalTasks
+      await db.put(value.task.id, serializedTask) // Inserimento del task nel database
+      console.log('task inserted successfully in db task.')
     }
   } catch (error) {
     console.error('Error inserting or updating task:', error)
-    throw new Error(error) // Gestione dell'errore
+    throw error // Gestione dell'errore
   } finally {
     await close() // Chiusura della connessione al database
   }
 }
 
-//qui ricevo un taskId e lo elimino
+// Funzione per eliminare un task
 async function deleteThisTask(taskId) {
+  await createDbTasks() // Ensure DB is created
   console.log('Deleting task id: ', taskId)
+  await connect()
   try {
-    await connect() // Connessione al database
-    await db.del(taskId) // Elimina l'tasko utilizzando l'ID come chiave
+    await db.del(taskId) // Elimina il task utilizzando l'ID come chiave
     console.log('task deleted successfully.')
   } catch (error) {
     console.error('Error deleting task:', error)
@@ -192,9 +192,8 @@ async function deleteThisTask(taskId) {
   }
 }
 
-//non so
-function query(key) {
-  connect()
+// Funzione per eseguire una query sul database
+async function query(key) {
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
       if (err) {
@@ -205,7 +204,8 @@ function query(key) {
     })
   })
 }
-//funzione che chiude il db e fa un log di conferma chiusura
+
+// Funzione che chiude il db e fa un log di conferma chiusura
 function close() {
   return new Promise((resolve, reject) => {
     db.close((err) => {
@@ -223,7 +223,6 @@ module.exports = {
   insertTask,
   createDbTasks,
   getSingleTask,
-  readAllTasks,
   getAllTasks,
   deleteThisTask
 }

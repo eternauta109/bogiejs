@@ -50,9 +50,14 @@ export default function Basic({ handleOpen }) {
 
   const getEventsFromDb = async () => {
     console.log('getEventsFromDb triggerato')
-    const result = await window.api.getAllEvents()
-    console.log('result get events from db', result)
-    setEvents(result)
+    try {
+      const result = await window.api.getAllEvents()
+      console.log('result get events from db', result)
+      setEvents(result) // Assicurati di impostare gli eventi correttamente
+    } catch (error) {
+      console.error('MyCalendar: getEventsFromDb: Error fetching events:', error)
+      // Gestisci l'errore, magari impostando uno stato di errore per mostrarlo nell'interfaccia utente
+    }
   }
 
   useEffect(() => {
