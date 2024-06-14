@@ -170,7 +170,7 @@ async function deleteThisTopic(topicId) {
   console.log('Deleting topic id: ', topicId)
   await connect()
   try {
-    await db.del(topicId) // Elimina il topic utilizzando l'ID come chiave
+    await db.del(topicId.id) // Elimina il topic utilizzando l'ID come chiave
     console.log('topic deleted successfully.')
   } catch (error) {
     console.error('Error deleting topic:', error)

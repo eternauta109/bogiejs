@@ -42,10 +42,12 @@ const topicReducer = (state, action) => {
     }
 
     case 'DELETE_TOPIC':
+      console.log(action.payload)
       return {
         ...state,
-        topics: state.topics.filter((topic) => topic.id !== action.payload.id)
+        topics: state.topics.filter((topic) => topic.id !== action.payload)
       }
+
     case 'SET_TOPICS':
       console.log('payload.topics SET_TOPICS in reducer says:', action.payload)
       return {

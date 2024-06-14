@@ -24,7 +24,6 @@ async function createAllDb() {
     await createDbTasks()
     await createDbTopics()
     await createDbOptions()
-    console.log('Tutti i database sono stati creati con successo.')
   } catch (error) {
     console.error('Si è verificato un errore durante la creazione dei database:', error)
   }
@@ -33,11 +32,6 @@ async function createAllDb() {
 ;(async () => {
   await createAllDb()
 })()
-/* createDbUser()
-createDbEvents()
-createDbTasks()
-createDbTopics()
-createDbOptions() */
 
 let mainWindow
 function createWindow() {
@@ -81,7 +75,9 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
+  // inizializzo tutti gli IPC HANDLERS
   initializeIpcHandlers(ipcMain)
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
