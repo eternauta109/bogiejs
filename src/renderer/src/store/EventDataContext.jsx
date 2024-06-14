@@ -81,7 +81,7 @@ export const EventStoreContext = ({ children }) => {
   const deleteTopic = (id) => {
     topicDispatch({
       type: 'DELETE_TOPIC',
-      payload: { id }
+      payload: id
     })
   }
 
