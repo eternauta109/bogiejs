@@ -198,6 +198,7 @@ function connect() {
       if (err) {
         reject(err)
       } else {
+        console.log('db Task connesso')
         resolve()
       }
     })
