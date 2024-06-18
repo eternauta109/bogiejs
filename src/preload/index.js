@@ -52,7 +52,8 @@ async function login({ userName, password }) {
     const result = await ipcRenderer.invoke('login', { userName, password })
     return result
   } catch (error) {
-    throw new Error('errore in preload login:', error)
+    console.error('Errore in preload login:', error)
+    throw error
   }
 }
 
@@ -62,7 +63,8 @@ async function addNewUser(args) {
 
     return result
   } catch (error) {
-    throw new Error('errore in preload addNewUser:', error)
+    console.error('Errore in preload addNewUser:', error)
+    throw error
   }
 }
 
@@ -72,7 +74,8 @@ async function deleteThisManager(args) {
 
     return result
   } catch (error) {
-    throw new Error('errore in preload deleteThisManager:', error)
+    console.error('Errore in preload deleteThisManager:', error)
+    throw error
   }
 }
 
@@ -82,7 +85,8 @@ async function deleteThisNotify(args) {
 
     return result
   } catch (error) {
-    throw new Error('errore in preload deleteThisNotify:', error)
+    console.error('Errore in preload deleteThisNotify:', error)
+    throw error
   }
 }
 
@@ -93,7 +97,8 @@ async function getAllManagers(args) {
 
     return result
   } catch (error) {
-    throw new Error('errore in preload addNewUser:', error)
+    console.error('Errore in preload getAllManagers:', error)
+    throw error
   }
 }
 

@@ -31,7 +31,6 @@ const ModalEvent = ({ open, handleClose, upDate }) => {
     handleClose()
     initEvent() // Suppongo che tu abbia la funzione initEvent()
   }
-  console.log('update', upDate)
 
   return (
     <Dialog

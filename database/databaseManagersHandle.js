@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { Level } = require('level')
 const path = require('path')
 const fs = require('fs').promises
@@ -33,6 +32,7 @@ async function getManagerByCredentials(userName, password) {
   try {
     for await (const [, manager] of db.iterator()) {
       if (manager.userName === userName && manager.password === password) {
+        // eslint-disable-next-line no-unused-vars
         const { password, ...managerWithoutPassword } = manager
         const managersName = await getAllManagersName(managerWithoutPassword)
         return { managerFound: { ...managerWithoutPassword, isAuth: true }, managersName }
@@ -109,7 +109,8 @@ async function iteratorForAddNotify(obj, newNotify) {
       }
     }
   } catch (error) {
-    console.error('Error adding notification:', error)
+    console.error('managersDB: iterrator for add notify: error:', error)
+    throw error
   } finally {
     await close()
   }
@@ -165,10 +166,14 @@ async function populateDatabase() {
 }
 
 async function deleteThisNotify(args) {
+  console.log('sono nel db managers e sto cancellando notifica:', args)
+
   await createDbUser() // Ensure DB is created
+
+  await connect()
   const user = await query(args.userId)
   const index = user.notification.findIndex((notify) => notify.id === args.notifyId)
-  await connect()
+
   try {
     if (index !== -1) {
       user.notification.splice(index, 1)
@@ -242,7 +247,7 @@ async function insertNewManager(key, value) {
 
 async function query(key) {
   await createDbUser() // Ensure DB is created
-  await connect()
+
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
       if (err) {

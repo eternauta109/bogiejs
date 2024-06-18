@@ -96,7 +96,8 @@ export default function Task({ id, taskFromParent, status, handleOpenOldTask, ex
 
   useEffect(() => {
     // Questo effetto viene eseguito quando `task` cambia
-    console.log('Il task è cambiato', task, visible)
+    /* console.log('Il task è cambiato', task, visible) */
+    return
   }, [task, perc])
 
   useEffect(() => {

@@ -63,7 +63,8 @@ export default function SubAction({ type, upDate, fakeTask }) {
   }, [upDate])
 
   useEffect(() => {
-    console.log(`subAction: ${type}: `, state)
+    return
+    /* console.log(`subAction: ${type}: `, state) */
   }, [state, type])
 
   return (
