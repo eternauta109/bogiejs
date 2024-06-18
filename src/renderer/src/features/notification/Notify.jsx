@@ -35,10 +35,14 @@ export const Notify = ({ onHandleClose, open, notify }) => {
 
   const handleCancelNotify = async (e, notifyId) => {
     console.log(notifyId, user)
-    const newNotify = await window.api.deleteThisNotify({ notifyId, userId: user.user.id })
-    console.log('array notifiche aggiornato è tornato a Notify cosi', newNotify)
-    deleteNotify(newNotify)
-    console.log('user aggiornato', user)
+    try {
+      const newNotify = await window.api.deleteThisNotify({ notifyId, userId: user.user.id })
+      console.log('array notifiche aggiornato è tornato a Notify cosi', newNotify)
+      deleteNotify(newNotify)
+      console.log('user aggiornato', user)
+    } catch (error) {
+      console.error('Notify: delete notify error:', error)
+    }
   }
 
   useEffect(() => {
