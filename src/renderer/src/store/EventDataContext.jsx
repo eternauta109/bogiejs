@@ -88,10 +88,9 @@ export const EventStoreContext = ({ children }) => {
   //Action EVENT
 
   const addEvent = (event) => {
-    const updateEvents = eventState.events.concat(event)
     deispatchEvent({
       type: 'ADD_EVENT',
-      payload: { events: updateEvents }
+      payload: event
     })
   }
 
@@ -117,7 +116,12 @@ export const EventStoreContext = ({ children }) => {
       payload: eventId
     })
   }
-
+  const deleteMultipleEvents = (eventId) => {
+    deispatchEvent({
+      type: 'DELETE_EVENTS',
+      payload: eventId
+    })
+  }
   const setEvent = (event) => {
     deispatchEvent({
       type: 'SET_EVENT',
@@ -228,6 +232,7 @@ export const EventStoreContext = ({ children }) => {
     setEvents,
     deleteEvent,
     setFieldEvent,
+    deleteMultipleEvents,
 
     //TASK
     tasks: taskState.tasks,

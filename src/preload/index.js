@@ -10,6 +10,7 @@ const api = {
   deleteThisNotify,
   addNewEvent,
   removeEvent,
+  removeMultipleEvent,
   addNewTask,
   getAllTasks,
   removeTask,
@@ -127,6 +128,17 @@ async function addNewEvent(args) {
 async function removeEvent(args) {
   try {
     const result = await ipcRenderer.invoke('removeEvent', args)
+    return result
+  } catch (error) {
+    console.error('Errore in preload removeEvent:', error)
+    throw error
+  }
+}
+
+async function removeMultipleEvent(args) {
+  /* console.log('da preload cancella multiple', args) */
+  try {
+    const result = await ipcRenderer.invoke('removeMultipleEvent', args)
     return result
   } catch (error) {
     console.error('Errore in preload removeEvent:', error)

@@ -32,7 +32,7 @@ const localizer = dateFnsLocalizer({
   locales
 })
 
-export default function Basic({ handleOpen }) {
+export default function Basic({ handleOpen, setRicorency }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
   const { max, views } = useMemo(
@@ -44,6 +44,7 @@ export default function Basic({ handleOpen }) {
 
   const onSelectEvent = (event) => {
     console.log('onSelectEvent', event)
+    event.eventType === 'ricorenza' ? setRicorency(true) : setRicorency(false)
     setEvent(event)
     handleOpen()
   }

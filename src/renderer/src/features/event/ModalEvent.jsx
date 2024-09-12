@@ -10,6 +10,7 @@ import Slide from '@mui/material/Slide'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import Typography from '@mui/material/Typography'
+import Frequency from './eventType/Frequency'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -24,9 +25,9 @@ const style = {
 }
 
 // eslint-disable-next-line react/prop-types
-const ModalEvent = ({ open, handleClose, upDate }) => {
+const ModalEvent = ({ open, handleClose, upDate, ricorency }) => {
   const { initEvent, event } = useEventsStore()
-
+  console.log(ricorency)
   const handleDialogClose = () => {
     handleClose()
     initEvent() // Suppongo che tu abbia la funzione initEvent()
@@ -63,7 +64,11 @@ const ModalEvent = ({ open, handleClose, upDate }) => {
       </DialogTitle>
       <DialogContent dividers>
         <Box sx={style}>
-          <NewEvent handleClose={handleClose} upDate={upDate} />
+          {ricorency ? (
+            <Frequency handleClose={handleClose} upDate={upDate} />
+          ) : (
+            <NewEvent handleClose={handleClose} upDate={upDate} />
+          )}
         </Box>
       </DialogContent>
     </Dialog>

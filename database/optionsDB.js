@@ -50,6 +50,7 @@ async function populateDatabase() {
     ],
     topicType: [
       { value: 'none', label: 'none' },
+      { value: 'utility', label: 'utlity' },
       { value: 'cascading', label: 'cascading' },
       { value: 'suggest', label: 'abitudini' },
       { value: 'tutorial', label: 'Tutorial' },
