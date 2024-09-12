@@ -65,6 +65,7 @@ const Topics = () => {
   const { topics, upDateTopic, setTopics, user, deleteTopic, totalTopics } = useEventsStore()
   const [optionsState, setOptionsState] = useState({})
   const [rowModesModel, setRowModesModel] = useState({})
+  const [showManagerColumns, setShowManagerColumns] = useState(true)
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -126,7 +127,7 @@ const Topics = () => {
     }
   }
 
-  const columns = [
+  const baseColumns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
       field: 'dateStart',
@@ -202,8 +203,8 @@ const Topics = () => {
             </a>
           </Typography>
         ) : null
-    },
-    ...user.managersName.map((manager) => ({
+    }
+    /* ...user.managersName.map((manager) => ({
       field: manager,
       headerName: manager,
       width: 110,
@@ -220,7 +221,10 @@ const Topics = () => {
           }}
         />
       )
-    })),
+    })), */
+  ]
+
+  const endColumns = [
     {
       field: 'tmVeto',
       headerName: 'Tm Veto',
@@ -295,10 +299,35 @@ const Topics = () => {
     }
   ]
 
+  // Colonne manager solo se showManagerColumns è true
+  const managerColumns = user.managersName.map((manager) => ({
+    field: manager,
+    headerName: manager,
+    width: 110,
+    renderCell: (params) => (
+      <ManagerCheckbox
+        row={params.row}
+        manager={manager}
+        onCheckboxChange={(manager) => {
+          handleCheckboxChange(params.row.id, manager)
+          setRowModesModel({
+            ...rowModesModel,
+            [params.row.id]: { mode: GridRowModes.Edit }
+          })
+        }}
+      />
+    )
+  }))
+
   const getOptions = async () => {
     const result = await getOptionsFromDb()
     setOptionsState(result)
   }
+
+  // Unisci le colonne base e manager, controllando la visibilità
+  const columns = showManagerColumns
+    ? [...baseColumns, ...managerColumns, ...endColumns]
+    : [...baseColumns, ...endColumns]
 
   const getTopics = async () => {
     const result = await getTopicsFromDb()
@@ -343,6 +372,16 @@ const Topics = () => {
         }
       }}
     >
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
+        <Typography variant="body2" sx={{ mr: 2 }}>
+          mostra/nascondi managers
+        </Typography>
+        <Switch
+          checked={showManagerColumns}
+          onChange={() => setShowManagerColumns((prev) => !prev)}
+          inputProps={{ 'aria-label': 'controlled' }}
+        />
+      </Box>
       <DataGrid
         rows={topics ? topics : []}
         columns={columns}
