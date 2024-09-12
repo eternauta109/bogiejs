@@ -19,9 +19,10 @@ import {
   IconButton
 } from '@mui/material'
 
+import useEventsStore from '../../store/EventDataContext'
+
 import ClassicEvent from './eventType/ClassicEvent'
 import MattineEvent from './eventType/MattineEvent'
-import useEventsStore from '../../store/EventDataContext'
 import Prevendite from './eventType/Prevendite'
 import Promo from './eventType/Promo'
 import Compleanni from './eventType/Compleanni'
@@ -35,6 +36,7 @@ import Sopraluogo from './eventType/Sopraluogo'
 import Meeting from './eventType/Meeting'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import SubAction from './eventType/serviceEventType/SubAction'
+import Manutenzione from './eventType/Manutenzione'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -228,6 +230,8 @@ function NewEvent({ handleClose, upDate }) {
         return <Meeting upDate={upDate} />
       case 'matinee':
         return <MattineEvent upDate={upDate} />
+      case 'manutenzione':
+        return <Manutenzione upDate={upDate} />
       default:
         return <ClassicEvent />
     }

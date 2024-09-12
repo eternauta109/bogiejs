@@ -151,6 +151,39 @@ async function deleteThisEvent(eventId) {
   }
 }
 
+async function deleteMultipleEvents(frequencyId) {
+  /* console.log('rimuovi eventi multipli', frequencyId) */
+  await createDbEvents() // Assicura che il DB sia creato
+  await connect() // Connessione al DB
+
+  try {
+    // 1. Crea uno stream per leggere tutti gli eventi
+    const eventsToDelete = []
+
+    for await (const [key, value] of db.iterator()) {
+      /* console.log('prima di convertire in json', value) */
+      const event = JSON.parse(value) // Supponendo che i dati siano in JSON
+      /* console.log('in json', event) */
+      if (event.frequencyId === frequencyId) {
+        eventsToDelete.push(key) // Aggiungi l'ID dell'evento da eliminare
+      }
+    }
+
+    // 2. Elimina tutti gli eventi con il frequencyId
+    for (const eventId of eventsToDelete) {
+      await db.del(eventId)
+      console.log(`Event with ID ${eventId} deleted successfully.`)
+    }
+
+    console.log(`All events with frequencyId ${frequencyId} have been deleted.`)
+  } catch (error) {
+    console.error('Error deleting events by frequencyId:', error)
+    throw error
+  } finally {
+    await close() // Chiudi la connessione al DB
+  }
+}
+
 async function query(key) {
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
@@ -195,5 +228,6 @@ module.exports = {
   createDbEvents,
   getAllEvents,
   deleteThisEvent,
-  readAllEvents
+  readAllEvents,
+  deleteMultipleEvents
 }

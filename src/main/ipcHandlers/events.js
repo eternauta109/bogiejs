@@ -1,5 +1,10 @@
 // ipcHandlers/events.js
-const { insertEvent, getAllEvents, deleteThisEvent } = require('../../database/eventsDB')
+const {
+  insertEvent,
+  getAllEvents,
+  deleteThisEvent,
+  deleteMultipleEvents
+} = require('../../database/eventsDB')
 const { addNotifyManagers } = require('../../database/databaseManagersHandle')
 
 export function handleEventIpc(ipcMain) {
@@ -26,6 +31,16 @@ export function handleEventIpc(ipcMain) {
   ipcMain.handle('removeEvent', async (event, eventId) => {
     try {
       await deleteThisEvent(eventId)
+    } catch (error) {
+      console.error('Errore nel main process getAllEvents:', error)
+      throw error // Rilancia l'errore per essere gestito nel preload
+    }
+  })
+
+  ipcMain.handle('removeMultipleEvent', async (event, eventId) => {
+    console.log('da main cancella multipla', eventId)
+    try {
+      await deleteMultipleEvents(eventId)
     } catch (error) {
       console.error('Errore nel main process getAllEvents:', error)
       throw error // Rilancia l'errore per essere gestito nel preload

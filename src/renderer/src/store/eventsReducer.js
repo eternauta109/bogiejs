@@ -8,10 +8,10 @@ const eventsReducer = (state, action) => {
   const { type, payload } = action
   switch (type) {
     case 'ADD_EVENT':
-      /* console.log("ADD_EVENT", payload); */
+      console.log('ADD_EVENT', payload)
       return {
         ...state,
-        events: payload.events,
+        events: state.events.concat(payload),
         totalEvents: state.totalEvents + 1
       }
 
@@ -19,6 +19,16 @@ const eventsReducer = (state, action) => {
     case 'DELETE_EVENT': {
       // Filtra gli eventi rimuovendo quello con l'ID corrispondente
       const updatedEvents = state.events.filter((event) => event.id !== payload)
+      return {
+        ...state,
+        events: updatedEvents
+      }
+    }
+
+    // Aggiungi il caso per la cancellazione di eventi multipli
+    case 'DELETE_EVENTS': {
+      // Filtra gli eventi rimuovendo quello con l'ID corrispondente
+      const updatedEvents = state.events.filter((event) => event.frequencyId !== payload)
       return {
         ...state,
         events: updatedEvents

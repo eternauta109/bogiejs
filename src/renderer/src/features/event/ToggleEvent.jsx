@@ -15,6 +15,7 @@ import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront'
 import Groups2Icon from '@mui/icons-material/Groups2'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import useEventsStore from '../../store/EventDataContext'
+import EngineeringIcon from '@mui/icons-material/Engineering'
 
 const colorMap = {
   evento: '#FD102B',
@@ -29,7 +30,8 @@ const colorMap = {
   stampa: '#669999',
   sopraluogo: '#F7DC6F',
   meeting: '#4291C6 ',
-  delivery: '#C49E97'
+  delivery: '#C49E97',
+  manutenzione: '#6699ff'
 }
 const ToggleEvent = () => {
   const { event, setEvent } = useEventsStore()
@@ -49,7 +51,11 @@ const ToggleEvent = () => {
       <ToggleButtonGroup
         value={event.eventType ? event.eventType : 'evento'}
         exclusive
-        sx={{ mb: 1 }}
+        sx={{
+          mb: 1,
+          width: '100%',
+          justifyContent: 'space-between'
+        }}
         aria-label="text alignment"
       >
         {Object.keys(colorMap)
@@ -73,7 +79,11 @@ const ToggleEvent = () => {
       <ToggleButtonGroup
         value={event.eventType ? event.eventType : 'evento'}
         exclusive
-        sx={{ mb: 4 }}
+        sx={{
+          mb: 4,
+          width: '100%',
+          justifyContent: 'space-between'
+        }}
         aria-label="text alignment"
       >
         {Object.keys(colorMap)
@@ -125,6 +135,8 @@ const getIcon = (type) => {
       return <SettingsAccessibilityIcon />
     case 'meeting':
       return <Groups2Icon />
+    case 'manutenzione':
+      return <EngineeringIcon />
     default:
       return null
   }

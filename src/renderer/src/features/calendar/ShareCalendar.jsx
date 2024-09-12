@@ -18,15 +18,22 @@ const roundButtonStyle = {
 
 const ShareCalendar = () => {
   const [openNewEvent, setOpenNewEvent] = useState(false)
+  const [ricorency, setRicorency] = useState(false)
   const [upDate, setUpDate] = useState(false)
   const [checked, setChecked] = useState(false) //stato dello swith per visualizzare calendar/scheduler
   const { initEvent } = useEventsStore()
 
   const handleOpenNewEvent = () => {
     setUpDate(false)
-
+    setRicorency(false)
     setOpenNewEvent(true)
     // Imposta upDate a false quando viene aperto il modal
+  }
+
+  const handleOpenRicorencyEvent = () => {
+    setUpDate(false)
+    setRicorency(true)
+    setOpenNewEvent(true)
   }
 
   const handleOpenOldEvent = () => {
@@ -40,7 +47,6 @@ const ShareCalendar = () => {
   const handleChange = (event) => {
     setChecked(event.target.checked)
   }
-  //^^^
 
   const handleCloseNewEvent = () => {
     initEvent()
@@ -52,14 +58,39 @@ const ShareCalendar = () => {
       <Grid container spacing={1} alignItems="center" justifyContent="center">
         <Grid item xs={12} md={11}>
           {!checked ? (
-            <MyCalendar handleOpen={handleOpenOldEvent} />
+            <MyCalendar handleOpen={handleOpenOldEvent} setRicorency={setRicorency} />
           ) : (
             <SchedulerComponent handleOpen={handleOpenOldEvent} />
           )}
         </Grid>
         <Grid item xs={12} md={1}>
-          <Button variant="contained" style={roundButtonStyle} onClick={handleOpenNewEvent}>
-            Add ITEM
+          <Button
+            variant="contained"
+            style={roundButtonStyle}
+            onClick={handleOpenNewEvent}
+            sx={{
+              p: 5,
+              '&:hover': {
+                backgroundColor: 'darkred !important'
+              }
+            }}
+          >
+            Aggiungi Singola Attività
+          </Button>
+
+          <Button
+            variant="contained"
+            style={roundButtonStyle}
+            onClick={handleOpenRicorencyEvent}
+            sx={{
+              p: 5,
+              backgroundColor: 'teal !important', // Imposta il colore di sfondo a rosso
+              '&:hover': {
+                backgroundColor: 'darkred !important' // Colore di sfondo durante l'hover
+              }
+            }}
+          >
+            Aggiungi Attività Ricorrente
           </Button>
 
           <FormGroup>
@@ -77,7 +108,12 @@ const ShareCalendar = () => {
         </Grid>
       </Grid>
 
-      <ModalEvent open={openNewEvent} handleClose={handleCloseNewEvent} upDate={upDate} />
+      <ModalEvent
+        open={openNewEvent}
+        handleClose={handleCloseNewEvent}
+        upDate={upDate}
+        ricorency={ricorency}
+      />
     </Container>
   )
 }
