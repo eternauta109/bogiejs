@@ -6,12 +6,13 @@ import { Container, Grid, Switch, Button, FormGroup, FormControlLabel } from '@m
 import SchedulerComponent from '../scheduler/SchedulerComponent'
 import MyCalendar from './MyCalendar'
 import './calendar.css'
+import Filter from './Filter'
 
 const roundButtonStyle = {
   borderRadius: '10%',
   width: '100px',
   height: '60px',
-  margin: '20px',
+  marginBottom: '20px',
   minWidth: 'unset',
   backgroundColor: '#689F38' // Aggiungi il colore rosso al background
 }
@@ -55,14 +56,7 @@ const ShareCalendar = () => {
 
   return (
     <Container maxWidth="xl" style={{ width: '100%', height: '100vh' }}>
-      <Grid container spacing={1} alignItems="center" justifyContent="center">
-        <Grid item xs={12} md={11}>
-          {!checked ? (
-            <MyCalendar handleOpen={handleOpenOldEvent} setRicorency={setRicorency} />
-          ) : (
-            <SchedulerComponent handleOpen={handleOpenOldEvent} />
-          )}
-        </Grid>
+      <Grid container spacing={1} alignItems="center" justifyContent="start">
         <Grid item xs={12} md={1}>
           <Button
             variant="contained"
@@ -102,9 +96,20 @@ const ShareCalendar = () => {
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
               }
+              labelPlacement="top"
               label="scheduler"
             />
           </FormGroup>
+        </Grid>
+        <Grid item xs={12} md={10}>
+          {!checked ? (
+            <MyCalendar handleOpen={handleOpenOldEvent} setRicorency={setRicorency} />
+          ) : (
+            <SchedulerComponent handleOpen={handleOpenOldEvent} />
+          )}
+        </Grid>
+        <Grid item xs={12} md={1}>
+          <Filter />
         </Grid>
       </Grid>
 

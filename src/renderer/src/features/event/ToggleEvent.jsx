@@ -1,54 +1,255 @@
 /* eslint-disable react/prop-types */
-
-import { ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material'
-import EventIcon from '@mui/icons-material/Event'
-import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility'
-import CelebrationIcon from '@mui/icons-material/Celebration'
-import SellIcon from '@mui/icons-material/Sell'
-import SchoolIcon from '@mui/icons-material/School'
-import DevicesOtherIcon from '@mui/icons-material/DevicesOther'
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
-import MovieCreationIcon from '@mui/icons-material/MovieCreation'
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
-import LocalAirportIcon from '@mui/icons-material/LocalAirport'
-import PhotoCameraFrontIcon from '@mui/icons-material/PhotoCameraFront'
-import Groups2Icon from '@mui/icons-material/Groups2'
-import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import { useState } from 'react'
+import { Typography } from '@mui/material'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import Box from '@mui/material/Box'
+import opsIcon from '../../assets/ops.png'
+import maintenanceIcons from '../../assets/maintenance.png'
+import concIcon from '../../assets/concIcon.png'
+import eventIcon from '../../assets/eventIcon.png'
+import screenIcon from '../../assets/screenIcon.png'
+import ToggleService from './ToggleService'
 import useEventsStore from '../../store/EventDataContext'
-import EngineeringIcon from '@mui/icons-material/Engineering'
 
-const colorMap = {
-  evento: '#FD102B',
-  matinee: '#7DCEA0',
-  prevendite: '#BB8FCE',
-  promo: '#F5B041 ',
-  compleanni: '#448AFF',
-  extra: '#FAFAD2',
-  anteprima: '#42C67B',
-  maratona: '#4EF9F4',
-  visita: '#FF5733',
-  stampa: '#669999',
-  sopraluogo: '#F7DC6F',
-  meeting: '#4291C6 ',
-  delivery: '#C49E97',
-  manutenzione: '#6699ff'
-}
 const ToggleEvent = () => {
-  const { event, setEvent } = useEventsStore()
+  const { setEvent } = useEventsStore()
+  const [selectedEvent, setSelectedEvent] = useState(null) // Stato per il pulsante
+  const colorMap = {
+    //ops
+    visita: '#1f618d',
+    compleanni: '#5499c7',
+    matinee: '#2980b9',
+    //manutenzione
+    manutenzione: '#6699ff',
+    //concession
+    delivery: '#af7ac5',
+    promo: '#9b59b6  ',
+    menu: '#633974  ',
+    //evento
+    sopraluogo: '#f7dc6f',
+    meeting: '#f4d03f  ',
+    evento: '#d4ac0d',
+    convention: '#d4ac0d ',
+    privateproj: '#9a7d0a',
+    //screencontent
+    prevendite: '#7dcea0',
+    extra: '#52be80',
+    anteprima: '#27ae60 ',
+    maratona: '#1e8449 ',
+    stampa: '#196f3d'
+  }
 
   const handleToggleAlignment = (newAlignment) => {
     console.log('toggleAlignment', newAlignment)
-    if (newAlignment !== null) {
+    if (newAlignment !== selectedEvent) {
+      setSelectedEvent(newAlignment)
       setEvent({ eventType: newAlignment, colorEventType: colorMap[newAlignment] })
+    } else {
+      setSelectedEvent(null)
     }
   }
 
   return (
     <>
-      <Typography variant="body2" color="grey">
-        scegli il tipo di evento
-      </Typography>
       <ToggleButtonGroup
+        value={selectedEvent}
+        exclusive
+        onChange={handleToggleAlignment}
+        aria-label="text alignment"
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row', // Layout a colonna
+            mb: 2,
+            justifyContent: 'space-between', // Centra verticalmente
+            gap: 2, // Spaziatura tra gli elementi
+            alignItems: 'flex-start' // Allinea tutti i box in alto
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              height: '100%',
+              flexDirection: 'column', // Disposizione a colonna
+              alignItems: 'center', // Centra gli elementi orizzontalmente
+              justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
+              gap: 2, // Spaziatura tra gli elementi
+              border: '1px solid #5499c7', // Bordo con colore e larghezza
+              borderRadius: '8px', // Arrotonda i bordi (opzionale)
+              padding: 1, // Aggiunge spazio interno
+              width: 'fit-content' // Imposta la larghezza al contenuto
+            }}
+          >
+            <Typography variant="body2" color="grey">
+              ops
+            </Typography>
+
+            <img src={opsIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+            <ToggleService
+              value="visita"
+              handleToggleAlignment={handleToggleAlignment}
+              selectedEvent={selectedEvent}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="compleanni"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="matinee"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              height: '100%',
+              flexDirection: 'column', // Layout a colonna
+              alignItems: 'center', // Centra gli elementi orizzontalmente
+              justifyContent: 'flex-start', // Centra verticalmente
+              gap: 2, // Spaziatura tra gli elementi
+              border: '1px solid 	#48c9b0 ', // Bordo con colore e larghezza
+              borderRadius: '8px', // Arrot	#FFFF00nda i bordi (opzionale)
+              padding: 1, // Aggiunge spazio interno
+              width: 'fit-content' // Imposta la larghezza al contenuto
+            }}
+          >
+            <Typography variant="body2" color="grey">
+              manut.
+            </Typography>
+            <img src={maintenanceIcons} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="manutenzione"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+          </Box>
+          <Box
+            sx={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column', // Layout a colonna
+              alignItems: 'center', // Centra gli elementi orizzontalmente
+              justifyContent: 'flex-start', // Centra verticalmente
+              gap: 2, // Spaziatura tra gli elementi
+              border: '1px solid #af7ac5', // Bordo con colore e larghezza
+              borderRadius: '8px', // Arrotonda i bordi (opzionale)
+              padding: 1, // Aggiunge spazio interno
+              width: 'fit-content' // Imposta la larghezza al contenuto
+            }}
+          >
+            <Typography variant="body2" color="grey">
+              conc.
+            </Typography>
+            <img src={concIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="delivery"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="promo"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="menu"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column', // Layout a colonna
+              alignItems: 'center', // Centra gli elementi orizzontalmente
+              justifyContent: 'flex-start', // Centra verticalmente
+              gap: 2, // Spaziatura tra gli elementi
+              border: '1px solid #f39c12', // Bordo con colore e larghezza
+              borderRadius: '8px', // Arrotonda i bordi (opzionale)
+              padding: 1, // Aggiunge spazio interno
+              width: 'fit-content' // Imposta la larghezza al contenuto
+            }}
+          >
+            <Typography variant="body2" color="grey">
+              eventi
+            </Typography>
+            <img src={eventIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="sopraluogo"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="meeting"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="evento"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="convention"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="privateproj"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column', // Layout a colonna
+              alignItems: 'center', // Centra gli elementi orizzontalmente
+              justifyContent: 'flex-start', // Centra verticalmente
+              gap: 2, // Spaziatura tra gli elementi
+              border: '1px solid #229954', // Bordo con colore e larghezza
+              borderRadius: '8px', // Arrotonda i bordi (opzionale)
+              padding: 1, // Aggiunge spazio interno
+              width: 'fit-content' // Imposta la larghezza al contenuto
+            }}
+          >
+            <Typography variant="body2" color="grey">
+              ScreenCont.
+            </Typography>
+            <img src={screenIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="prevendite"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="extra"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="anteprima"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="maratona"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+            <ToggleService
+              selectedEvent={selectedEvent}
+              value="stampa"
+              handleToggleAlignment={handleToggleAlignment}
+            />
+          </Box>
+        </Box>
+      </ToggleButtonGroup>
+
+      {/*   <ToggleButtonGroup
         value={event.eventType ? event.eventType : 'evento'}
         exclusive
         sx={{
@@ -102,44 +303,9 @@ const ToggleEvent = () => {
               <Tooltip title={type}>{getIcon(type)}</Tooltip>
             </ToggleButton>
           ))}
-      </ToggleButtonGroup>
+      </ToggleButtonGroup> */}
     </>
   )
-}
-
-const getIcon = (type) => {
-  switch (type) {
-    case 'evento':
-      return <EventIcon />
-    case 'matinee':
-      return <SchoolIcon />
-    case 'prevendite':
-      return <SellIcon />
-    case 'promo':
-      return <DevicesOtherIcon />
-    case 'compleanni':
-      return <CelebrationIcon />
-    case 'extra':
-      return <RocketLaunchIcon />
-    case 'delivery':
-      return <LocalShippingIcon />
-    case 'anteprima':
-      return <MovieCreationIcon />
-    case 'maratona':
-      return <DirectionsRunIcon />
-    case 'visita':
-      return <LocalAirportIcon />
-    case 'stampa':
-      return <PhotoCameraFrontIcon />
-    case 'sopraluogo':
-      return <SettingsAccessibilityIcon />
-    case 'meeting':
-      return <Groups2Icon />
-    case 'manutenzione':
-      return <EngineeringIcon />
-    default:
-      return null
-  }
 }
 
 export default ToggleEvent
