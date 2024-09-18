@@ -22,9 +22,11 @@ const ShareCalendar = () => {
   const [ricorency, setRicorency] = useState(false)
   const [upDate, setUpDate] = useState(false)
   const [checked, setChecked] = useState(false) //stato dello swith per visualizzare calendar/scheduler
-  const { initEvent } = useEventsStore()
+  const { initEvent, event } = useEventsStore()
+  const [filteredEvents, setFilteredEvents] = useState(null)
 
   const handleOpenNewEvent = () => {
+    console.log(event)
     setUpDate(false)
     setRicorency(false)
     setOpenNewEvent(true)
@@ -103,13 +105,17 @@ const ShareCalendar = () => {
         </Grid>
         <Grid item xs={12} md={10}>
           {!checked ? (
-            <MyCalendar handleOpen={handleOpenOldEvent} setRicorency={setRicorency} />
+            <MyCalendar
+              handleOpen={handleOpenOldEvent}
+              setRicorency={setRicorency}
+              filteredEvents={filteredEvents}
+            />
           ) : (
             <SchedulerComponent handleOpen={handleOpenOldEvent} />
           )}
         </Grid>
         <Grid item xs={12} md={1}>
-          <Filter />
+          <Filter setFilteredEvents={setFilteredEvents} />
         </Grid>
       </Grid>
 

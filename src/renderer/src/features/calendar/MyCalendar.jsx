@@ -32,7 +32,7 @@ const localizer = dateFnsLocalizer({
   locales
 })
 
-export default function Basic({ handleOpen, setRicorency }) {
+export default function Basic({ handleOpen, setRicorency, filteredEvents }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
   const { max, views } = useMemo(
@@ -82,7 +82,7 @@ export default function Basic({ handleOpen, setRicorency }) {
         <Calendar
           localizer={localizer}
           max={max}
-          events={events}
+          events={filteredEvents?.length > 0 ? filteredEvents : events}
           startAccessor="start"
           endAccessor="end"
           style={{ height: 880 }}

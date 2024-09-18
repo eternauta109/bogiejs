@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
-import { Typography } from '@mui/material'
+import { Typography, Tooltip, IconButton } from '@mui/material'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Box from '@mui/material/Box'
 import opsIcon from '../../assets/ops.png'
@@ -14,6 +14,8 @@ import useEventsStore from '../../store/EventDataContext'
 const ToggleEvent = () => {
   const { setEvent } = useEventsStore()
   const [selectedEvent, setSelectedEvent] = useState(null) // Stato per il pulsante
+  const [macroArea, setMacroArea] = useState(null)
+
   const colorMap = {
     //ops
     visita: '#1f618d',
@@ -49,22 +51,24 @@ const ToggleEvent = () => {
     }
   }
 
+  const handleIconClick = (iconName) => {
+    console.log(`Icon clicked: ${iconName}`)
+    setMacroArea(iconName)
+    // Aggiungi qui la logica che desideri, come il filtraggio degli eventi.
+  }
+
   return (
     <>
-      <ToggleButtonGroup
-        value={selectedEvent}
-        exclusive
-        onChange={handleToggleAlignment}
-        aria-label="text alignment"
-      >
+      <>
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'row', // Layout a colonna
-            mb: 2,
-            justifyContent: 'space-between', // Centra verticalmente
-            gap: 2, // Spaziatura tra gli elementi
-            alignItems: 'flex-start' // Allinea tutti i box in alto
+            height: '100%',
+            flexDirection: 'raw', // Disposizione a colonna
+            alignItems: 'center', // Centra gli elementi orizzontalmente
+            justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
+            gap: 1, // Spaziatura tra gli elementi
+            width: 'fit-content' // Imposta la larghezza al contenuto
           }}
         >
           <Box
@@ -84,34 +88,22 @@ const ToggleEvent = () => {
             <Typography variant="body2" color="grey">
               ops
             </Typography>
-
-            <img src={opsIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
-            <ToggleService
-              value="visita"
-              handleToggleAlignment={handleToggleAlignment}
-              selectedEvent={selectedEvent}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="compleanni"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="matinee"
-              handleToggleAlignment={handleToggleAlignment}
-            />
+            <Tooltip title="Ops">
+              <IconButton onClick={() => handleIconClick('ops')}>
+                <img src={opsIcon} alt="Ops Icon" style={{ width: '50px', height: '50px' }} />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Box
             sx={{
               display: 'flex',
               height: '100%',
-              flexDirection: 'column', // Layout a colonna
+              flexDirection: 'column', // Disposizione a colonna
               alignItems: 'center', // Centra gli elementi orizzontalmente
-              justifyContent: 'flex-start', // Centra verticalmente
+              justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
               gap: 2, // Spaziatura tra gli elementi
-              border: '1px solid 	#48c9b0 ', // Bordo con colore e larghezza
-              borderRadius: '8px', // Arrot	#FFFF00nda i bordi (opzionale)
+              border: '1px solid #6699ff', // Bordo con colore e larghezza
+              borderRadius: '8px', // Arrotonda i bordi (opzionale)
               padding: 1, // Aggiunge spazio interno
               width: 'fit-content' // Imposta la larghezza al contenuto
             }}
@@ -119,20 +111,23 @@ const ToggleEvent = () => {
             <Typography variant="body2" color="grey">
               manut.
             </Typography>
-            <img src={maintenanceIcons} alt="My Icon" style={{ width: '50px', height: '50px' }} />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="manutenzione"
-              handleToggleAlignment={handleToggleAlignment}
-            />
+            <Tooltip title="Manutenzione">
+              <IconButton onClick={() => handleIconClick('manutenzione')}>
+                <img
+                  src={maintenanceIcons}
+                  alt="Manutenzione Icon"
+                  style={{ width: '50px', height: '50px' }}
+                />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Box
             sx={{
-              height: '100%',
               display: 'flex',
-              flexDirection: 'column', // Layout a colonna
+              height: '100%',
+              flexDirection: 'column', // Disposizione a colonna
               alignItems: 'center', // Centra gli elementi orizzontalmente
-              justifyContent: 'flex-start', // Centra verticalmente
+              justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
               gap: 2, // Spaziatura tra gli elementi
               border: '1px solid #af7ac5', // Bordo con colore e larghezza
               borderRadius: '8px', // Arrotonda i bordi (opzionale)
@@ -143,31 +138,25 @@ const ToggleEvent = () => {
             <Typography variant="body2" color="grey">
               conc.
             </Typography>
-            <img src={concIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="delivery"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="promo"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="menu"
-              handleToggleAlignment={handleToggleAlignment}
-            />
+            <Tooltip title="Concession">
+              <IconButton onClick={() => handleIconClick('conc')}>
+                <img
+                  src={concIcon}
+                  alt="Concession Icon"
+                  style={{ width: '50px', height: '50px' }}
+                />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column', // Layout a colonna
+              height: '100%',
+              flexDirection: 'column', // Disposizione a colonna
               alignItems: 'center', // Centra gli elementi orizzontalmente
-              justifyContent: 'flex-start', // Centra verticalmente
+              justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
               gap: 2, // Spaziatura tra gli elementi
-              border: '1px solid #f39c12', // Bordo con colore e larghezza
+              border: '1px solid #d4ac0d', // Bordo con colore e larghezza
               borderRadius: '8px', // Arrotonda i bordi (opzionale)
               padding: 1, // Aggiunge spazio interno
               width: 'fit-content' // Imposta la larghezza al contenuto
@@ -176,134 +165,214 @@ const ToggleEvent = () => {
             <Typography variant="body2" color="grey">
               eventi
             </Typography>
-            <img src={eventIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="sopraluogo"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="meeting"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="evento"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="convention"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="privateproj"
-              handleToggleAlignment={handleToggleAlignment}
-            />
+            <Tooltip title="Eventi">
+              <IconButton onClick={() => handleIconClick('eventi')}>
+                <img src={eventIcon} alt="Eventi Icon" style={{ width: '50px', height: '50px' }} />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column', // Layout a colonna
+              height: '100%',
+              flexDirection: 'column', // Disposizione a colonna
               alignItems: 'center', // Centra gli elementi orizzontalmente
-              justifyContent: 'flex-start', // Centra verticalmente
+              justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
               gap: 2, // Spaziatura tra gli elementi
-              border: '1px solid #229954', // Bordo con colore e larghezza
+              border: '1px solid #7dcea0', // Bordo con colore e larghezza
               borderRadius: '8px', // Arrotonda i bordi (opzionale)
               padding: 1, // Aggiunge spazio interno
               width: 'fit-content' // Imposta la larghezza al contenuto
             }}
           >
             <Typography variant="body2" color="grey">
-              ScreenCont.
+              SC&MRK
             </Typography>
-            <img src={screenIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="prevendite"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="extra"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="anteprima"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="maratona"
-              handleToggleAlignment={handleToggleAlignment}
-            />
-            <ToggleService
-              selectedEvent={selectedEvent}
-              value="stampa"
-              handleToggleAlignment={handleToggleAlignment}
-            />
+            <Tooltip title="Screen Content">
+              <IconButton onClick={() => handleIconClick('screenContent')}>
+                <img
+                  src={screenIcon}
+                  alt="Screen Content Icon"
+                  style={{ width: '50px', height: '50px' }}
+                />
+              </IconButton>
+            </Tooltip>
           </Box>
         </Box>
-      </ToggleButtonGroup>
+      </>
 
-      {/*   <ToggleButtonGroup
-        value={event.eventType ? event.eventType : 'evento'}
-        exclusive
-        sx={{
-          mb: 1,
-          width: '100%',
-          justifyContent: 'space-between'
-        }}
-        aria-label="text alignment"
-      >
-        {Object.keys(colorMap)
-          .slice(0, 7)
-          .map((type) => (
-            <ToggleButton
-              key={type}
-              value={type}
-              aria-label={type}
+      <>
+        <ToggleButtonGroup
+          value={selectedEvent}
+          exclusive
+          onChange={handleToggleAlignment}
+          aria-label="text alignment"
+        >
+          {macroArea === 'ops' ? (
+            <Box
               sx={{
-                backgroundColor: colorMap[type],
-                '&.Mui-selected': { backgroundColor: colorMap[type], opacity: 0.7 }
+                display: 'flex',
+                flexDirection: 'row', // Layout a colonna
+                mb: 2,
+                mt: 2,
+                justifyContent: 'space-between', // Centra verticalmente
+                gap: 2, // Spaziatura tra gli elementi
+                alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
-              onClick={() => handleToggleAlignment(type)}
             >
-              <Tooltip title={type}>{getIcon(type)}</Tooltip>
-            </ToggleButton>
-          ))}
-      </ToggleButtonGroup>
+              <img src={opsIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <ToggleService
+                value="visita"
+                handleToggleAlignment={handleToggleAlignment}
+                selectedEvent={selectedEvent}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="compleanni"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="matinee"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+            </Box>
+          ) : null}
+          {macroArea === 'manutenzione' ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row', // Layout a colonna
+                mb: 2,
+                mt: 2,
+                justifyContent: 'space-between', // Centra verticalmente
+                gap: 2, // Spaziatura tra gli elementi
+                alignItems: 'flex-start' // Allinea tutti i box in alto
+              }}
+            >
+              <img src={maintenanceIcons} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="manutenzione"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+            </Box>
+          ) : null}
 
-      <ToggleButtonGroup
-        value={event.eventType ? event.eventType : 'evento'}
-        exclusive
-        sx={{
-          mb: 4,
-          width: '100%',
-          justifyContent: 'space-between'
-        }}
-        aria-label="text alignment"
-      >
-        {Object.keys(colorMap)
-          .slice(7)
-          .map((type) => (
-            <ToggleButton
-              key={type}
-              value={type}
-              aria-label={type}
+          {macroArea === 'conc' ? (
+            <Box
               sx={{
-                backgroundColor: colorMap[type],
-                '&.Mui-selected': { backgroundColor: colorMap[type], opacity: 0.7 }
+                display: 'flex',
+                flexDirection: 'row', // Layout a colonna
+                mb: 2,
+                mt: 2,
+                justifyContent: 'space-between', // Centra verticalmente
+                gap: 2, // Spaziatura tra gli elementi
+                alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
-              onClick={() => handleToggleAlignment(type)}
             >
-              <Tooltip title={type}>{getIcon(type)}</Tooltip>
-            </ToggleButton>
-          ))}
-      </ToggleButtonGroup> */}
+              <img src={concIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="delivery"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="promo"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="menu"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+            </Box>
+          ) : null}
+
+          {macroArea === 'eventi' ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row', // Layout a colonna
+                mb: 2,
+                mt: 2,
+                justifyContent: 'space-between', // Centra verticalmente
+                gap: 2, // Spaziatura tra gli elementi
+                alignItems: 'flex-start' // Allinea tutti i box in alto
+              }}
+            >
+              <img src={eventIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="sopraluogo"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="meeting"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="evento"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="convention"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="privateproj"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+            </Box>
+          ) : null}
+
+          {macroArea === 'screenContent' ? (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row', // Layout a colonna
+                mb: 2,
+                mt: 2,
+                justifyContent: 'space-between', // Centra verticalmente
+                gap: 2, // Spaziatura tra gli elementi
+                alignItems: 'flex-start' // Allinea tutti i box in alto
+              }}
+            >
+              <img src={screenIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="prevendite"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="extra"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="anteprima"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="maratona"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
+                value="stampa"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+            </Box>
+          ) : null}
+        </ToggleButtonGroup>
+      </>
     </>
   )
 }
