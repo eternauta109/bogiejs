@@ -1,7 +1,7 @@
 export const initialEvents = {
   totalEvents: 0,
   events: [],
-  newEvent: {}
+  newEvent: { subAction: [], description: '', division: '', link: '', note: '' }
 }
 
 const eventsReducer = (state, action) => {

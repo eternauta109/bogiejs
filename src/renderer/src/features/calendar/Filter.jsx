@@ -95,7 +95,7 @@ const Filter = ({ setFilteredEvents }) => {
         flexDirection: 'column', // Disposizione a colonna
         alignItems: 'center', // Centra gli elementi orizzontalmente
         justifyContent: 'flex-start', // Allinea gli elementi in alto verticalmente
-        gap: 2, // Spaziatura tra gli elementi
+        gap: 3, // Spaziatura tra gli elementi
         border: '1px solid grey', // Bordo con colore e larghezza
         borderRadius: '8px', // Arrotonda i bordi (opzionale)
         padding: 1, // Aggiunge spazio interno
