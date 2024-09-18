@@ -34,7 +34,7 @@ export default function ClassicEvent() {
   useEffect(() => {
     setEvent({
       eventType: !event.evetType && 'evento',
-      colorEventType: !event.evetType && '#FD102B',
+      colorEventType: !event.evetType && '#d4ac0d',
       start: new Date(),
       end: new Date(),
       subAction: [],

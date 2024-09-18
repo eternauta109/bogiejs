@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import ModalEvent from '../event/ModalEvent'
 import useEventsStore from '../../store/EventDataContext'
+import PrintOut from './ExportToExcel'
 import { Container, Grid, Switch, Button, FormGroup, FormControlLabel } from '@mui/material'
 import SchedulerComponent from '../scheduler/SchedulerComponent'
 import MyCalendar from './MyCalendar'
@@ -22,7 +23,7 @@ const ShareCalendar = () => {
   const [ricorency, setRicorency] = useState(false)
   const [upDate, setUpDate] = useState(false)
   const [checked, setChecked] = useState(false) //stato dello swith per visualizzare calendar/scheduler
-  const { initEvent, event } = useEventsStore()
+  const { initEvent, event, events } = useEventsStore()
   const [filteredEvents, setFilteredEvents] = useState(null)
 
   const handleOpenNewEvent = () => {
@@ -125,6 +126,7 @@ const ShareCalendar = () => {
         upDate={upDate}
         ricorency={ricorency}
       />
+      <PrintOut data={filteredEvents?.length > 0 ? filteredEvents : events} />
     </Container>
   )
 }
