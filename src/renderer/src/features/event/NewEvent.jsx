@@ -37,6 +37,7 @@ import Meeting from './eventType/Meeting'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import SubAction from './eventType/serviceEventType/SubAction'
 import Manutenzione from './eventType/Manutenzione'
+import Default from './eventType/Default'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -233,7 +234,7 @@ function NewEvent({ handleClose, upDate }) {
       case 'manutenzione':
         return <Manutenzione upDate={upDate} />
       default:
-        return <ClassicEvent />
+        return <Default upDate={upDate} />
     }
   }, [event.eventType])
 
@@ -265,7 +266,7 @@ function NewEvent({ handleClose, upDate }) {
       sx={{
         height: '600px',
         padding: 2,
-
+        width: '500px',
         mb: 2,
         overflowY: 'auto'
       }}

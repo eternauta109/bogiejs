@@ -41,12 +41,26 @@ async function populateDatabase() {
       { nameDivision: 'brief', color: '#90A4AE' }
     ],
     eventType: [
-      { type: 'evento', color: '#F39C12' },
-      { type: 'matineè', color: '#7DCEA0' },
-      { type: 'prevendite', color: '#BB8FCE' },
-      { type: 'promo', color: '#AAB7B8' },
-      { type: 'compleanni', color: '#448AFF' },
-      { type: 'extra', color: '#EF5350' }
+      {
+        type: 'operations',
+        color: '#F39C12'
+      },
+      {
+        type: 'concession',
+        color: '#7DCEA0'
+      },
+      {
+        type: 'screen_content',
+        color: '#BB8FCE'
+      },
+      {
+        type: 'eventi_sales',
+        color: '#AAB7B8'
+      },
+      {
+        type: 'maintenance',
+        color: '#448AFF'
+      }
     ],
     topicType: [
       { value: 'none', label: 'none' },

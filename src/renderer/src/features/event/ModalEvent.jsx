@@ -17,7 +17,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 })
 
 const style = {
-  width: '500px',
+  width: 'fit-content',
   bgcolor: 'background.paper',
   borderRadius: '8px',
   boxShadow: 24,
@@ -35,7 +35,9 @@ const ModalEvent = ({ open, handleClose, upDate, ricorency }) => {
 
   return (
     <Dialog
-      sx={{ top: '0' }}
+      sx={{
+        top: '0'
+      }}
       open={open}
       TransitionComponent={Transition}
       onClose={handleDialogClose}
