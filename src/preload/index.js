@@ -117,9 +117,10 @@ async function getAllEvents() {
 }
 
 //updatecolor all events from events db
-async function updateEvents() {
+async function updateEvents(colorMap) {
+  console.log('coorMap in preload', colorMap)
   try {
-    await ipcRenderer.invoke('updateEvents')
+    await ipcRenderer.invoke('updateEvents', colorMap)
   } catch (error) {
     console.error('Errore in preload updateEvents:', error)
     throw error

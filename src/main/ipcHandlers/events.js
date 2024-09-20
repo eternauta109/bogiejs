@@ -48,10 +48,10 @@ export function handleEventIpc(ipcMain) {
     }
   })
 
-  ipcMain.handle('updateEvents', async () => {
-    console.log('update event nel main')
+  ipcMain.handle('updateEvents', async (event, colorMap) => {
+    console.log('update event nel main', colorMap)
     try {
-      await UpDateEventsDB()
+      await UpDateEventsDB(colorMap)
     } catch (error) {
       console.error('Errore nel main process UpDateEventsDB,:', error)
       throw error // Rilancia l'errore per essere gestito nel preload
