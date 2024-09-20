@@ -39,7 +39,7 @@ const Dashboard = () => {
   const [newOpts, setNewOpts] = useState('')
   const [tabValue, setTabValue] = useState(0)
 
-  const { user, setUsersName } = useEventsStore()
+  const { user, setUsersName, options } = useEventsStore()
 
   const onHandleSubmit = async (e) => {
     e.preventDefault()
@@ -110,7 +110,7 @@ const Dashboard = () => {
 
   const updateEvents = async () => {
     try {
-      await window.api.updateEvents()
+      await window.api.updateEvents(options.colorMap)
     } catch (error) {
       console.log('errore nel tentare di aggiornare i colori', error)
     }

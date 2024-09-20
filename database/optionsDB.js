@@ -84,7 +84,9 @@ async function populateDatabase() {
       extra: '#52be80',
       anteprima: '#27ae60 ',
       maratona: '#1e8449 ',
-      stampa: '#196f3d'
+      stampa: '#196f3d',
+      //ricorrenza
+      ricorenza: '#50394c'
     },
     topicType: [
       { value: 'none', label: 'none' },
