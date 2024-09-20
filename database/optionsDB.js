@@ -85,6 +85,7 @@ async function populateDatabase() {
       anteprima: '#27ae60 ',
       maratona: '#1e8449 ',
       stampa: '#196f3d',
+      premiere: '#a9dfbf ',
       //ricorrenza
       ricorenza: '#50394c'
     },

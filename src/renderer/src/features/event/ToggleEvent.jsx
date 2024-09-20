@@ -346,6 +346,11 @@ const ToggleEvent = () => {
               />
               <ToggleService
                 selectedEvent={selectedEvent}
+                value="premiere"
+                handleToggleAlignment={handleToggleAlignment}
+              />
+              <ToggleService
+                selectedEvent={selectedEvent}
                 value="maratona"
                 handleToggleAlignment={handleToggleAlignment}
               />
