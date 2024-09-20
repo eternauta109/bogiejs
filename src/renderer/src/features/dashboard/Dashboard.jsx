@@ -108,8 +108,17 @@ const Dashboard = () => {
     setTabValue(newValue)
   }
 
+  const updateEvents = async () => {
+    try {
+      await window.api.updateEvents()
+    } catch (error) {
+      console.log('errore nel tentare di aggiornare i colori', error)
+    }
+  }
+
   return (
     <Container sx={{ padding: 2, justifyContent: 'center' }}>
+      <Button onClick={updateEvents}>update color</Button>
       <Tabs value={tabValue} onChange={handleTabChange} centered>
         <Tab label="Gestione Manager" />
         <Tab label="Opzioni" />
@@ -144,6 +153,7 @@ const Dashboard = () => {
                     <MenuItem value="am">am</MenuItem>
                     <MenuItem value="jm">jm</MenuItem>
                     <MenuItem value="tl">tl</MenuItem>
+                    <MenuItem value="pm">pm</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField

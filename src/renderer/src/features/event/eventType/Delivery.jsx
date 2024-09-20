@@ -15,12 +15,7 @@ export default function Delivery({ upDate }) {
     console.log('upDate in MattineEvent', upDate)
     !upDate &&
       setEvent({
-        ...event,
-        title: '',
-        description: '',
-        subAction: [],
-        start: new Date(),
-        end: new Date()
+        ...event
       })
   }, [])
 

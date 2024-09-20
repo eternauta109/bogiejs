@@ -12,10 +12,8 @@ import {
 import { DateTimeRange } from './serviceEventType/Field'
 import useEventsStore from '../../../store/EventDataContext'
 
-import { useEffect } from 'react'
-
 export default function ClassicEvent() {
-  const { event, setFieldEvent, options, setEvent } = useEventsStore()
+  const { event, setFieldEvent, options } = useEventsStore()
 
   //gestisco i cambiamenti del valore della divsions e aggiorno sia
   // lo stato che il colore relativo
@@ -31,22 +29,6 @@ export default function ClassicEvent() {
     })
     setFieldEvent({ campo: 'colorDivision', valore: division.color })
   }
-  useEffect(() => {
-    setEvent({
-      eventType: !event.evetType && 'evento',
-      colorEventType: !event.evetType && '#d4ac0d',
-      start: new Date(),
-      end: new Date(),
-      subAction: [],
-      description: '',
-      division: '',
-      link: '',
-      note: ''
-    })
-    return () => {
-      console.log('lascio classic event da useffect con event=:', event)
-    }
-  }, [])
 
   /* useMemo(() => console.log('event in calssic event', event), [event]) */
   return (

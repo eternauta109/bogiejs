@@ -184,6 +184,65 @@ async function deleteMultipleEvents(frequencyId) {
   }
 }
 
+async function UpDateEventsDB() {
+  const colorMap = {
+    // ops
+    visita: '#1f618d',
+    compleanni: '#5499c7',
+    matinee: '#2980b9',
+    // manutenzione
+    manutenzione: '#6699ff',
+    // concession
+    delivery: '#af7ac5',
+    promo: '#9b59b6',
+    menu: '#633974',
+    // evento
+    sopraluogo: '#f7dc6f',
+    meeting: '#f4d03f',
+    evento: '#d4ac0d',
+    convention: '#d4ac0d',
+    privateproj: '#9a7d0a',
+    // screencontent
+    prevendite: '#7dcea0',
+    extra: '#52be80',
+    anteprima: '#27ae60',
+    maratona: '#1e8449',
+    stampa: '#196f3d'
+  }
+
+  await connect() // Connessione al DB
+
+  console.log('Inizio aggiornamento eventi nel DB')
+
+  try {
+    for await (const [key, value] of db.iterator()) {
+      try {
+        const event = JSON.parse(value) // Supponendo che i dati siano in JSON
+        console.log('Evento originale:', event)
+
+        // Controlla se l'evento ha un eventType che corrisponde a una chiave in colorMap
+        if (event.eventType && colorMap[event.eventType]) {
+          // Aggiorna il campo colorEventType in base al tipo di evento
+          event.colorEventType = colorMap[event.eventType]
+
+          // Salva l'evento aggiornato nel DB
+          await db.put(key, JSON.stringify(event)) // Sovrascrive l'evento nel DB
+          console.log(`Evento aggiornato con nuovo colore: ${event.colorEventType}`)
+        } else {
+          console.log(`Tipo di evento non trovato o non mappato: ${event.eventType}`)
+        }
+      } catch (error) {
+        console.error(`Errore nel processare l'evento con chiave ${key}:`, error)
+      }
+    }
+  } catch (iteratorError) {
+    console.error("Errore durante l'iterazione del database:", iteratorError)
+  } finally {
+    await close() // Chiudi la connessione al DB dopo l'iterazione completa
+    console.log('Aggiornamento completato e database chiuso')
+  }
+}
+
 async function query(key) {
   return new Promise((resolve, reject) => {
     db.get(key, (err, value) => {
@@ -228,6 +287,7 @@ module.exports = {
   createDbEvents,
   getAllEvents,
   deleteThisEvent,
+  UpDateEventsDB,
   readAllEvents,
   deleteMultipleEvents
 }

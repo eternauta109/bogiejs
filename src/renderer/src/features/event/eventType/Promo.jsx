@@ -16,13 +16,9 @@ export default function Promo({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
-        subAction: [],
-        description: '',
+
         gadget: '',
-        whereGadget: '',
-        start: new Date(),
-        end: new Date()
+        whereGadget: ''
       })
   }, [])
   return (

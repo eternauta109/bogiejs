@@ -102,103 +102,152 @@ const Filter = ({ setFilteredEvents }) => {
         width: 'fit-content' // Imposta la larghezza al contenuto
       }}
     >
-      <Typography variant="body2" color="grey">
-        ops
-      </Typography>
-      <Tooltip title="Ops">
-        <IconButton
-          onClick={() => handleIconClick('ops')}
-          sx={{
-            backgroundColor: selectedIcons.ops ? '#cce7ff' : 'transparent', // Colore di sfondo se selezionato
-            borderRadius: '50%' // Arrotonda l'icona se selezionata
-          }}
-        >
-          <img src={opsIcon} alt="Ops Icon" style={{ width: '50px', height: '50px' }} />
-        </IconButton>
-      </Tooltip>
-
-      <Typography variant="body2" color="grey">
-        manut.
-      </Typography>
-      <Tooltip title="Manutenzione">
-        <IconButton
-          onClick={() => handleIconClick('manutenzione')}
-          sx={{
-            backgroundColor: selectedIcons.manutenzione ? '#cce7ff' : 'transparent',
-            borderRadius: '50%'
-          }}
-        >
-          <img
-            src={maintenanceIcons}
-            alt="Manutenzione Icon"
-            style={{ width: '50px', height: '50px' }}
-          />
-        </IconButton>
-      </Tooltip>
-
-      <Typography variant="body2" color="grey">
-        conc.
-      </Typography>
-      <Tooltip title="Concession">
-        <IconButton
-          onClick={() => handleIconClick('conc')}
-          sx={{
-            backgroundColor: selectedIcons.conc ? '#cce7ff' : 'transparent',
-            borderRadius: '50%'
-          }}
-        >
-          <img src={concIcon} alt="Concession Icon" style={{ width: '50px', height: '50px' }} />
-        </IconButton>
-      </Tooltip>
-
-      <Typography variant="body2" color="grey">
-        eventi
-      </Typography>
-      <Tooltip title="Eventi">
-        <IconButton
-          onClick={() => handleIconClick('eventi')}
-          sx={{
-            backgroundColor: selectedIcons.eventi ? '#cce7ff' : 'transparent',
-            borderRadius: '50%'
-          }}
-        >
-          <img src={eventIcon} alt="Eventi Icon" style={{ width: '50px', height: '50px' }} />
-        </IconButton>
-      </Tooltip>
-
-      <Typography variant="body2" color="grey">
-        ScreenCont.
-      </Typography>
-      <Tooltip title="Screen Content">
-        <IconButton
-          onClick={() => handleIconClick('screenContent')}
-          sx={{
-            backgroundColor: selectedIcons.screenContent ? '#cce7ff' : 'transparent',
-            borderRadius: '50%'
-          }}
-        >
-          <img
-            src={screenIcon}
-            alt="Screen Content Icon"
-            style={{ width: '50px', height: '50px' }}
-          />
-        </IconButton>
-      </Tooltip>
-
-      <Typography variant="body2" color="grey">
-        all
-      </Typography>
-      <Tooltip title="All">
-        <IconButton
-          onClick={() => handleIconClick('all')}
-          sx={{
-            backgroundColor: selectedIcons.all ? '#cce7ff' : 'transparent',
-            borderRadius: '50%'
-          }}
-        >
-          <img src={all} alt="All Icon" style={{ width: '50px', height: '50px' }} />
-        </IconButton>
-      </Tooltip>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start'
+        }}
+      >
+        <Typography variant="body2" color="grey">
+          ops
+        </Typography>
+        <Tooltip title="Ops">
+          <IconButton
+            onClick={() => handleIconClick('ops')}
+            sx={{
+              backgroundColor: selectedIcons.ops ? '#cce7ff' : 'transparent', // Colore di sfondo se selezionato
+              borderRadius: '50%' // Arrotonda l'icona se selezionata
+            }}
+          >
+            <img src={opsIcon} alt="Ops Icon" style={{ width: '50px', height: '50px' }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start'
+        }}
+      >
+        <Typography variant="body2" color="grey">
+          manut.
+        </Typography>
+        <Tooltip title="Manutenzione">
+          <IconButton
+            onClick={() => handleIconClick('manutenzione')}
+            sx={{
+              backgroundColor: selectedIcons.manutenzione ? '#cce7ff' : 'transparent',
+              borderRadius: '50%'
+            }}
+          >
+            <img
+              src={maintenanceIcons}
+              alt="Manutenzione Icon"
+              style={{ width: '50px', height: '50px' }}
+            />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start'
+        }}
+      >
+        <Typography variant="body2" color="grey">
+          conc.
+        </Typography>
+        <Tooltip title="Concession">
+          <IconButton
+            onClick={() => handleIconClick('conc')}
+            sx={{
+              backgroundColor: selectedIcons.conc ? '#cce7ff' : 'transparent',
+              borderRadius: '50%'
+            }}
+          >
+            <img src={concIcon} alt="Concession Icon" style={{ width: '50px', height: '50px' }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start'
+        }}
+      >
+        <Typography variant="body2" color="grey">
+          eventi
+        </Typography>
+        <Tooltip title="Eventi">
+          <IconButton
+            onClick={() => handleIconClick('eventi')}
+            sx={{
+              backgroundColor: selectedIcons.eventi ? '#cce7ff' : 'transparent',
+              borderRadius: '50%'
+            }}
+          >
+            <img src={eventIcon} alt="Eventi Icon" style={{ width: '50px', height: '50px' }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start'
+        }}
+      >
+        <Typography variant="body2" color="grey">
+          ScreenCont.
+        </Typography>
+        <Tooltip title="Screen Content">
+          <IconButton
+            onClick={() => handleIconClick('screenContent')}
+            sx={{
+              backgroundColor: selectedIcons.screenContent ? '#cce7ff' : 'transparent',
+              borderRadius: '50%'
+            }}
+          >
+            <img
+              src={screenIcon}
+              alt="Screen Content Icon"
+              style={{ width: '50px', height: '50px' }}
+            />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start'
+        }}
+      >
+        <Typography variant="body2" color="grey">
+          all
+        </Typography>
+        <Tooltip title="All">
+          <IconButton
+            onClick={() => handleIconClick('all')}
+            sx={{
+              backgroundColor: selectedIcons.all ? '#cce7ff' : 'transparent',
+              borderRadius: '50%'
+            }}
+          >
+            <img src={all} alt="All Icon" style={{ width: '50px', height: '50px' }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Box>
   )
 }

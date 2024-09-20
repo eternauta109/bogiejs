@@ -18,12 +18,8 @@ export default function Manutenzione({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
-        description: '',
-        subAction: [],
-        doned: false,
-        start: new Date(),
-        end: new Date()
+
+        doned: false
       })
   }, [])
 

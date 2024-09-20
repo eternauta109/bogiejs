@@ -19,13 +19,12 @@ export default function Prevendite({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
+
         referent: '',
         screen: 0,
-        subAction: [],
+
         priceCard: '',
-        start: new Date(),
-        end: new Date(),
+
         startOpen: new Date(),
         endOpen: new Date()
       })

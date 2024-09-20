@@ -6,6 +6,7 @@ const api = {
   login,
   getPath,
   getAllEvents,
+  updateEvents,
   getSingleTask,
   deleteThisNotify,
   addNewEvent,
@@ -111,6 +112,16 @@ async function getAllEvents() {
     return result
   } catch (error) {
     console.error('Errore in preload getAllEvents:', error)
+    throw error
+  }
+}
+
+//updatecolor all events from events db
+async function updateEvents() {
+  try {
+    await ipcRenderer.invoke('updateEvents')
+  } catch (error) {
+    console.error('Errore in preload updateEvents:', error)
     throw error
   }
 }
