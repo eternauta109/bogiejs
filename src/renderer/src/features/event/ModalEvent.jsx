@@ -27,7 +27,7 @@ const style = {
 // eslint-disable-next-line react/prop-types
 const ModalEvent = ({ open, handleClose, upDate, ricorency }) => {
   const { initEvent, event } = useEventsStore()
-  console.log(ricorency)
+
   const handleDialogClose = () => {
     handleClose()
     initEvent() // Suppongo che tu abbia la funzione initEvent()
@@ -66,6 +66,9 @@ const ModalEvent = ({ open, handleClose, upDate, ricorency }) => {
       </DialogTitle>
       <DialogContent dividers>
         <Box sx={style}>
+          {event?.eventType === undefined && (
+            <Typography>devi scegliere un tipo di evento</Typography>
+          )}
           {ricorency ? (
             <Frequency handleClose={handleClose} upDate={upDate} />
           ) : (

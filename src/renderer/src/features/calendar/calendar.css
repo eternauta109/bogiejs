@@ -64,6 +64,7 @@
   }
   
   .rbc-selected {
-    background-color: #0044cc !important;
-  }
+    border: 2px solid red !important; /* Spessore del bordo e colore rosso */
+   
+}
   

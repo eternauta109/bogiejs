@@ -17,14 +17,12 @@ export default function Compleanni({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
-        subAction: [],
+
         referent: '',
         email: '',
         phone: 0,
         film: '',
-        start: new Date(),
-        end: new Date(),
+
         number: 0,
         amount: 0
       })

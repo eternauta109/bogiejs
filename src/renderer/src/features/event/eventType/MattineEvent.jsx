@@ -17,13 +17,11 @@ export default function MattineEvent({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
+
         referent: '',
         email: '',
         phone: 0,
-        start: new Date(),
-        end: new Date(),
-        subAction: [],
+
         number: 0,
         amount: 0
       })

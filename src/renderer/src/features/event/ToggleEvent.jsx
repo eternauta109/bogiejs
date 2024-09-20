@@ -12,47 +12,32 @@ import ToggleService from './ToggleService'
 import useEventsStore from '../../store/EventDataContext'
 
 const ToggleEvent = () => {
-  const { setEvent } = useEventsStore()
+  const { setEvent, options } = useEventsStore()
   const [selectedEvent, setSelectedEvent] = useState(null) // Stato per il pulsante
   const [macroArea, setMacroArea] = useState(null)
 
-  const colorMap = {
-    //ops
-    visita: '#1f618d',
-    compleanni: '#5499c7',
-    matinee: '#2980b9',
-    //manutenzione
-    manutenzione: '#6699ff',
-    //concession
-    delivery: '#af7ac5',
-    promo: '#9b59b6  ',
-    menu: '#633974  ',
-    //evento
-    sopraluogo: '#f7dc6f',
-    meeting: '#f4d03f  ',
-    evento: '#d4ac0d',
-    convention: '#d4ac0d ',
-    privateproj: '#9a7d0a',
-    //screencontent
-    prevendite: '#7dcea0',
-    extra: '#52be80',
-    anteprima: '#27ae60 ',
-    maratona: '#1e8449 ',
-    stampa: '#196f3d'
-  }
-
   const handleToggleAlignment = (newAlignment) => {
-    console.log('toggleAlignment', newAlignment)
+    console.log('toggleAlignment', options)
     if (newAlignment !== selectedEvent) {
       setSelectedEvent(newAlignment)
-      setEvent({ eventType: newAlignment, colorEventType: colorMap[newAlignment] })
+      setEvent({
+        eventType: newAlignment,
+        colorEventType: options.colorMap[newAlignment],
+        start: new Date(),
+        end: new Date(),
+        subAction: [],
+        description: '',
+        division: '',
+        link: '',
+        note: ''
+      })
     } else {
       setSelectedEvent(null)
     }
   }
 
   const handleIconClick = (iconName) => {
-    console.log(`Icon clicked: ${iconName}`)
+    /* console.log(`Icon clicked: ${iconName}`) */
     setMacroArea(iconName)
     // Aggiungi qui la logica che desideri, come il filtraggio degli eventi.
   }

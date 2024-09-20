@@ -12,12 +12,7 @@ export default function Sopraluogo({ upDate }) {
   useEffect(() => {
     !upDate &&
       setEvent({
-        ...event,
-        title: '',
-        description: '',
-        subAction: [],
-        start: new Date(),
-        end: new Date()
+        ...event
       })
   }, [])
 

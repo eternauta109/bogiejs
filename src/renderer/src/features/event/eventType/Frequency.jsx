@@ -102,7 +102,7 @@ function Frequency({ handleClose, upDate }) {
       }
       handleClose()
     } else {
-      console.log(rule)
+      console.log('aggiungi evento ricorente:', event)
       const recurringDates = rule.all()
       const freq = uuidv4()
       const formattedEvents = recurringDates.map((date) => ({
@@ -117,7 +117,7 @@ function Frequency({ handleClose, upDate }) {
         rrule: rule.toString(), // Saving the RRule string for later usage
         start: date,
         eventType: !event.evetType && 'ricorenza',
-        colorEventType: !event.evetType && '#daa520',
+        colorEventType: !event.evetType && '#50394c',
         frequencyId: freq,
         end: new Date(date.getTime() + 60 * 60 * 1000) // Durata di 1 ora
       }))
@@ -136,9 +136,12 @@ function Frequency({ handleClose, upDate }) {
   }
 
   useEffect(() => {
+    !upDate && console.log('event in ric useeffect', event)
     setEvent({
       eventType: !event.evetType && 'ricorenza',
-      colorEventType: !event.evetType && '#daa520',
+      colorEventType: !event.evetType && '#50394c',
+      description: '',
+      title: '',
       start: new Date(),
       execute: false,
       end: new Date()

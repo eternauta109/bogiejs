@@ -17,32 +17,10 @@ import EngineeringIcon from '@mui/icons-material/Engineering'
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation'
 import PhonelinkLockIcon from '@mui/icons-material/PhonelinkLock'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
+import useEventsStore from '../../store/EventDataContext'
 // eslint-disable-next-line react/prop-types
 export const ToggleService = ({ value, handleToggleAlignment, selectedEvent }) => {
-  const colorMap = {
-    //ops
-    visita: '#1f618d',
-    compleanni: '#5499c7',
-    matinee: '#2980b9',
-    //manutenzione
-    manutenzione: '#6699ff',
-    //concession
-    delivery: '#af7ac5',
-    promo: '#9b59b6  ',
-    menu: '#633974  ',
-    //evento
-    sopraluogo: '#f7dc6f',
-    meeting: '#f4d03f  ',
-    evento: '#d4ac0d',
-    convention: '#d4ac0d ',
-    privateproj: '#9a7d0a',
-    //screencontent
-    prevendite: '#7dcea0',
-    extra: '#52be80',
-    anteprima: '#27ae60 ',
-    maratona: '#1e8449 ',
-    stampa: '#196f3d'
-  }
+  const { options } = useEventsStore()
 
   return (
     <ToggleButton
@@ -50,7 +28,7 @@ export const ToggleService = ({ value, handleToggleAlignment, selectedEvent }) =
       selected={selectedEvent === value}
       aria-label={value}
       sx={{
-        backgroundColor: selectedEvent === value ? 'grey' : colorMap[value] // Cambia il colore a seconda che il pulsante sia selezionato o meno
+        backgroundColor: selectedEvent === value ? 'grey' : options.colorMap[value] // Cambia il colore a seconda che il pulsante sia selezionato o meno
         // Imposta il colore quando selezionato
       }}
       onClick={() => handleToggleAlignment(value)}

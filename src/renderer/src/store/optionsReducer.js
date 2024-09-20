@@ -32,7 +32,7 @@ export const initialOption = {
       color: '#90A4AE'
     }
   ],
-  eventType: [
+  /* eventType: [
     {
       type: 'operations',
       color: '#F39C12'
@@ -53,7 +53,31 @@ export const initialOption = {
       type: 'maintenance',
       color: '#448AFF'
     }
-  ],
+  ], */
+  colorMap: {
+    //ops
+    visita: '#1f618d',
+    compleanni: '#5499c7',
+    matinee: '#2980b9',
+    //manutenzione
+    manutenzione: '#6699ff',
+    //concession
+    delivery: '#af7ac5',
+    promo: '#9b59b6',
+    menu: '#633974',
+    //evento
+    sopraluogo: '#f7dc6f',
+    meeting: '#f4d03f',
+    evento: '#d4ac0d',
+    convention: '#d4ac0d',
+    privateproj: '#9a7d0a',
+    //screencontent
+    prevendite: '#7dcea0',
+    extra: '#52be80',
+    anteprima: '#27ae60 ',
+    maratona: '#1e8449 ',
+    stampa: '#196f3d'
+  },
   topicType: [
     { value: 'none', label: 'none' },
     { value: 'utility', label: 'utlity' },

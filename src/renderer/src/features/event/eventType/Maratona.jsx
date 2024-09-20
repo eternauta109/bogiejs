@@ -14,13 +14,9 @@ export default function Maratona({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
-        subAction: [],
-        description: '',
+
         screen: 0,
-        priceCard: '',
-        start: new Date(),
-        end: new Date()
+        priceCard: ''
       })
   }, [])
 

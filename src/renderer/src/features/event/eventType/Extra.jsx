@@ -17,15 +17,9 @@ export default function Extra({ upDate }) {
     !upDate &&
       setEvent({
         ...event,
-        title: '',
-        subAction: [],
         referent: '',
         screen: 0,
-        priceCard: '',
-        start: new Date(),
-        end: new Date(),
-        startOpen: new Date(),
-        endOpen: new Date()
+        priceCard: ''
       })
   }, [])
 
