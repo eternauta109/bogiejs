@@ -1,10 +1,12 @@
 import { ToggleButton, Tooltip } from '@mui/material'
 
 import EventIcon from '@mui/icons-material/Event'
+
 import SettingsAccessibilityIcon from '@mui/icons-material/SettingsAccessibility'
 import CelebrationIcon from '@mui/icons-material/Celebration'
 import SellIcon from '@mui/icons-material/Sell'
 import SchoolIcon from '@mui/icons-material/School'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import DevicesOtherIcon from '@mui/icons-material/DevicesOther'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import MovieCreationIcon from '@mui/icons-material/MovieCreation'
@@ -16,20 +18,23 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import EngineeringIcon from '@mui/icons-material/Engineering'
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation'
 import PhonelinkLockIcon from '@mui/icons-material/PhonelinkLock'
+import AllInclusiveIcon from '@mui/icons-material/AllInclusive'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import useEventsStore from '../../store/EventDataContext'
 // eslint-disable-next-line react/prop-types
 export const ToggleService = ({ value, handleToggleAlignment, selectedEvent }) => {
   const { options } = useEventsStore()
-
+  console.log('toggleservice value', value, selectedEvent)
   return (
     <ToggleButton
       value={value}
       selected={selectedEvent === value}
       aria-label={value}
       sx={{
-        backgroundColor: selectedEvent === value ? 'grey' : options.colorMap[value] // Cambia il colore a seconda che il pulsante sia selezionato o meno
-        // Imposta il colore quando selezionato
+        backgroundColor: options.colorMap[value], // Default background color
+        '&.Mui-selected': {
+          backgroundColor: '#abb2b9' // Background color when selected
+        }
       }}
       onClick={() => handleToggleAlignment(value)}
     >
@@ -85,7 +90,9 @@ const getIcon = (type) => {
       return <DirectionsRunIcon />
     case 'stampa':
       return <PhotoCameraFrontIcon />
+    case 'premiere':
+      return <AttachMoneyIcon />
     default:
-      return null
+      return <AllInclusiveIcon />
   }
 }
