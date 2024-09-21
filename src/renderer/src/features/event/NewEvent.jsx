@@ -62,7 +62,6 @@ function NewEvent({ handleClose, upDate }) {
     totalTasks,
     upDateEvent,
     setEvents,
-    initEvent,
     deleteEvent,
     user,
     options
@@ -264,7 +263,6 @@ function NewEvent({ handleClose, upDate }) {
 
     return () => {
       console.log('lascio newevent con event:', event)
-      initEvent()
     }
   }, [user.managersName.length])
 

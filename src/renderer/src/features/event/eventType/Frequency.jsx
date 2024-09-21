@@ -136,16 +136,17 @@ function Frequency({ handleClose, upDate }) {
   }
 
   useEffect(() => {
-    !upDate && console.log('event in ric useeffect', event)
-    setEvent({
-      eventType: !event.evetType && 'ricorenza',
-      colorEventType: !event.evetType && '#50394c',
-      description: '',
-      title: '',
-      start: new Date(),
-      execute: false,
-      end: new Date()
-    })
+    console.log('event in ric useeffect', event, upDate)
+    !upDate &&
+      setEvent({
+        eventType: !event.evetType && 'ricorenza',
+        colorEventType: !event.evetType && '#50394c',
+        description: '',
+        title: '',
+        start: new Date(),
+        execute: false,
+        end: new Date()
+      })
     return () => {
       console.log('lascio ricorenza da useffect con event=:', event)
     }
