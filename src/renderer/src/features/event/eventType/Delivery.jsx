@@ -2,22 +2,14 @@
 import { TextField, Box, Typography } from '@mui/material'
 import useEventsStore from '../../../store/EventDataContext'
 
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { DateTimeRange } from './serviceEventType/Field'
 
-export default function Delivery({ upDate }) {
-  const { event, setFieldEvent, options, setEvent } = useEventsStore()
+export default function Delivery() {
+  const { event, setFieldEvent, options } = useEventsStore()
 
   useMemo(() => console.log('event in prevendite event', event), [event])
-
-  useEffect(() => {
-    console.log('upDate in MattineEvent', upDate)
-    !upDate &&
-      setEvent({
-        ...event
-      })
-  }, [])
 
   return (
     <>

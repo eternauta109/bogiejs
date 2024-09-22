@@ -20,6 +20,8 @@ const ToggleEvent = () => {
     console.log('toggleAlignment', options)
     if (newAlignment !== selectedEvent) {
       setSelectedEvent(newAlignment)
+
+      //è qui che sostanzialmente si inizializza l'event
       setEvent({
         eventType: newAlignment,
         colorEventType: options.colorMap[newAlignment],
