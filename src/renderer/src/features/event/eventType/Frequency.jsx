@@ -25,15 +25,12 @@ function Frequency({ handleClose, upDate }) {
 
   const {
     event,
-
     addEvent,
     setEvent,
     setFieldEvent,
     deleteMultipleEvents,
     totalEvents,
-
     upDateEvent,
-
     deleteEvent,
     user,
     options
@@ -66,7 +63,8 @@ function Frequency({ handleClose, upDate }) {
     }
     handleClose()
   }
-  // Helper function to convert frequency to RRule frequency
+
+  // Funzione helper per convertire la frequenza in frequenza RRule
   const getRRuleFrequency = () => {
     switch (freq) {
       case 'day':
@@ -77,18 +75,22 @@ function Frequency({ handleClose, upDate }) {
         return RRule.MONTHLY
       case 'year':
         return RRule.YEARLY
+      case 'endOfMonth': // Gestione per "ultimo giorno del mese"
+        return RRule.MONTHLY
       default:
         return RRule.WEEKLY
     }
   }
 
+  // Configurazione delle opzioni RRule, inclusa l'opzione "ultimo giorno del mese"
   const rruleOptions = {
     freq: getRRuleFrequency(),
-    dtstart: event.start, // Start date of recurrence
-    until: event.end // End date of recurrence
+    dtstart: event.start, // Data di inizio della ricorrenza
+    until: event.end, // Data di fine della ricorrenza
+    ...(freq === 'endOfMonth' && { bymonthday: -1 }) // Impostazione "ultimo giorno del mese"
   }
 
-  // Create an RRule object
+  // Creazione dell'oggetto RRule
   const rule = new RRule(rruleOptions)
 
   const saveFreqEvent = async () => {
@@ -104,7 +106,7 @@ function Frequency({ handleClose, upDate }) {
     } else {
       console.log('aggiungi evento ricorente:', event)
       const recurringDates = rule.all()
-      const freq = uuidv4()
+      const freqId = uuidv4()
       const formattedEvents = recurringDates.map((date) => ({
         ...event,
         id: 'eventFreq-' + uuidv4(),
@@ -114,11 +116,11 @@ function Frequency({ handleClose, upDate }) {
         area: user.user.area,
         role: user.user.role,
         description: event.description,
-        rrule: rule.toString(), // Saving the RRule string for later usage
+        rrule: rule.toString(), // Salvando la stringa RRule per utilizzo futuro
         start: date,
         eventType: !event.evetType && 'ricorrenza',
         colorEventType: !event.evetType && '#50394c',
-        frequencyId: freq,
+        frequencyId: freqId,
         end: new Date(date.getTime() + 60 * 60 * 1000) // Durata di 1 ora
       }))
 
@@ -201,6 +203,11 @@ function Frequency({ handleClose, upDate }) {
               <FormControlLabel value="week" control={<Radio />} label="settimanale" />
               <FormControlLabel value="mouth" control={<Radio />} label="mensile" />
               <FormControlLabel value="year" control={<Radio />} label="annuale" />
+              <FormControlLabel
+                value="endOfMonth"
+                control={<Radio />}
+                label="ultimo giorno del mese"
+              />
             </RadioGroup>
           </FormControl>
           <Box sx={{ mt: 2 }}>
@@ -218,7 +225,7 @@ function Frequency({ handleClose, upDate }) {
             control={
               <Switch
                 name="execute"
-                checked={event?.execute ? event.execute : false} // Garantisce un booleano
+                checked={event?.execute ? event.execute : false}
                 onChange={(e) =>
                   setEvent({
                     ...event,
