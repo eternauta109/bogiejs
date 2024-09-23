@@ -87,7 +87,7 @@ async function populateDatabase() {
       stampa: '#196f3d',
       premiere: '#a9dfbf ',
       //ricorrenza
-      ricorenza: '#50394c'
+      ricorrenza: '#50394c'
     },
     topicType: [
       { value: 'none', label: 'none' },

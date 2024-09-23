@@ -103,7 +103,7 @@ const SchedulerComponent = ({ handleOpen }) => {
           onItemClick={(item) => console.log(item)}
           onFilterData={() => setFilterButtonState(1)}
           onClearFilterData={() => setFilterButtonState(0)}
-          config={{ zoom: 1, filterButtonState }}
+          config={{ zoom: 0, filterButtonState }}
           style={{ flex: 0 }}
         />
       </div>

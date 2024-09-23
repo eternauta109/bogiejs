@@ -56,7 +56,7 @@ function Frequency({ handleClose, upDate }) {
   }
 
   const onDeleteAll = async (e, idToCancel) => {
-    console.log('cancella tutta ricorenza', idToCancel)
+    console.log('cancella tutta ricorrenza', idToCancel)
     e.preventDefault()
     try {
       await window.api.removeMultipleEvent(idToCancel)
@@ -116,7 +116,7 @@ function Frequency({ handleClose, upDate }) {
         description: event.description,
         rrule: rule.toString(), // Saving the RRule string for later usage
         start: date,
-        eventType: !event.evetType && 'ricorenza',
+        eventType: !event.evetType && 'ricorrenza',
         colorEventType: !event.evetType && '#50394c',
         frequencyId: freq,
         end: new Date(date.getTime() + 60 * 60 * 1000) // Durata di 1 ora
@@ -139,7 +139,7 @@ function Frequency({ handleClose, upDate }) {
     console.log('event in ric useeffect', event, upDate)
     !upDate &&
       setEvent({
-        eventType: !event.evetType && 'ricorenza',
+        eventType: !event.evetType && 'ricorrenza',
         colorEventType: !event.evetType && '#50394c',
         description: '',
         title: '',
@@ -148,7 +148,7 @@ function Frequency({ handleClose, upDate }) {
         end: new Date()
       })
     return () => {
-      console.log('lascio ricorenza da useffect con event=:', event)
+      console.log('lascio ricorrenza da useffect con event=:', event)
     }
   }, [])
 
@@ -257,7 +257,7 @@ function Frequency({ handleClose, upDate }) {
                 onDeleteAll(e, event.frequencyId)
               }}
             >
-              cancella tutta la ricorenza
+              cancella tutta la ricorrenza
             </Button>
           </Box>
         )}

@@ -197,6 +197,11 @@ async function UpDateEventsDB(colorMap) {
         const event = JSON.parse(value) // Supponendo che i dati siano in JSON
         console.log('Evento originale:', event)
 
+        if (event.eventType === 'ricorenza') {
+          event.eventType = 'ricorrenza'
+          console.log(`ricorrenza aggiornato con nuovo valore: ricorrenza`)
+        }
+
         // Controlla se l'evento ha un eventType che corrisponde a una chiave in colorMap
         if (event.eventType && colorMap[event.eventType]) {
           // Aggiorna il campo colorEventType in base al tipo di evento

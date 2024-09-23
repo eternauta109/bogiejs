@@ -23,11 +23,11 @@ const ShareCalendar = () => {
   const [ricorency, setRicorency] = useState(false)
   const [upDate, setUpDate] = useState(false)
   const [checked, setChecked] = useState(false) //stato dello swith per visualizzare calendar/scheduler
-  const { initEvent, event, events } = useEventsStore()
+  const { initEvent, events } = useEventsStore()
   const [filteredEvents, setFilteredEvents] = useState(null)
 
   const handleOpenNewEvent = () => {
-    console.log(event)
+    /* console.log(event) */
     setUpDate(false)
     setRicorency(false)
     setOpenNewEvent(true)
