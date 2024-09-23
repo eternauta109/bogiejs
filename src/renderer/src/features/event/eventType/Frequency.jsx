@@ -76,18 +76,20 @@ function Frequency({ handleClose, upDate }) {
       case 'year':
         return RRule.YEARLY
       case 'endOfMonth': // Gestione per "ultimo giorno del mese"
+      case 'startOfMonth': // Gestione per "primo giorno del mese"
         return RRule.MONTHLY
       default:
         return RRule.WEEKLY
     }
   }
 
-  // Configurazione delle opzioni RRule, inclusa l'opzione "ultimo giorno del mese"
+  // Configurazione delle opzioni RRule, inclusa l'opzione "primo giorno del mese" e "ultimo giorno del mese"
   const rruleOptions = {
     freq: getRRuleFrequency(),
     dtstart: event.start, // Data di inizio della ricorrenza
     until: event.end, // Data di fine della ricorrenza
-    ...(freq === 'endOfMonth' && { bymonthday: -1 }) // Impostazione "ultimo giorno del mese"
+    ...(freq === 'endOfMonth' && { bymonthday: -1 }), // Impostazione "ultimo giorno del mese"
+    ...(freq === 'startOfMonth' && { bymonthday: 1 }) // Impostazione "primo giorno del mese"
   }
 
   // Creazione dell'oggetto RRule
@@ -203,6 +205,11 @@ function Frequency({ handleClose, upDate }) {
               <FormControlLabel value="week" control={<Radio />} label="settimanale" />
               <FormControlLabel value="mouth" control={<Radio />} label="mensile" />
               <FormControlLabel value="year" control={<Radio />} label="annuale" />
+              <FormControlLabel
+                value="startOfMonth"
+                control={<Radio />}
+                label="primo giorno del mese"
+              />
               <FormControlLabel
                 value="endOfMonth"
                 control={<Radio />}
