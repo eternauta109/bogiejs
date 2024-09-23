@@ -35,7 +35,7 @@ const localizer = dateFnsLocalizer({
 export default function Basic({ handleOpen, setRicorency, filteredEvents }) {
   const { events, setEvent, setEvents } = useEventsStore()
 
-  const { max, views } = useMemo(
+  const { views } = useMemo(
     () => ({
       views: [Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA] // Remove 'WORK_WEEK' from here
     }),
@@ -44,7 +44,7 @@ export default function Basic({ handleOpen, setRicorency, filteredEvents }) {
 
   const onSelectEvent = (event) => {
     console.log('onSelectEvent', event)
-    event.eventType === 'ricorenza' ? setRicorency(true) : setRicorency(false)
+    event.eventType === 'ricorrenza' ? setRicorency(true) : setRicorency(false)
     setEvent(event)
     handleOpen()
   }
@@ -72,16 +72,33 @@ export default function Basic({ handleOpen, setRicorency, filteredEvents }) {
   }, [])
 
   const eventStyleGetter = (event) => {
-    const backgroundColor = event.colorEventType
-    return { style: { backgroundColor } }
+    let style = {
+      backgroundColor: event.colorEventType // Use event's background color
+    }
+
+    // Check if eventType is 'ricorrenza' and execute is true
+    if (event.eventType === 'ricorrenza' && event.execute) {
+      style = {
+        ...style,
+        border: '4px solid green' // Add a green border
+      }
+    }
+
+    return { style }
   }
+
+  // Define start and end times for the DAY view
+  const minTime = new Date()
+  minTime.setHours(0, 0, 0) // Start time: 6:00 AM
+
+  const maxTime = new Date()
+  maxTime.setHours(23, 59, 59) // End time: 3:00 AM (27 = 24 + 3)
 
   return (
     <div className="calendarContainer">
       {events && (
         <Calendar
           localizer={localizer}
-          max={max}
           events={filteredEvents?.length > 0 ? filteredEvents : events}
           startAccessor="start"
           endAccessor="end"
@@ -89,6 +106,8 @@ export default function Basic({ handleOpen, setRicorency, filteredEvents }) {
           selectable={true}
           step={60}
           views={views}
+          min={minTime} // Set the minimum time shown in the day view
+          max={maxTime} // Set the maximum time shown in the day view
           onSelectEvent={onSelectEvent}
           eventPropGetter={eventStyleGetter}
           components={{
