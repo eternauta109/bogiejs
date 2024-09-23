@@ -118,7 +118,7 @@ const Dashboard = () => {
 
   return (
     <Container sx={{ padding: 2, justifyContent: 'center' }}>
-      <Button onClick={updateEvents}>update color</Button>
+      <Button onClick={updateEvents}>update events</Button>
       <Tabs value={tabValue} onChange={handleTabChange} centered>
         <Tab label="Gestione Manager" />
         <Tab label="Opzioni" />
