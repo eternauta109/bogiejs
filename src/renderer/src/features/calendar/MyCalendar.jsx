@@ -84,6 +84,13 @@ export default function Basic({ handleOpen, setRicorency, filteredEvents }) {
       }
     }
 
+    if (event.eventType === 'ricorrenza' && !event.execute) {
+      style = {
+        ...style,
+        border: '4px solid orange' // Add a green border
+      }
+    }
+
     return { style }
   }
 
