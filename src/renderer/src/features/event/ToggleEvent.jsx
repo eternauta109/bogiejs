@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Typography, Tooltip, IconButton } from '@mui/material'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
 import opsIcon from '../../assets/ops.png'
 import maintenanceIcons from '../../assets/maintenance.png'
 import concIcon from '../../assets/concIcon.png'
@@ -77,7 +78,12 @@ const ToggleEvent = () => {
             </Typography>
             <Tooltip title="Ops">
               <IconButton onClick={() => handleIconClick('ops')}>
-                <img src={opsIcon} alt="Ops Icon" style={{ width: '50px', height: '50px' }} />
+                <Avatar
+                  alt="My Icon"
+                  src={opsIcon}
+                  sx={{ width: 50, height: 50 }} // Adjust the size here
+                  variant="square" // Change to "circular" for rounded or "rounded" for rounded square
+                />
               </IconButton>
             </Tooltip>
           </Box>
@@ -100,10 +106,10 @@ const ToggleEvent = () => {
             </Typography>
             <Tooltip title="Manutenzione">
               <IconButton onClick={() => handleIconClick('manutenzione')}>
-                <img
+                <Avatar
                   src={maintenanceIcons}
                   alt="Manutenzione Icon"
-                  style={{ width: '50px', height: '50px' }}
+                  sx={{ width: '50px', height: '50px' }}
                 />
               </IconButton>
             </Tooltip>
@@ -127,10 +133,10 @@ const ToggleEvent = () => {
             </Typography>
             <Tooltip title="Concession">
               <IconButton onClick={() => handleIconClick('conc')}>
-                <img
+                <Avatar
                   src={concIcon}
                   alt="Concession Icon"
-                  style={{ width: '50px', height: '50px' }}
+                  sx={{ width: '50px', height: '50px' }}
                 />
               </IconButton>
             </Tooltip>
@@ -154,7 +160,7 @@ const ToggleEvent = () => {
             </Typography>
             <Tooltip title="Eventi">
               <IconButton onClick={() => handleIconClick('eventi')}>
-                <img src={eventIcon} alt="Eventi Icon" style={{ width: '50px', height: '50px' }} />
+                <Avatar src={eventIcon} alt="Eventi Icon" sx={{ width: '50px', height: '50px' }} />
               </IconButton>
             </Tooltip>
           </Box>
@@ -177,10 +183,10 @@ const ToggleEvent = () => {
             </Typography>
             <Tooltip title="Screen Content">
               <IconButton onClick={() => handleIconClick('screenContent')}>
-                <img
+                <Avatar
                   src={screenIcon}
                   alt="Screen Content Icon"
-                  style={{ width: '50px', height: '50px' }}
+                  sx={{ width: '50px', height: '50px' }}
                 />
               </IconButton>
             </Tooltip>
@@ -207,7 +213,13 @@ const ToggleEvent = () => {
                 alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
             >
-              <img src={opsIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <Avatar
+                alt="My Icon"
+                src={opsIcon}
+                sx={{ width: 50, height: 50 }} // Adjust the size here
+                variant="square" // Change to "circular" for rounded or "rounded" for rounded square
+              />
+
               <ToggleService
                 value="visita"
                 handleToggleAlignment={handleToggleAlignment}
@@ -237,7 +249,7 @@ const ToggleEvent = () => {
                 alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
             >
-              <img src={maintenanceIcons} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <Avatar src={maintenanceIcons} alt="My Icon" sx={{ width: '50px', height: '50px' }} />
               <ToggleService
                 selectedEvent={selectedEvent}
                 value="manutenzione"
@@ -258,7 +270,7 @@ const ToggleEvent = () => {
                 alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
             >
-              <img src={concIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <Avatar src={concIcon} alt="My Icon" sx={{ width: '50px', height: '50px' }} />
               <ToggleService
                 selectedEvent={selectedEvent}
                 value="delivery"
@@ -289,7 +301,7 @@ const ToggleEvent = () => {
                 alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
             >
-              <img src={eventIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <Avatar src={eventIcon} alt="My Icon" sx={{ width: '50px', height: '50px' }} />
               <ToggleService
                 selectedEvent={selectedEvent}
                 value="sopraluogo"
@@ -330,7 +342,7 @@ const ToggleEvent = () => {
                 alignItems: 'flex-start' // Allinea tutti i box in alto
               }}
             >
-              <img src={screenIcon} alt="My Icon" style={{ width: '50px', height: '50px' }} />
+              <Avatar src={screenIcon} alt="My Icon" sx={{ width: '50px', height: '50px' }} />
               <ToggleService
                 selectedEvent={selectedEvent}
                 value="prevendite"
