@@ -10,7 +10,9 @@ import {
   FormLabel,
   FormControlLabel,
   Radio,
-  Switch
+  Switch,
+  Select,
+  MenuItem
 } from '@mui/material'
 import { v4 as uuidv4 } from 'uuid'
 import '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker.css'
@@ -22,6 +24,7 @@ import { DateTimeRange } from './serviceEventType/Field'
 // eslint-disable-next-line react/prop-types
 function Frequency({ handleClose, upDate }) {
   const [freq, setFreq] = useState('week')
+  const [duration, setDuration] = useState(60) // Durata in minuti, predefinita a 60 (1 ora)
 
   const {
     event,
@@ -38,6 +41,10 @@ function Frequency({ handleClose, upDate }) {
 
   const handleFreqChange = (e) => {
     setFreq(e.target.value)
+  }
+
+  const handleDurationChange = (e) => {
+    setDuration(Number(e.target.value))
   }
 
   const onDeleteSingle = async (e, idToCancel) => {
@@ -64,7 +71,6 @@ function Frequency({ handleClose, upDate }) {
     handleClose()
   }
 
-  // Funzione helper per convertire la frequenza in frequenza RRule
   const getRRuleFrequency = () => {
     switch (freq) {
       case 'day':
@@ -75,24 +81,22 @@ function Frequency({ handleClose, upDate }) {
         return RRule.MONTHLY
       case 'year':
         return RRule.YEARLY
-      case 'endOfMonth': // Gestione per "ultimo giorno del mese"
-      case 'startOfMonth': // Gestione per "primo giorno del mese"
+      case 'endOfMonth':
+      case 'startOfMonth':
         return RRule.MONTHLY
       default:
         return RRule.WEEKLY
     }
   }
 
-  // Configurazione delle opzioni RRule, inclusa l'opzione "primo giorno del mese" e "ultimo giorno del mese"
   const rruleOptions = {
     freq: getRRuleFrequency(),
-    dtstart: event.start, // Data di inizio della ricorrenza
-    until: event.end, // Data di fine della ricorrenza
-    ...(freq === 'endOfMonth' && { bymonthday: -1 }), // Impostazione "ultimo giorno del mese"
-    ...(freq === 'startOfMonth' && { bymonthday: 1 }) // Impostazione "primo giorno del mese"
+    dtstart: event.start,
+    until: event.end,
+    ...(freq === 'endOfMonth' && { bymonthday: -1 }),
+    ...(freq === 'startOfMonth' && { bymonthday: 1 })
   }
 
-  // Creazione dell'oggetto RRule
   const rule = new RRule(rruleOptions)
 
   const saveFreqEvent = async () => {
@@ -118,12 +122,12 @@ function Frequency({ handleClose, upDate }) {
         area: user.user.area,
         role: user.user.role,
         description: event.description,
-        rrule: rule.toString(), // Salvando la stringa RRule per utilizzo futuro
+        rrule: rule.toString(),
         start: date,
         eventType: !event.evetType && 'ricorrenza',
         colorEventType: !event.evetType && '#50394c',
         frequencyId: freqId,
-        end: new Date(date.getTime() + 60 * 60 * 1000) // Durata di 1 ora
+        end: new Date(date.getTime() + duration * 60 * 1000) // Durata in base ai minuti selezionati
       }))
 
       for (let i = 0; i < formattedEvents.length; i++) {
@@ -217,6 +221,28 @@ function Frequency({ handleClose, upDate }) {
               />
             </RadioGroup>
           </FormControl>
+
+          {/* Campo per selezionare la durata dell'evento */}
+          <FormControl fullWidth sx={{ mt: 2 }}>
+            <FormLabel id="duration-label">Durata evento</FormLabel>
+            <Select
+              labelId="duration-label"
+              value={duration}
+              onChange={handleDurationChange}
+              displayEmpty
+              fullWidth
+            >
+              {[...Array(48)].map((_, index) => {
+                const minutes = (index + 1) * 30
+                return (
+                  <MenuItem key={minutes} value={minutes}>
+                    {`${Math.floor(minutes / 60)}h ${minutes % 60 !== 0 ? (minutes % 60) + 'm' : ''}`.trim()}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
+
           <Box sx={{ mt: 2 }}>
             <Typography variant="body2" color="grey" sx={{ mt: 2 }}>
               range temporale
