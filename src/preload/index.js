@@ -3,6 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
+  addProductToDB,
+  getProductsFromDB,
   login,
   getPath,
   getAllEvents,
@@ -38,6 +40,29 @@ if (process.contextIsolated) {
 } else {
   window.electron = electronAPI
   window.api = api
+}
+
+//PRODUCTS
+//aggiungi prodotto
+async function addProductToDB(args) {
+  console.log('preload products', args)
+  try {
+    const result = await ipcRenderer.invoke('addProductToDB', args)
+    return result
+  } catch (error) {
+    console.error('Errore in preload addNewEvent:', error)
+    throw error
+  }
+}
+
+async function getProductsFromDB() {
+  try {
+    const result = await ipcRenderer.invoke('getProductsFromDB')
+    return result
+  } catch (error) {
+    console.error('Errore in preload getProductsFromDB:', error)
+    throw error
+  }
 }
 
 //PATH

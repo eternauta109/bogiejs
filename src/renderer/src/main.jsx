@@ -2,16 +2,16 @@ import './assets/main.css'
 
 import ReactDOM from 'react-dom/client'
 import App from './App'
-
+import { Provider } from 'react-redux'
+import store from './store'
 import { HashRouter as Router } from 'react-router-dom'
-import { EventStoreContext } from './store/EventDataContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   /*  <StrictMode> */
-  <EventStoreContext>
+  <Provider store={store}>
     <Router>
       <App />
     </Router>
-  </EventStoreContext>
+  </Provider>
   /*  </StrictMode> */
 )

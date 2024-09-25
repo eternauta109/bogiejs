@@ -27,7 +27,8 @@ import TopicIcon from '@mui/icons-material/Topic'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import eyeIcon from '../assets/bigeye2.ico'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
-import useEventsStore from '../store/EventDataContext'
+
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Message } from './messages/Message'
 
@@ -40,17 +41,19 @@ function NavBar() {
   const handleCloseModal = () => setOpenModal(false)
   const handleOpenMessageModal = () => setOpenMessgaeModal(true)
   const handleCloseMessageModal = () => setOpenMessgaeModal(false)
-  const { user, logOut } = useEventsStore()
+
+  const user = useSelector((state) => state.managers.user)
+  console.log('navbar user', user)
 
   const pages = [
     { name: 'Calendario', icon: <CalendarTodayIcon /> },
     { name: 'Lavagna', icon: <DashboardIcon /> },
     { name: 'Topics', icon: <TopicIcon /> },
 
-    ...(user.user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
+    ...(user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
   ]
 
-  const settings = [`name: ${user.user.userName}`, `role: ${user.user.role}`]
+  const settings = [`name: ${user.userName}`, `role: ${user.role}`]
 
   const navigate = useNavigate()
 
@@ -117,7 +120,7 @@ function NavBar() {
   }
 
   const handleLogout = () => {
-    logOut()
+    /* logOut() */
     navigate('/')
   }
 
@@ -256,7 +259,7 @@ function NavBar() {
 
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
             <IconButton onClick={handleOpenModal} sx={{ mr: 1, color: 'inherit' }}>
-              <Badge badgeContent={user.user.notification.length} color="secondary">
+              <Badge badgeContent={user.notification.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -267,7 +270,7 @@ function NavBar() {
             </IconButton>
             <Tooltip title="user">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, ml: 2 }}>
-                <Avatar {...stringAvatar(user.user.userName)} />
+                <Avatar {...stringAvatar(user.userName)} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -298,7 +301,7 @@ function NavBar() {
           </Box>
         </Toolbar>
       </Container>
-      <Notify onHandleClose={handleCloseModal} open={openModal} notify={user.user.notification} />
+      <Notify onHandleClose={handleCloseModal} open={openModal} notify={user.notification} />
       <Message onHandleMessageClose={handleCloseMessageModal} open={openMessageModal} />
     </AppBar>
   )

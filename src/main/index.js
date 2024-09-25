@@ -12,7 +12,7 @@ ipcMain.handle('getPath', async () => {
 })
 
 const { createDbUser } = require('../../database/databaseManagersHandle')
-const { createDbEvents } = require('../../database/eventsDB')
+const { createDbProducts } = require('../../database/productsDB')
 const { createDbTasks } = require('../../database/taskDB')
 const { createDbTopics } = require('../../database/topicsDB')
 const { createDbOptions } = require('../../database/optionsDB')
@@ -20,7 +20,7 @@ const { createDbOptions } = require('../../database/optionsDB')
 async function createAllDb() {
   try {
     await createDbUser()
-    await createDbEvents()
+    await createDbProducts()
     await createDbTasks()
     await createDbTopics()
     await createDbOptions()
@@ -38,8 +38,8 @@ function createWindow() {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   mainWindow = new BrowserWindow({
-    width: width,
-    height: height,
+    width: 1100,
+    height: 800,
     show: false,
     icon: join(__dirname, '../../resources/icon.png'),
     autoHideMenuBar: true,
