@@ -48,9 +48,10 @@ function NavBar() {
   const pages = [
     { name: 'Gestione Prodotti', icon: <CalendarTodayIcon /> },
     { name: 'Rifornisci YumTrek', icon: <DashboardIcon /> },
-    { name: 'Cassa', icon: <TopicIcon /> },
-    { name: 'Home', icon: <TopicIcon /> },
 
+    { name: 'Home', icon: <TopicIcon /> },
+    { name: 'carica spettacoli', icon: <TopicIcon /> },
+    { name: 'cassa', icon: <TopicIcon /> },
     ...(user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
   ]
 
@@ -104,14 +105,17 @@ function NavBar() {
       case 'Rifornisci YumTrek':
         navigate('/supplies')
         break
-      case 'cassa':
-        navigate('/till')
-        break
       case 'Home':
         navigate('/landing')
         break
       case 'dashboard':
         navigate('/dashboard')
+        break
+      case 'carica spettacoli':
+        navigate('/loader')
+        break
+      case 'cassa':
+        navigate('/YumCart')
         break
       default:
         break

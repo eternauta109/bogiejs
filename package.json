@@ -30,7 +30,7 @@
     "@mui/x-date-pickers-pro": "6.0.4",
     "@reduxjs/toolkit": "^2.2.7",
     "@wojtekmaj/react-datetimerange-picker": "^5.5.0",
-    "date-fns": "2.30.0",
+    "date-fns": "^2.30.0",
     "exceljs": "^4.4.0",
     "level": "^8.0.1",
     "react-big-calendar": "1.11.2",

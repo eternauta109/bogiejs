@@ -5,6 +5,8 @@ import managersReducer from './reducers/managers'
 import productsReducer from './reducers/products'
 import suppliesReducer from './reducers/supplies'
 import cartReducer from './reducers/cart'
+import showsReducer from './reducers/shows'
+import salesReducer from './reducers/sales'
 
 // Configura lo store utilizzando configureStore
 const store = configureStore({
@@ -12,7 +14,9 @@ const store = configureStore({
     managers: managersReducer,
     products: productsReducer,
     supplies: suppliesReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    shows: showsReducer,
+    sales: salesReducer
   }
 })
 

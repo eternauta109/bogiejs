@@ -91,11 +91,11 @@ const Supplies = () => {
         setNewSupply((prevSupply) => ({
           ...prevSupply,
           [name]: value,
+          prezzo: selectedProduct.prezzoVendita,
           codice: selectedProduct.codice // Imposta il codice selezionato
         }))
       }
     } else {
-      console.log('prodotto non trovato', newSupply)
       setNewSupply((prevSupply) => ({
         ...prevSupply,
         [name]: value
