@@ -46,9 +46,10 @@ function NavBar() {
   console.log('navbar user', user)
 
   const pages = [
-    { name: 'Calendario', icon: <CalendarTodayIcon /> },
-    { name: 'Lavagna', icon: <DashboardIcon /> },
-    { name: 'Topics', icon: <TopicIcon /> },
+    { name: 'Gestione Prodotti', icon: <CalendarTodayIcon /> },
+    { name: 'Rifornisci YumTrek', icon: <DashboardIcon /> },
+    { name: 'Cassa', icon: <TopicIcon /> },
+    { name: 'Home', icon: <TopicIcon /> },
 
     ...(user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
   ]
@@ -97,14 +98,17 @@ function NavBar() {
 
   const handleCloseNavMenu = (e, page) => {
     switch (page) {
-      case 'Topics':
-        navigate('/topics')
+      case 'Gestione Prodotti':
+        navigate('/manage-products')
         break
-      case 'Lavagna':
-        navigate('/kanban')
+      case 'Rifornisci YumTrek':
+        navigate('/supplies')
         break
-      case 'Calendario':
-        navigate('/calendar')
+      case 'cassa':
+        navigate('/till')
+        break
+      case 'Home':
+        navigate('/landing')
         break
       case 'dashboard':
         navigate('/dashboard')
@@ -177,7 +181,7 @@ function NavBar() {
               textDecoration: 'none'
             }}
           >
-            BIG-EYE
+            YumTrek
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -231,7 +235,7 @@ function NavBar() {
               textDecoration: 'none'
             }}
           >
-            BigEye
+            YumTrek
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
             {pages.map((page, key) => (

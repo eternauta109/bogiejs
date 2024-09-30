@@ -4,9 +4,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // Thunk per caricare i prodotti da LevelDB
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_, thunkAPI) => {
   try {
-    const products = await window.api.getProductsFromDB() // Assumiamo che window.api.getProductsFromDB() recuperi i prodotti da LevelDB
-    console.log('prod in slice', products)
-    return products
+    const { allProducts, totalProduct } = await window.api.getProductsFromDB() // Assumiamo che window.api.getProductsFromDB() recuperi i prodotti da LevelDB
+    console.log('prod in slice', allProducts, totalProduct)
+    return { allProducts, totalProduct }
   } catch (error) {
     return thunkAPI.rejectWithValue({ error: error.message })
   }
@@ -31,8 +31,9 @@ export const updateProductInDB = createAsyncThunk(
   'products/updateProductInDB',
   async (product, thunkAPI) => {
     try {
-      const updatedProduct = await window.api.updateProductInDB(product) // Assumiamo che window.api.updateProductInDB(product) aggiorni il prodotto in LevelDB
-      return updatedProduct
+      await window.api.updateProductInDB(product) // Assumiamo che window.api.updateProductInDB(product) aggiorni il prodotto in LevelDB
+
+      return product
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message })
     }
@@ -55,6 +56,7 @@ export const deleteProductFromDB = createAsyncThunk(
 const productsSlice = createSlice({
   name: 'products',
   initialState: {
+    totalProduct: 0,
     products: [],
     loading: false,
     error: null
@@ -69,7 +71,8 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false
-        state.products = action.payload
+        state.products = action.payload.allProducts
+        state.totalProduct = action.payload.totalProduct + 1
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false
@@ -84,6 +87,7 @@ const productsSlice = createSlice({
       .addCase(addProductToDB.fulfilled, (state, action) => {
         state.loading = false
         state.products.push(action.payload)
+        state.totalProduct = +1
       })
       .addCase(addProductToDB.rejected, (state, action) => {
         state.loading = false
@@ -96,8 +100,12 @@ const productsSlice = createSlice({
         state.error = null
       })
       .addCase(updateProductInDB.fulfilled, (state, action) => {
+        console.log(state.products)
         state.loading = false
-        const index = state.products.findIndex((product) => product.id === action.payload.id)
+        const index = state.products.findIndex(
+          (product) => product.idProduct === action.payload.idProduct
+        )
+
         if (index !== -1) {
           state.products[index] = action.payload
         }
@@ -114,7 +122,7 @@ const productsSlice = createSlice({
       })
       .addCase(deleteProductFromDB.fulfilled, (state, action) => {
         state.loading = false
-        state.products = state.products.filter((product) => product.id !== action.payload)
+        state.products = state.products.filter((product) => product.idProduct !== action.payload)
       })
       .addCase(deleteProductFromDB.rejected, (state, action) => {
         state.loading = false

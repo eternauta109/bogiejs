@@ -28,7 +28,7 @@ const Landing = () => {
   }
 
   const handleLoadBogie = () => {
-    navigate('/load-bogie')
+    navigate('/supplies')
   }
 
   return (
@@ -40,7 +40,7 @@ const Landing = () => {
           gutterBottom
           sx={{ color: '#ba4a00', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
         >
-          Benvenuto nel Sistema Bogie
+          Benvenuto nel Sistema YumTrek
         </Typography>
         <Typography variant="h6" color="textSecondary">
           Seleziona un'azione da eseguire
@@ -136,7 +136,7 @@ const Landing = () => {
           </Card>
         </Grid>
 
-        {/* Card per "Caricare il Bogie" */}
+        {/* Card per "Caricare il YumTrek" */}
         <Grid item xs={12} md={4}>
           <Card
             sx={{
@@ -158,10 +158,10 @@ const Landing = () => {
                 }}
               />
               <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
-                Carica il Bogie
+                Carica YumTrek
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                Carica il tuo Bogie con nuovi prodotti
+                Carica il tuo YumTrek con nuovi prodotti
               </Typography>
             </CardContent>
             <CardActions>
@@ -174,7 +174,7 @@ const Landing = () => {
                   '&:hover': { backgroundColor: '#1abc9c', transform: 'scale(1.02)' }
                 }}
               >
-                Carica Bogie
+                Carica YumTrek
               </Button>
             </CardActions>
           </Card>

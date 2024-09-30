@@ -60,32 +60,18 @@ export default function Login() {
     setOpenSnackBar(false)
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
     // Chiama dispatch e attendi il completamento dell'azione asincrona
-    const resultAction = await dispatch(loginUser({ userName, password }))
-    console.log(resultAction)
-    /* if (loginUser.fulfilled.match(resultAction)) {
-      console.log('Utente autenticato con successo', resultAction.payload)
-    } else {
-      console.error('Errore durante l’autenticazione', resultAction.error)
-      openSnack()
-    } */
-    /* try {
-      // Chiamata IPC all'handler di Electron per autenticare l'utente
-      const { managerFound, managersName } = await window.api.login({ userName, password })
 
-      // Se l'autenticazione è riuscita, aggiorna lo store con l'utente autenticato
-      if (managerFound.isAuth) {
-        dispatch(setUser({ managerFound, managersName })) // Usa l'azione setUser dal managerSlice
-        navigate('/calendar') // Naviga alla schermata del calendario
-      } else {
-        openSnack() // Mostra lo Snackbar per errore
+    try {
+      dispatch(loginUser({ userName, password }))
+      if (!user.isAuth) {
+        openSnack()
       }
     } catch (error) {
-      console.error('Errore durante l’autenticazione:', error)
-      openSnack() // Mostra lo Snackbar in caso di errore
-    } */
+      console.log('handle submit error in login:', error)
+    }
   }
 
   useEffect(() => {
@@ -95,8 +81,6 @@ export default function Login() {
     if (user?.isAuth) {
       console.log('qui autenticato', user)
       navigate('/landing')
-    } else {
-      openSnack()
     }
   }, [user, navigate])
 
@@ -118,7 +102,7 @@ export default function Login() {
           fontWeight="bold"
           sx={{ textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
         >
-          Bogie
+          YUM-TREK
         </Typography>
       </Box>
 
@@ -153,7 +137,7 @@ export default function Login() {
             <Typography component="h1" variant="h5" color="primary">
               Sign in
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <Box component="form" onSubmit={(e) => handleSubmit(e)} noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required

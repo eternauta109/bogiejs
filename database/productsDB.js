@@ -35,13 +35,17 @@ async function getAllProducts() {
   console.log('productsDB: getAllProducts')
   await createDbProducts() // Ensure DB is created
   const allProducts = []
+  let totalProduct = 0
   await connect()
 
   try {
-    for await (const [, value] of db.iterator()) {
+    for await (const [key, value] of db.iterator()) {
       const parsedEvent = JSON.parse(value)
-
-      allProducts.push(parsedEvent)
+      if (key !== 'productCounter') {
+        allProducts.push(parsedEvent)
+      } else {
+        totalProduct = parseInt(value, 10)
+      }
     }
     console.log('productsDB: getAllProducts: ho finito di raccogliere gli products')
   } catch (error) {
@@ -51,24 +55,7 @@ async function getAllProducts() {
     await close()
   }
 
-  return allProducts
-}
-
-async function readAllEvents() {
-  await createDbProducts() // Ensure DB is created
-  const results = []
-  await connect()
-  try {
-    for await (const [key, value] of db.iterator()) {
-      results.push({ key, value })
-    }
-    console.log('read', results)
-  } catch (error) {
-    console.error('Error reading all events:', error)
-  } finally {
-    await close()
-  }
-  return results
+  return { allProducts, totalProduct }
 }
 
 async function eventExists(key) {
@@ -80,19 +67,49 @@ async function eventExists(key) {
   }
 }
 
+async function getNextId() {
+  try {
+    // Prova a recuperare l'attuale valore del contatore
+    let currentId = 0
+    try {
+      currentId = await db.get('productCounter')
+      currentId = parseInt(currentId, 10) // Converti l'ID in un numero intero
+      console.log('prima volta productCounter', currentId)
+    } catch (error) {
+      if (error.notFound) {
+        currentId = 0 // Inizia da 0 se il contatore non è stato ancora creato
+      } else {
+        console.error('Errore durante il recupero del supplyCounter:', error)
+        throw error
+      }
+    }
+
+    // Incrementa il contatore di uno
+    const nextId = currentId + 1
+    console.log('id prodotto aumentato:', nextId)
+    await db.put('productCounter', nextId.toString()) // Salva il nuovo valore del contatore
+
+    return nextId
+  } catch (error) {
+    console.error('Errore durante la generazione del prossimo ID:', error)
+    throw error
+  }
+}
+
 async function insertProduct(value) {
   console.log('prodotto arrivato nel db:', value)
-  await createDbProducts() // Ensure DB is created
   const serializeProd = JSON.stringify({
     ...value
   })
   await connect()
   try {
     if (await eventExists(value.idProduct)) {
-      await db.put(value.idProduct, serializeProd)
+      console.log('il prodotto esiste')
     } else {
-      await db.put(value.idProduct, serializeProd)
+      console.log('il prodotto non  esiste')
+      await getNextId() // Ottieni il prossimo ID
     }
+    await db.put(value.idProduct, serializeProd)
     console.log('Event inserted or updated successfully.')
   } catch (error) {
     console.error('Error inserting or updating event:', error)
@@ -102,91 +119,17 @@ async function insertProduct(value) {
   }
 }
 
-async function deleteThisEvent(eventId) {
+async function deleteProduct(productId) {
   await createDbProducts() // Ensure DB is created
   await connect()
   try {
-    await db.del(eventId)
+    await db.del(productId)
     console.log('Event deleted successfully.')
   } catch (error) {
     console.error('Error deleting event:', error)
     throw error
   } finally {
     await close()
-  }
-}
-
-async function deleteMultipleEvents(frequencyId) {
-  /* console.log('rimuovi eventi multipli', frequencyId) */
-  await createDbProducts() // Assicura che il DB sia creato
-  await connect() // Connessione al DB
-
-  try {
-    // 1. Crea uno stream per leggere tutti gli eventi
-    const eventsToDelete = []
-
-    for await (const [key, value] of db.iterator()) {
-      /* console.log('prima di convertire in json', value) */
-      const event = JSON.parse(value) // Supponendo che i dati siano in JSON
-      /* console.log('in json', event) */
-      if (event.frequencyId === frequencyId) {
-        eventsToDelete.push(key) // Aggiungi l'ID dell'evento da eliminare
-      }
-    }
-
-    // 2. Elimina tutti gli eventi con il frequencyId
-    for (const eventId of eventsToDelete) {
-      await db.del(eventId)
-      console.log(`Event with ID ${eventId} deleted successfully.`)
-    }
-
-    console.log(`All events with frequencyId ${frequencyId} have been deleted.`)
-  } catch (error) {
-    console.error('Error deleting events by frequencyId:', error)
-    throw error
-  } finally {
-    await close() // Chiudi la connessione al DB
-  }
-}
-
-async function UpDateProductsDB(colorMap) {
-  console.log('UpDateProductsDB', colorMap)
-
-  await connect() // Connessione al DB
-
-  console.log('Inizio aggiornamento eventi nel DB')
-
-  try {
-    for await (const [key, value] of db.iterator()) {
-      try {
-        const event = JSON.parse(value) // Supponendo che i dati siano in JSON
-        console.log('Evento originale:', event)
-
-        if (event.eventType === 'ricorenza') {
-          event.eventType = 'ricorrenza'
-          console.log(`ricorrenza aggiornato con nuovo valore: ricorrenza`)
-        }
-
-        // Controlla se l'evento ha un eventType che corrisponde a una chiave in colorMap
-        if (event.eventType && colorMap[event.eventType]) {
-          // Aggiorna il campo colorEventType in base al tipo di evento
-          event.colorEventType = colorMap[event.eventType]
-
-          // Salva l'evento aggiornato nel DB
-          await db.put(key, JSON.stringify(event)) // Sovrascrive l'evento nel DB
-          console.log(`Evento aggiornato con nuovo colore: ${event.colorEventType}`)
-        } else {
-          console.log(`Tipo di evento non trovato o non mappato: ${event.eventType}`)
-        }
-      } catch (error) {
-        console.error(`Errore nel processare l'evento con chiave ${key}:`, error)
-      }
-    }
-  } catch (iteratorError) {
-    console.error("Errore durante l'iterazione del database:", iteratorError)
-  } finally {
-    await close() // Chiudi la connessione al DB dopo l'iterazione completa
-    console.log('Aggiornamento completato e database chiuso')
   }
 }
 
@@ -233,8 +176,5 @@ module.exports = {
   insertProduct,
   createDbProducts,
   getAllProducts,
-  deleteThisEvent,
-  UpDateProductsDB,
-  readAllEvents,
-  deleteMultipleEvents
+  deleteProduct
 }

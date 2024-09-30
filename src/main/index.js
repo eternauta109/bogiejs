@@ -13,17 +13,15 @@ ipcMain.handle('getPath', async () => {
 
 const { createDbUser } = require('../../database/databaseManagersHandle')
 const { createDbProducts } = require('../../database/productsDB')
-const { createDbTasks } = require('../../database/taskDB')
-const { createDbTopics } = require('../../database/topicsDB')
+/*  */
 const { createDbOptions } = require('../../database/optionsDB')
-
+const { createDbSupplies } = require('../../database/suppliesDB')
 async function createAllDb() {
   try {
     await createDbUser()
     await createDbProducts()
-    await createDbTasks()
-    await createDbTopics()
     await createDbOptions()
+    await createDbSupplies()
   } catch (error) {
     console.error('Si è verificato un errore durante la creazione dei database:', error)
   }

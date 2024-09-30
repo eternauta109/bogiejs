@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid'
 import {
   Container,
   Box,
+  Snackbar,
+  Alert,
   Typography,
   Button,
   Dialog,
@@ -27,15 +29,10 @@ import {
 const ManageProducts = () => {
   const dispatch = useDispatch()
   const { products, loading } = useSelector((state) => state.products)
-
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [openDialog, setOpenDialog] = useState(false)
-
-  useEffect(() => {
-    console.log('useeffect MAnageProd.:', products)
-    // Recupera i prodotti quando il componente si monta
-    dispatch(fetchProducts())
-  }, [dispatch])
+  const [errorMessage, setErrorMessage] = useState('') // Stato per il messaggio di errore
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
 
   // Colonne del DataGrid
   const columns = [
@@ -63,7 +60,7 @@ const ManageProducts = () => {
             size="small"
             color="secondary"
             startIcon={<DeleteIcon />}
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDelete(params.row.idProduct)}
           >
             Elimina
           </Button>
@@ -97,19 +94,48 @@ const ManageProducts = () => {
 
   // Funzione per salvare il prodotto (aggiunta o modifica)
   const handleSaveProduct = () => {
-    if (selectedProduct.id) {
+    // Controlla se esiste già un prodotto con lo stesso codice
+    const existingProduct = products.find(
+      (product) =>
+        product.codice === selectedProduct.codice && selectedProduct.idProduct === undefined
+    )
+
+    if (existingProduct) {
+      // Mostra un messaggio di errore se il codice è già presente
+      setErrorMessage(
+        `Il codice prodotto "${selectedProduct.codice}" è già in uso. Si prega di inserire un codice diverso.`
+      )
+      setSnackbarOpen(true)
+      return
+    }
+
+    if (selectedProduct.idProduct) {
+      console.log('sto facendo update prodotto')
       dispatch(updateProductInDB(selectedProduct))
     } else {
+      console.log('aggiungo prodotto')
       dispatch(
         addProductToDB({
           ...selectedProduct,
-          id: products.length + 1,
+
           idProduct: 'prod-' + uuidv4()
         })
       )
     }
+
     handleCloseDialog()
   }
+
+  // Gestisci la chiusura dello Snackbar
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false)
+  }
+
+  useEffect(() => {
+    console.log('useeffect MAnageProd.:', products)
+    // Recupera i prodotti quando il componente si monta
+    dispatch(fetchProducts())
+  }, [dispatch])
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -130,7 +156,7 @@ const ManageProducts = () => {
           rowsPerPageOptions={[5]}
           loading={loading}
           disableSelectionOnClick
-          getRowId={(row) => row.id}
+          getRowId={(row) => row.codice}
         />
       </Box>
 
@@ -175,6 +201,12 @@ const ManageProducts = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* Snackbar per mostrare messaggi di errore */}
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   )
 }

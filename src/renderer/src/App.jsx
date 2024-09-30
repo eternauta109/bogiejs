@@ -1,13 +1,12 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 import NavBar from './features/NavBar'
-/* import Lavagna from './features/kanban_board/Lavagna'
-import Topics from './features/topics/Topics'
-import ShareCalendar from './features/calendar/ShareCalendar' */
+
 import Login from './features/Login'
 import { useSelector } from 'react-redux'
-/* import Dashboard from './features/dashboard/Dashboard' */
+
 import Landing from './features/home/Landing'
 import ManageProducts from './features/Products/ManageProducts'
+import Supplies from './features/Supplies/Supplies'
 
 function App() {
   const user = useSelector((state) => state.managers.user) // Assume che managerFound sia nello stato dei manager
@@ -22,14 +21,7 @@ function App() {
           path="/manage-products"
           element={user?.isAuth ? <ManageProducts /> : <Navigate to="/" />}
         />
-        {/*  <Route path="/calendar" element={user?.isAuth ? <ShareCalendar /> : <Navigate to="/" />} />
-       
-        <Route path="/topics" element={user?.isAuth ? <Topics /> : <Navigate to="/" />} />
-        <Route path="/kanban" element={user?.isAuth ? <Lavagna /> : <Navigate to="/" />} />
-        <Route
-          path="/dashboard"
-          element={user?.isAuth && user.role === 'tm' ? <Dashboard /> : <Navigate to="/" />}
-        /> */}
+        <Route path="/supplies" element={user?.isAuth ? <Supplies /> : <Navigate to="/" />} />
       </Routes>
     </div>
   )
