@@ -1,5 +1,5 @@
 // src/components/Landing.jsx
-import React from 'react'
+
 import {
   Box,
   Typography,
@@ -13,6 +13,8 @@ import {
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale'
 import EditIcon from '@mui/icons-material/Edit'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import MovieIcon from '@mui/icons-material/Movie'
+
 import { useNavigate } from 'react-router-dom'
 
 const Landing = () => {
@@ -20,7 +22,7 @@ const Landing = () => {
 
   // Funzioni di navigazione per ogni opzione
   const handleStartCashRegister = () => {
-    navigate('/cash-register')
+    navigate('/yumcart')
   }
 
   const handleManageProducts = () => {
@@ -29,6 +31,14 @@ const Landing = () => {
 
   const handleLoadBogie = () => {
     navigate('/supplies')
+  }
+
+  const handleLoadMovie = () => {
+    navigate('/loader')
+  }
+
+  const handleAnalisys = () => {
+    navigate('/transactionAnalisys')
   }
 
   return (
@@ -43,7 +53,7 @@ const Landing = () => {
           Benvenuto nel Sistema YumTrek
         </Typography>
         <Typography variant="h6" color="textSecondary">
-          Seleziona un'azione da eseguire
+          cosa vuoi fare?
         </Typography>
       </Box>
 
@@ -73,7 +83,7 @@ const Landing = () => {
                 Avvia la Cassa
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                Gestisci le vendite e le transazioni
+                inizia la fase di vendita dopo aver caricato lo yumtrek
               </Typography>
             </CardContent>
             <CardActions>
@@ -172,6 +182,94 @@ const Landing = () => {
                 sx={{
                   backgroundColor: '#16a085',
                   '&:hover': { backgroundColor: '#1abc9c', transform: 'scale(1.02)' }
+                }}
+              >
+                Carica YumTrek
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+
+        {/* Card per "Caricare i shows" */}
+        <Grid item xs={12} md={4}>
+          <Card
+            sx={{
+              boxShadow: 5,
+              transition: 'transform 0.3s, box-shadow 0.3s',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)'
+              }
+            }}
+          >
+            <CardContent sx={{ textAlign: 'center' }}>
+              <MovieIcon
+                sx={{
+                  fontSize: 60,
+                  color: '#c39bd3',
+                  transition: 'color 0.3s',
+                  '&:hover': { color: '#af7ac5' }
+                }}
+              />
+              <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
+                Carica i shows
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Carica i spettacoli di oggi in cui entrerà lo yumtrek
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleLoadMovie}
+                sx={{
+                  backgroundColor: '#c39bd3',
+                  '&:hover': { backgroundColor: '#af7ac5', transform: 'scale(1.02)' }
+                }}
+              >
+                Carica YumTrek
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+
+        {/* Card per "analisys trans" */}
+        <Grid item xs={12} md={4}>
+          <Card
+            sx={{
+              boxShadow: 5,
+              transition: 'transform 0.3s, box-shadow 0.3s',
+              '&:hover': {
+                transform: 'scale(1.05)',
+                boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)'
+              }
+            }}
+          >
+            <CardContent sx={{ textAlign: 'center' }}>
+              <MovieIcon
+                sx={{
+                  fontSize: 60,
+                  color: '#bdc3c7',
+                  transition: 'color 0.3s',
+                  '&:hover': { color: '#a6acaf' }
+                }}
+              />
+              <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
+                Carica i shows
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Carica i spettacoli di oggi in cui entrerà lo yumtrek
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleAnalisys}
+                sx={{
+                  backgroundColor: '#bdc3c7',
+                  '&:hover': { backgroundColor: '#a6acaf', transform: 'scale(1.02)' }
                 }}
               >
                 Carica YumTrek

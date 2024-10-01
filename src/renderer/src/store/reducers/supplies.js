@@ -14,7 +14,7 @@ export const fetchSupplies = createAsyncThunk('supplies/fetchSupplies', async (_
 
 // Thunk per aggiornare un prodotto in LevelDB
 export const updateSupplyInDB = createAsyncThunk(
-  'products/updateSupplyInDB',
+  'supplies/updateSupplyInDB',
   async (supply, thunkAPI) => {
     try {
       await window.api.updateSupplyInDB(supply) // Assumiamo che window.api.updateProductInDB(product) aggiorni il prodotto in LevelDB
@@ -28,7 +28,7 @@ export const updateSupplyInDB = createAsyncThunk(
 
 // Thunk per eliminare un prodotto da LevelDB
 export const deleteSupplyFromDB = createAsyncThunk(
-  'products/deleteSupplyFromDB',
+  'supplies/deleteSupplyFromDB',
   async (idSupply, thunkAPI) => {
     try {
       await window.api.deleteSupplyFromDB(idSupply) // Assumiamo che window.api.deleteProductFromDB(productId) elimini il prodotto da LevelDB

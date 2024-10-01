@@ -5,14 +5,14 @@ const fsConstants = require('fs').constants
 
 const { app } = require('electron')
 
-const dbName = 'supplies'
-const isBuild = process.env.NODE_ENV === 'supplieion'
+const dbName = 'transactions'
+const isBuild = process.env.NODE_ENV === 'transactionsion'
 const dbPath = path.join(isBuild ? __dirname : app.getAppPath(), `../db/${dbName}`)
 console.log('nuova path', dbPath)
 
 let db
 
-async function createDbSupplies() {
+async function createDbTransactions() {
   try {
     await fs.access(dbPath, fsConstants.F_OK)
     console.log(`db ${dbName} gia esistente`)
@@ -22,7 +22,7 @@ async function createDbSupplies() {
       /* await populateDatabase() */
       await connect()
       await close()
-      console.log('supplies db creato con successo')
+      console.log('transactions db creato con successo')
     } catch (error) {
       console.error(`errore in fase di creazione db ${dbName}:`, error)
       throw error
@@ -31,28 +31,28 @@ async function createDbSupplies() {
   return dbPath
 }
 
-async function getAllSupplies() {
-  console.log('suppliesDB: getAllSupplies')
-  await createDbSupplies() // Ensure DB is created
-  const allSupplies = []
+async function getAllTransactions() {
+  console.log('transactionsDB: getAllTransactions')
+
+  const allTransactions = []
   await connect()
 
   try {
     for await (const [key, value] of db.iterator()) {
       const parsedEvent = JSON.parse(value)
-      console.log('qui', key)
-      if (key !== 'supplyCounter') {
-        allSupplies.push(parsedEvent)
+
+      if (key !== 'transactionCounter') {
+        allTransactions.push(parsedEvent)
       }
     }
-    console.log('suppliesDB: getAllSupplies: ho finito di raccogliere gli supplies')
+    console.log('transactionsDB: getAllTransactions: ho finito di raccogliere gli transactions')
   } catch (error) {
-    console.error('Error fetching all supplies:', error)
+    console.error('Error fetching all transactions:', error)
     throw error
   } finally {
     await close()
   }
-  return allSupplies
+  return allTransactions
 }
 
 async function eventExists(key) {
@@ -64,35 +64,36 @@ async function eventExists(key) {
   }
 }
 
-async function insertSupply(value) {
-  console.log('Supply arrivato nel db:', value)
+async function insertTransaction(transactions) {
+  console.log('Transactions arrivati nel db:', transactions)
 
-  const serializeProd = JSON.stringify({
-    ...value
-  })
-  console.log('supply serialized', serializeProd)
-  await connect()
+  await connect() // Apri la connessione al DB una sola volta per ottimizzare
   try {
-    if (await eventExists(value.supplyId)) {
-      console.log('Il prodotto esiste già', value)
-    } else {
-      console.log('Il prodotto non esiste, lo aggiungo')
+    for (const transaction of transactions) {
+      const serializeTransaction = JSON.stringify(transaction)
+      console.log('Transaction serialized', serializeTransaction)
+
+      if (await eventExists(transaction.salesId)) {
+        console.log('La transazione esiste già', transaction.salesId)
+      } else {
+        console.log('La transazione non esiste, la aggiungo')
+        await db.put(transaction.salesId, serializeTransaction)
+        console.log('Transazione inserita con successo.')
+      }
     }
-    await db.put(value.supplyId, serializeProd)
-    console.log('Supply inserito o aggiornato con successo.')
   } catch (error) {
-    console.error('Errore durante l’inserimento o l’aggiornamento del supply:', error)
+    console.error('Errore durante l’inserimento o l’aggiornamento delle transazioni:', error)
     throw error
   } finally {
-    await close()
+    await close() // Chiudi la connessione al DB alla fine
   }
 }
 
-async function deleteSupply(supplyId) {
-  await createDbSupplies() // Ensure DB is created
+async function deleteTransaction(transactionId) {
+  await createDbTransactions() // Ensure DB is created
   await connect()
   try {
-    await db.del(supplyId)
+    await db.del(transactionId)
     console.log('Event deleted successfully.')
   } catch (error) {
     console.error('Error deleting event:', error)
@@ -121,7 +122,7 @@ function connect() {
       if (err) {
         reject(err)
       } else {
-        console.log('db supplies connesso')
+        console.log('db transactions connesso')
         resolve()
       }
     })
@@ -134,7 +135,7 @@ function close() {
       if (err) {
         reject(err)
       } else {
-        console.log('db supplies chiuso')
+        console.log('db transactions chiuso')
         resolve()
       }
     })
@@ -142,8 +143,8 @@ function close() {
 }
 
 module.exports = {
-  insertSupply,
-  createDbSupplies,
-  getAllSupplies,
-  deleteSupply
+  insertTransaction,
+  createDbTransactions,
+  getAllTransactions,
+  deleteTransaction
 }

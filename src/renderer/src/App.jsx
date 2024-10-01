@@ -10,6 +10,7 @@ import Supplies from './features/Supplies/Supplies'
 import ExcelLoader from './features/Loader/ExcelLoader'
 import YumCart from './features/YumCart/YumCart'
 import Dashboard from './features/dashboard/Dashboard'
+import TransactionsAnalisys from './features/transactions/TransactionAnalisys'
 
 function App() {
   const user = useSelector((state) => state.managers.user) // Assume che managerFound sia nello stato dei manager
@@ -28,6 +29,10 @@ function App() {
         <Route path="/loader" element={user?.isAuth ? <ExcelLoader /> : <Navigate to="/" />} />
         <Route path="/yumcart" element={user?.isAuth ? <YumCart /> : <Navigate to="/" />} />
         <Route path="/dashboard" element={user?.isAuth ? <Dashboard /> : <Navigate to="/" />} />
+        <Route
+          path="/transactionAnalisys"
+          element={user?.isAuth ? <TransactionsAnalisys /> : <Navigate to="/" />}
+        />
       </Routes>
     </div>
   )

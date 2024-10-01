@@ -13,13 +13,14 @@ ipcMain.handle('getPath', async () => {
 
 const { createDbUser } = require('../../database/databaseManagersHandle')
 const { createDbProducts } = require('../../database/productsDB')
-/*  */
+const { createDbTransactions } = require('../../database/transactionsDB')
 const { createDbOptions } = require('../../database/optionsDB')
 const { createDbSupplies } = require('../../database/suppliesDB')
 async function createAllDb() {
   try {
     await createDbUser()
     await createDbProducts()
+    await createDbTransactions()
     await createDbOptions()
     await createDbSupplies()
   } catch (error) {

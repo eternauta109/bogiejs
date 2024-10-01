@@ -7,13 +7,19 @@ const api = {
   getProductsFromDB,
   deleteProductFromDB,
   updateProductInDB,
+
   addSupplyToDB,
   getSuppliesFromDB,
   deleteSupplyFromDB,
   updateSupplyInDB,
+
+  addTransactionToDB,
+  getTransactionsFromDB,
+  deleteTransactionFromDB,
+  updateTransactionInDB,
+
   login,
   getPath,
-
   getOptions,
   shell: shell
 }
@@ -119,6 +125,51 @@ async function getSuppliesFromDB() {
     return result
   } catch (error) {
     console.error('Errore in preload getSuppliesFromDB:', error)
+    throw error
+  }
+}
+
+//TRANSACTIONS
+//aggiungi supplie
+async function addTransactionToDB(args) {
+  console.log('preload add supplie', args)
+  try {
+    const result = await ipcRenderer.invoke('addTransactionToDB', args)
+    return result
+  } catch (error) {
+    console.error('Errore in preload addTransactionToDB:', error)
+    throw error
+  }
+}
+
+async function updateTransactionInDB(args) {
+  console.log('preload products update', args)
+  try {
+    const result = await ipcRenderer.invoke('addTransactionToDB', args)
+    return result
+  } catch (error) {
+    console.error('Errore in preload addTransactionToDB:', error)
+    throw error
+  }
+}
+
+async function deleteTransactionFromDB(args) {
+  console.log('preload delete supplie in preload', args)
+  try {
+    const result = await ipcRenderer.invoke('deleteTransactionFromDB', args)
+    return result
+  } catch (error) {
+    console.error('Errore in preload deleteTransactionFromDB:', error)
+    throw error
+  }
+}
+
+async function getTransactionsFromDB() {
+  try {
+    const result = await ipcRenderer.invoke('getTransactionsFromDB')
+    return result
+  } catch (error) {
+    console.error('Errore in preload getTransactionsFromDB:', error)
     throw error
   }
 }
