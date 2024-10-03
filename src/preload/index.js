@@ -19,6 +19,9 @@ const api = {
   updateTransactionInDB,
 
   login,
+  addNewUser,
+  getUsersFromDB,
+
   getPath,
   getOptions,
   shell: shell
@@ -189,6 +192,27 @@ async function login({ userName, password }) {
     return result
   } catch (error) {
     console.error('Errore in preload login:', error)
+    throw error
+  }
+}
+
+async function addNewUser(user) {
+  try {
+    await ipcRenderer.invoke('addNewUser', user)
+    return
+  } catch (error) {
+    console.error('Errore in preload registerUser:', error)
+    throw error
+  }
+}
+
+async function getUsersFromDB(user) {
+  try {
+    const users = await ipcRenderer.invoke('getUsersFromDB', user)
+    console.log('retunr users from preload', users)
+    return users
+  } catch (error) {
+    console.error('Errore in preload getUsersFromDB:', error)
     throw error
   }
 }

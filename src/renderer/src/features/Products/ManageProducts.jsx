@@ -10,6 +10,8 @@ import {
   Typography,
   Button,
   Dialog,
+  MenuItem,
+  Select,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -34,11 +36,15 @@ const ManageProducts = () => {
   const [errorMessage, setErrorMessage] = useState('') // Stato per il messaggio di errore
   const [snackbarOpen, setSnackbarOpen] = useState(false)
 
+  //valory delle category
+  const categoryList = ['food', 'confetionary', 'drink', 'sweeties']
+
   // Colonne del DataGrid
   const columns = [
     { field: 'codice', headerName: 'Codice', width: 150 },
     { field: 'nomeProdotto', headerName: 'Nome Prodotto', width: 200 },
     { field: 'prezzoVendita', headerName: 'Prezzo di Vendita', width: 150, type: 'number' },
+    { field: 'category', headerName: 'categoria', width: 150 },
     {
       field: 'actions',
       headerName: 'Azioni',
@@ -193,6 +199,23 @@ const ManageProducts = () => {
               setSelectedProduct({ ...selectedProduct, prezzoVendita: parseFloat(e.target.value) })
             }
           />
+          <Select
+            value={selectedProduct?.category || ''}
+            name="category"
+            required
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, category: e.target.value })}
+            displayEmpty
+            sx={{ width: 200 }}
+          >
+            <MenuItem value="" disabled>
+              Seleziona una categoria
+            </MenuItem>
+            {categoryList.map((cat, key) => (
+              <MenuItem key={key} value={cat}>
+                {cat}
+              </MenuItem>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Annulla</Button>

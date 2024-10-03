@@ -25,10 +25,13 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import TopicIcon from '@mui/icons-material/Topic'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import eyeIcon from '../assets/bigeye2.ico'
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 
-import { useSelector } from 'react-redux'
+import MovieIcon from '@mui/icons-material/Movie'
+import RollerShadesClosed from '@mui/icons-material/RollerShadesClosed'
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import { logOut } from '../store/reducers/managers' // Importa l'azione
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Message } from './messages/Message'
 
@@ -41,17 +44,16 @@ function NavBar() {
   const handleCloseModal = () => setOpenModal(false)
   const handleOpenMessageModal = () => setOpenMessgaeModal(true)
   const handleCloseMessageModal = () => setOpenMessgaeModal(false)
-
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.managers.user)
-  console.log('navbar user', user)
 
   const pages = [
+    { name: 'Home', icon: <TopicIcon /> },
     { name: 'Gestione Prodotti', icon: <CalendarTodayIcon /> },
     { name: 'Rifornisci YumTrek', icon: <DashboardIcon /> },
-
-    { name: 'Home', icon: <TopicIcon /> },
-    { name: 'carica spettacoli', icon: <TopicIcon /> },
-    { name: 'cassa', icon: <TopicIcon /> },
+    { name: 'carica spettacoli', icon: <MovieIcon /> },
+    { name: 'cassa', icon: <PointOfSaleIcon /> },
+    ...(user.role === 'tm' ? [{ name: 'analisi', icon: <RollerShadesClosed /> }] : []),
     ...(user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
   ]
 
@@ -117,6 +119,10 @@ function NavBar() {
       case 'cassa':
         navigate('/YumCart')
         break
+      case 'analisi':
+        navigate('/transactionAnalisys')
+        break
+
       default:
         break
     }
@@ -128,7 +134,7 @@ function NavBar() {
   }
 
   const handleLogout = () => {
-    /* logOut() */
+    dispatch(logOut())
     navigate('/')
   }
 
@@ -163,13 +169,7 @@ function NavBar() {
                 transition: 'transform 0.5s ease-in-out'
               }
             }}
-          >
-            <img
-              src={eyeIcon}
-              alt="icoEye"
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
-          </Box>
+          ></Box>
 
           <Typography
             variant="h6"

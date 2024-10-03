@@ -10,7 +10,7 @@ const {
 export function handleManagerIpc(ipcMain) {
   ipcMain.handle('addNewUser', async (event, args) => {
     try {
-      console.log('main addNewUSer args ', args)
+      console.log('main addNewUser args ', args)
       return await addNewUser({ ...args })
     } catch (error) {
       console.error('main: addNewUser: error: ', error)
@@ -28,12 +28,12 @@ export function handleManagerIpc(ipcMain) {
     }
   })
 
-  ipcMain.handle('getAllManagers', async (event, args) => {
+  ipcMain.handle('getUsersFromDB', async (event, args) => {
     try {
-      console.log('main getAllManagers', args)
+      console.log('main getUsersFromDB', args)
       return await getAllManagers(args)
     } catch (error) {
-      console.error('main: getAllManagers: error: ', error)
+      console.error('main: getUsersFromDB: error: ', error)
       throw error
     }
   })

@@ -77,9 +77,10 @@ const ExcelLoader = () => {
   ]
 
   // Gestisci la selezione degli spettacoli
-  const handleSelectionChange = (newSelection) => {
+  /* const handleSelectionChange = (newSelection) => {
+    console.log('qui', newSelection)
     setSelectedShows(newSelection)
-  }
+  } */
 
   // Salva gli spettacoli selezionati nello store
   const handleSaveSelectedShows = () => {
@@ -91,7 +92,7 @@ const ExcelLoader = () => {
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>
-        Carica gli Spettacoli YumTrek
+        Carica gli Spettacoli in YumTrek
       </Typography>
       <Box mt={2} mb={4}>
         <input
@@ -112,7 +113,10 @@ const ExcelLoader = () => {
           rows={rows}
           columns={columns}
           checkboxSelection
-          onSelectionModelChange={handleSelectionChange}
+          onRowSelectionModelChange={(newSelectionModel) => {
+            console.log(newSelectionModel), setSelectedShows(newSelectionModel)
+          }}
+          rowSelectionModel={selectedShows}
         />
       </div>
       <Button

@@ -48,12 +48,11 @@ async function getManagerByCredentials(userName, password) {
 }
 
 async function getAllManagers(user) {
-  await createDbUser() // Ensure DB is created
   const allManagers = []
   await connect()
   try {
     for await (const [, value] of db.iterator()) {
-      if (user.user.cinema === value.cinema) {
+      if (user.cinema === value.cinema) {
         allManagers.push(value)
       }
     }
@@ -62,6 +61,7 @@ async function getAllManagers(user) {
   } finally {
     await close()
   }
+  console.log('return allUsers', allManagers)
   return allManagers
 }
 

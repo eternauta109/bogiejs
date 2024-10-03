@@ -32,7 +32,8 @@ const Supplies = () => {
   const [newSupply, setNewSupply] = useState({
     supplyName: '',
     initialQuantity: '',
-    remainingQuantity: ''
+    remainingQuantity: '',
+    category: ''
   })
   const [openSnackBar, setOpenSnackBar] = useState(false)
   const [editing, setEditing] = useState(false) // Stato per indicare se stiamo modificando
@@ -91,6 +92,7 @@ const Supplies = () => {
         setNewSupply((prevSupply) => ({
           ...prevSupply,
           [name]: value,
+          category: selectedProduct.category,
           prezzo: selectedProduct.prezzoVendita,
           codice: selectedProduct.codice // Imposta il codice selezionato
         }))
@@ -128,7 +130,7 @@ const Supplies = () => {
         await dispatch(addSupplyToDB(supplyToSave)).unwrap()
       }
 
-      setNewSupply({ supplyName: '', initialQuantity: '', remainingQuantity: '' }) // Resetta il form dopo il salvataggio
+      setNewSupply({ supplyName: '', initialQuantity: '', remainingQuantity: '', category: '' }) // Resetta il form dopo il salvataggio
       setOpenSnackBar(true) // Mostra snackbar di successo
       setEditing(false) // Reset dell'editing
     } catch (error) {

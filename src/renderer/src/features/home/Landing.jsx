@@ -14,7 +14,7 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale'
 import EditIcon from '@mui/icons-material/Edit'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import MovieIcon from '@mui/icons-material/Movie'
-
+import RollerShadesClosed from '@mui/icons-material/RollerShadesClosed'
 import { useNavigate } from 'react-router-dom'
 
 const Landing = () => {
@@ -247,7 +247,7 @@ const Landing = () => {
             }}
           >
             <CardContent sx={{ textAlign: 'center' }}>
-              <MovieIcon
+              <RollerShadesClosed
                 sx={{
                   fontSize: 60,
                   color: '#bdc3c7',
@@ -256,10 +256,10 @@ const Landing = () => {
                 }}
               />
               <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
-                Carica i shows
+                Chiusura YumTrek
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                Carica i spettacoli di oggi in cui entrerà lo yumtrek
+                Qui fai i conteggi di yum trek e scarichi le transazioni, frai gli storni etc
               </Typography>
             </CardContent>
             <CardActions>
@@ -272,7 +272,7 @@ const Landing = () => {
                   '&:hover': { backgroundColor: '#a6acaf', transform: 'scale(1.02)' }
                 }}
               >
-                Carica YumTrek
+                Chiudi Cassa
               </Button>
             </CardActions>
           </Card>

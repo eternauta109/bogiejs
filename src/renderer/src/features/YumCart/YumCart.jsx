@@ -24,16 +24,11 @@ const YumCart = () => {
   const [selectedShow, setSelectedShow] = useState('')
   const [attendance, setAttendance] = useState('')
   const dispatch = useDispatch()
+  const shows = useSelector((state) => state.shows.selectedShows)
   const user = useSelector((state) => state.managers.user)
   const cart = useSelector((state) => state.cart.items)
   const total = useSelector((state) => state.cart.total)
   const supplies = useSelector((state) => state.supplies.supplies)
-
-  const shows = [
-    { id: 1, FEATURE: 'Indiana Jones', FEATURE_TIME: '14:00' },
-    { id: 2, FEATURE: 'Ghostbuster', FEATURE_TIME: '15:00' },
-    { id: 3, FEATURE: 'Star Wars', FEATURE_TIME: '16:30' }
-  ]
 
   // Gestisce la selezione dello spettacolo
   const handleShowSelection = (event) => {
@@ -42,14 +37,16 @@ const YumCart = () => {
 
   // Aggiunge un prodotto al carrello
   const handleAddToCart = (supply) => {
+    console.log(supply)
     if (!selectedShow || !attendance) return
     const showDetails = shows.find((show) => show.id === selectedShow)
     const newTransaction = {
       ...supply,
       user: user.userName,
-      FEATURE: showDetails.FEATURE,
+      FEATURE: showDetails.PLAYLIST,
       FEATURE_TIME: showDetails.FEATURE_TIME,
       attendance: parseInt(attendance, 10),
+      SHOW_TIME: showDetails.SHOW_TIME,
       salesId: 'sales-' + uuidv4(),
       transactionDate: format(new Date(), 'yyyy/MM/dd HH:mm:ss')
     }
@@ -58,6 +55,7 @@ const YumCart = () => {
 
   // Rimuove un prodotto dal carrello
   const handleRemoveFromCart = (id) => {
+    console.log(id)
     dispatch(removeItem(id))
   }
 
@@ -114,7 +112,7 @@ const YumCart = () => {
                 </MenuItem>
                 {shows.map((show) => (
                   <MenuItem key={show.id} value={show.id}>
-                    {show.FEATURE} - {show.FEATURE_TIME}
+                    {show.PLAYLIST} - {show.FEATURE_TIME}
                   </MenuItem>
                 ))}
               </Select>
