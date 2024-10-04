@@ -134,13 +134,10 @@ async function addNotifyManagers({ typeNotify, obj }) {
   await iteratorForAddNotify(obj, newNotify)
 }
 
-async function deleteThisManager(user) {
-  await createDbUser() // Ensure DB is created
+async function deleteThisManager(userId) {
   await connect()
   try {
-    await db.del(user.id)
-    const managersName = await getAllManagersName(user)
-    return [...managersName]
+    await db.del(userId)
   } catch (error) {
     console.error('Error deleting manager:', error)
     throw error

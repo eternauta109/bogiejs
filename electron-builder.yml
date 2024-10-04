@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: bigeye
+productName: yumtrek
 
 directories:
   buildResources: build
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: bigeye
+  executableName: yumtrek
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

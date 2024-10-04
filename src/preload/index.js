@@ -21,6 +21,7 @@ const api = {
   login,
   addNewUser,
   getUsersFromDB,
+  deleteThisManager,
 
   getPath,
   getOptions,
@@ -213,6 +214,15 @@ async function getUsersFromDB(user) {
     return users
   } catch (error) {
     console.error('Errore in preload getUsersFromDB:', error)
+    throw error
+  }
+}
+
+async function deleteThisManager(userId) {
+  try {
+    await ipcRenderer.invoke('deleteThisManager', userId)
+  } catch (error) {
+    console.error('Errore in preload deleteThisManager:', error)
     throw error
   }
 }

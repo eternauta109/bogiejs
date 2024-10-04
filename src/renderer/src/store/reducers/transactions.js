@@ -72,7 +72,7 @@ const transactionsSlice = createSlice({
       })
       .addCase(fetchTransactions.fulfilled, (state, action) => {
         state.loading = false
-        console.log('trans reducer fetchTransactions', action.payload)
+
         state.transactions = action.payload
       })
       .addCase(fetchTransactions.rejected, (state, action) => {
@@ -88,7 +88,6 @@ const transactionsSlice = createSlice({
       .addCase(addTransactionToDB.fulfilled, (state, action) => {
         state.loading = false
         state.transactions = [...state.transactions, ...action.payload] // Aggiungi la nuova transaction allo stato
-        console.log('trans reducer addTransactionToDB', state.transactions)
       })
       .addCase(addTransactionToDB.rejected, (state, action) => {
         state.loading = false
@@ -98,13 +97,9 @@ const transactionsSlice = createSlice({
       //upDatetransaction
       .addCase(updateTransactionInDB.fulfilled, (state, action) => {
         const index = state.transactions.findIndex(
-          (transaction) => (
-            console.log('transactionyyy', transaction),
-            transaction.transactionId === action.payload.transactionId
-          )
+          (transaction) => transaction.transactionId === action.payload.transactionId
         )
         if (index !== -1) {
-          console.log('aggiorno singolo index di transactionss', index)
           state.transactions[index] = action.payload
         }
       })

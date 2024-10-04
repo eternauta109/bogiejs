@@ -18,7 +18,7 @@ import {
   Card,
   CardContent
 } from '@mui/material'
-import { registerUser, fetchUsers } from '../../store/reducers/managers'
+import { registerUser, fetchUsers, deleteUser } from '../../store/reducers/managers'
 import { v4 as uuidv4 } from 'uuid'
 import DeleteIcon from '@mui/icons-material/Delete'
 
@@ -71,11 +71,9 @@ const Dashboard = () => {
 
   const onHandleDeleteUser = async (e, manager) => {
     e.preventDefault()
-    console.log(manager)
-    const arrayNames = await window.api.deleteThisManager(manager)
-    console.log('dashboard lista managers', arrayNames)
-    // Dopo la cancellazione aggiorna la lista degli utenti
-    getUsers() // Richiama `getUsers` dopo la cancellazione per aggiornare la lista
+    dispatch(deleteUser(manager.id))
+
+    console.log('dashboard cancellazione user', manager.userName)
   }
 
   return (

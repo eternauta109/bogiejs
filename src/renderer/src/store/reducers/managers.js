@@ -13,12 +13,23 @@ export const loginUser = createAsyncThunk('managers/loginUser', async (credentia
   }
 })
 
-// Definizione di un'azione asincrona per effettuare il login
+// Definizione di un'azione asincrona per registrare un nuovo user
 export const registerUser = createAsyncThunk('managers/registerUser', async (user, thunkAPI) => {
   console.log('register user reducer:', user)
   try {
     await window.api.addNewUser(user)
     return user
+  } catch (error) {
+    return thunkAPI.rejectWithValue({ error: error.message })
+  }
+})
+
+// Definizione di un'azione asincrona per cancellare un user
+export const deleteUser = createAsyncThunk('managers/deleteUser', async (userId, thunkAPI) => {
+  console.log('register user reducer:', userId)
+  try {
+    await window.api.deleteThisManager(userId)
+    return userId
   } catch (error) {
     return thunkAPI.rejectWithValue({ error: error.message })
   }
@@ -95,6 +106,20 @@ const managersSlice = createSlice({
         state.managers = action.payload
       })
       .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload.error
+      })
+
+      //delete users
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false
+        state.managers = state.managers.filter((manager) => manager.id !== action.payload)
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload.error
       })
