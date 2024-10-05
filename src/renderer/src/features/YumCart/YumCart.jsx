@@ -79,7 +79,7 @@ const YumCart = () => {
 
           {/* Totale */}
           <Box mt={2}>
-            <Typography variant="h6">Totale: €{total.toFixed(2)}</Typography>
+            <Typography variant="h6">Totale: €{parseFloat(total).toFixed(2)}</Typography>
           </Box>
         </Box>
 

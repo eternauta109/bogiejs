@@ -50,7 +50,7 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
             variant="h4"
             sx={{ fontWeight: 'bold', color: '#2c3e50', mb: 3, textAlign: 'center' }}
           >
-            €{total.toFixed(2)}
+            €{total}
           </Typography>
         </Paper>
 

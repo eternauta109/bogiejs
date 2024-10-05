@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Box, Typography, IconButton, Divider } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useDispatch } from 'react-redux'
@@ -21,7 +22,7 @@ const CartItem = ({ item }) => {
         mb={1}
       >
         <Typography>{item.supplyName}</Typography>
-        <Typography>€{item.prezzo}</Typography>
+        <Typography>€{parseFloat(item.prezzo).toFixed(2)}</Typography>
         <IconButton onClick={handleRemoveFromCart} size="small">
           <DeleteIcon />
         </IconButton>

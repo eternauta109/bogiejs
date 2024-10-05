@@ -95,7 +95,13 @@ const FilteredTransactionsByDay = () => {
                 {Object.keys(paymentTypes.cash).length > 0 ? (
                   <Box sx={{ pl: 2 }}>
                     {Object.entries(paymentTypes.cash).map(([productName, details]) => (
-                      <Box key={productName} sx={{ mb: 2 }}>
+                      <Box
+                        key={productName}
+                        sx={{ mb: 2 }}
+                        display="flex"
+                        flexDirection="row"
+                        gap={2}
+                      >
                         <Typography variant="subtitle1">Prodotto: {productName}</Typography>
                         <Typography>Quantità vendute: {details.count}</Typography>
                         <Typography>Totale incasso: €{details.total.toFixed(2)}</Typography>
@@ -115,7 +121,13 @@ const FilteredTransactionsByDay = () => {
                 {Object.keys(paymentTypes.card).length > 0 ? (
                   <Box sx={{ pl: 2 }}>
                     {Object.entries(paymentTypes.card).map(([productName, details]) => (
-                      <Box key={productName} sx={{ mb: 2 }}>
+                      <Box
+                        key={productName}
+                        sx={{ mb: 2 }}
+                        display="flex"
+                        flexDirection="row"
+                        gap={2}
+                      >
                         <Typography variant="subtitle1">Prodotto: {productName}</Typography>
                         <Typography>Quantità vendute: {details.count}</Typography>
                         <Typography>Totale incasso: €{details.total.toFixed(2)}</Typography>
