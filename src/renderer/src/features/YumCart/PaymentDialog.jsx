@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Dialog,
   DialogTitle,
@@ -10,7 +11,6 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 
-// eslint-disable-next-line react/prop-types
 const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
   const [cashReceived, setCashReceived] = useState('')
 
@@ -25,7 +25,6 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
     }
   }
 
-  // Funzione per aggiornare l'importo ricevuto usando il tastierino
   const handleKeyPress = (value) => {
     if (value === 'C') {
       setCashReceived('') // Cancella tutto
@@ -36,6 +35,10 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
     } else {
       setCashReceived(cashReceived + value) // Aggiunge il numero
     }
+  }
+
+  const handleQuickAdd = (amount) => {
+    setCashReceived((prev) => (parseFloat(prev) || 0) + amount + '') // Somma importo selezionato
   }
 
   return (
@@ -50,7 +53,7 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
             variant="h4"
             sx={{ fontWeight: 'bold', color: '#2c3e50', mb: 3, textAlign: 'center' }}
           >
-            €{total}
+            €{total.toFixed(2)}
           </Typography>
         </Paper>
 
@@ -71,6 +74,30 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
           >
             {cashReceived || '0.00'}
           </Typography>
+
+          {/* Pulsanti rapidi per aggiungere importi */}
+          <Grid container spacing={1} sx={{ mb: 2 }}>
+            {[10, 20, 50, 100].map((amount) => (
+              <Grid item xs={3} key={amount}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={() => handleQuickAdd(amount)}
+                  sx={{
+                    padding: 1,
+                    fontSize: '1.2rem',
+                    backgroundColor: '#2ecc71',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#27ae60'
+                    }
+                  }}
+                >
+                  +{amount}€
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
 
           {/* Tastierino Numerico */}
           <Grid container spacing={1}>

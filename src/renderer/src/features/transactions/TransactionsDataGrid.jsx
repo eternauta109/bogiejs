@@ -12,8 +12,8 @@ const TransactionsDataGrid = ({ transactions, loading, error }) => {
     { field: 'paymentType', headerName: 'Tipo Pagamento', width: 150 },
     { field: 'transactionDate', headerName: 'Data Transazione', width: 200 },
     { field: 'FEATURE', headerName: 'Spettacolo', width: 200 },
-    { field: 'FEATURE_TIME', headerName: 'Orario intermission', width: 150 },
-    { field: 'SHOW_TIME', headerName: 'Inizio Show', width: 150 },
+    { field: 'FEATURE_TIME', headerName: 'Orario intermission', width: 160 },
+    { field: 'SHOW_TIME', headerName: 'Inizio Show', width: 160 },
     { field: 'attendance', headerName: 'Presenze', width: 100, type: 'number' }
   ]
 

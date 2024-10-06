@@ -22,7 +22,12 @@ const ExportTransactionsToExcel = ({ transactions }) => {
       },
       { header: 'Tipo Pagamento', key: 'paymentType', width: 20 },
       { header: 'Spettacolo', key: 'FEATURE', width: 30 },
-      { header: 'Orario Show', key: 'SHOW_TIME', width: 20, style: { numFmt: 'hh:mm:ss' } },
+      {
+        header: 'Orario Show',
+        key: 'SHOW_TIME',
+        width: 20,
+        style: { numFmt: 'dd/mm/yyyy hh:mm:ss' }
+      },
       { header: 'Attendance', key: 'attendance', width: 30 }
     ]
 

@@ -22,8 +22,10 @@ const cartSlice = createSlice({
     },
     removeItem: (state, action) => {
       const index = state.items.findIndex((item) => item.salesId === action.payload)
+      const prezzoArrotondato = Math.round((state.items[index].prezzo + Number.EPSILON) * 100) / 100
       if (index !== -1) {
-        state.total -= state.items[index].prezzo
+        state.total -= prezzoArrotondato
+        state.total = Math.round((state.total + Number.EPSILON) * 100) / 100
         state.items.splice(index, 1)
       }
     },
