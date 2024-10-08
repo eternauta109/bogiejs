@@ -9,7 +9,7 @@ export const loginUser = createAsyncThunk('managers/loginUser', async (credentia
 
     return { managerFound, managersName }
   } catch (error) {
-    return thunkAPI.rejectWithValue({ error: error.message })
+    return thunkAPI.rejectWithValue({ error: error.message, code: error.code })
   }
 })
 

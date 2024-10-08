@@ -44,10 +44,19 @@ function createWindow() {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false,
+      preload: join(__dirname, '../preload/index.js')
+      /*  preload: join(__dirname, '../preload/index.js'),
+      sandbox: true */
     }
   })
+
+  /*  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+    callback({ cancel: true }) // Blocca tutte le richieste
+  }) */
+
   mainWindow.webContents.openDevTools({ mode: 'right' })
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

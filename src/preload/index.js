@@ -1,6 +1,6 @@
-import { contextBridge, ipcRenderer, shell } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-
+console.log('PRELOAD')
 // Custom APIs for renderer
 const api = {
   addProductToDB,
@@ -24,8 +24,7 @@ const api = {
   deleteThisManager,
 
   getPath,
-  getOptions,
-  shell: shell
+  getOptions
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
