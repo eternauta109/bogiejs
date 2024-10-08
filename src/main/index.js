@@ -7,8 +7,7 @@ import { initializeIpcHandlers } from './ipcHandlers'
 
 ipcMain.handle('getPath', async () => {
   const appPath = await app.getAppPath()
-  /* console.log('MAIN: getPath', appPath) */
-  return app.getAppPath()
+  return appPath
 })
 
 const { createDbUser } = require('../../database/databaseManagersHandle')
@@ -48,23 +47,34 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: false,
       preload: join(__dirname, '../preload/index.js')
-      /*  preload: join(__dirname, '../preload/index.js'),
-      sandbox: true */
     }
   })
 
-  /*  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
-    callback({ cancel: true }) // Blocca tutte le richieste
-  }) */
+  // Blocca tutte le richieste di rete, eccetto quelle locali
+  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+    console.log('Richiesta URL:', details.url)
 
-  mainWindow.webContents.openDevTools({ mode: 'right' })
-  mainWindow.on('ready-to-show', () => {
+    if (
+      details.url.startsWith('http://localhost') ||
+      details.url.startsWith('file://') ||
+      details.url.startsWith('ws://localhost') // Permetti richieste WebSocket in localhost
+    ) {
+      callback({ cancel: false }) // Consenti le richieste locali
+    } else {
+      console.log('Bloccato:', details.url) // Log delle richieste bloccate
+      callback({ cancel: true }) // Blocca tutte le altre
+    }
+  })
+
+  /* mainWindow.webContents.openDevTools({ mode: 'detach' }) */
+
+  // Mostra la finestra quando è pronta
+  mainWindow.once('ready-to-show', () => {
     mainWindow.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
+    return { action: 'deny' } // Impedisce l'apertura di link esterni
   })
 
   // HMR for renderer base on electron-vite cli.
@@ -93,9 +103,6 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong dal main'))
-
   createWindow()
 
   app.on('activate', function () {
@@ -114,5 +121,5 @@ app.on('window-all-closed', () => {
   }
 })
 
-// In this file you can include the rest of your app"s specific main process
+// In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
