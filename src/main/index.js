@@ -36,7 +36,7 @@ function createWindow() {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   mainWindow = new BrowserWindow({
-    width: 1100,
+    width: 1300,
     height: 800,
     show: false,
     icon: join(__dirname, '../../resources/icon.png'),

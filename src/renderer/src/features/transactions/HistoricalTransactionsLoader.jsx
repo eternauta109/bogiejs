@@ -19,9 +19,12 @@ const HistoricalTransactionsLoader = () => {
 
   return (
     <Box>
-      <Button variant="contained" color="secondary" onClick={loadHistoricalTransactions}>
-        Carica Transazioni Storiche
-      </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Button variant="contained" color="secondary" onClick={loadHistoricalTransactions}>
+          Carica Transazioni Storiche
+        </Button>
+        <ExportTransactionsToExcel transactions={transactions} />
+      </Box>
 
       <Box sx={{ mt: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -43,8 +46,6 @@ const HistoricalTransactionsLoader = () => {
           <TransactionsDataGrid transactions={transactions} loading={loading} error={error} />
         )}
       </Box>
-
-      <ExportTransactionsToExcel transactions={transactions} />
     </Box>
   )
 }

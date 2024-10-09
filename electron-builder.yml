@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.fabioconti.app
 productName: yumtrek
 
 directories:
@@ -33,11 +33,11 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: 'fabioconti'
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  url:

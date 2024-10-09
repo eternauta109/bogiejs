@@ -154,10 +154,18 @@ function NavBar() {
         mb: '20px',
         background: 'linear-gradient(45deg, #3498DB 30%, #58D68D 90%)',
         boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-        borderRadius: '10px'
+        borderRadius: '10px',
+        width: '100vw',
+        maxWidth: '100%'
       }}
     >
-      <Container maxWidth="xl">
+      <Container
+        sx={{
+          width: '100vw',
+          maxWidth: '100%',
+          padding: 0 // Rimuove il padding per garantire che occupi tutta la larghezza
+        }}
+      >
         <Toolbar disableGutters>
           <Box
             width={50}
@@ -177,7 +185,7 @@ function NavBar() {
             component="a"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', md: 'flex' }, // Mostra solo su schermi >= md
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -188,6 +196,7 @@ function NavBar() {
             YumTrek
           </Typography>
 
+          {/* Menu compresso (hamburger) visibile a schermi <= md */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -214,7 +223,7 @@ function NavBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' }
+                display: { xs: 'block', md: 'none' } // Mostra il menu solo per schermi <= md
               }}
             >
               {pages.map((page, key) => (
@@ -222,7 +231,10 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
+
           <RemoveRedEyeIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+
+          {/* Titolo visibile solo a schermi piccoli */}
           <Typography
             variant="h5"
             noWrap
@@ -230,7 +242,7 @@ function NavBar() {
             href=""
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: 'flex', md: 'none' }, // Mostra solo su schermi <= md
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
@@ -241,6 +253,8 @@ function NavBar() {
           >
             YumTrek
           </Typography>
+
+          {/* Navigazione per schermi più grandi */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
             {pages.map((page, key) => (
               <Button
@@ -265,8 +279,9 @@ function NavBar() {
             ))}
           </Box>
 
+          {/* Sezione utente */}
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={handleOpenModal} sx={{ mr: 1, color: 'inherit' }}>
+            <IconButton onClick={handleOpenModal} sx={{ mr: 0, color: 'inherit' }}>
               <Badge badgeContent={user.notification.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
