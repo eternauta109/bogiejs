@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import Modal from '@mui/material/Modal'
-import useEventsStore from '../../store/EventDataContext'
+
 import {
   Box,
   Card,
@@ -30,9 +30,7 @@ const style = {
   p: 4
 }
 
-export const Notify = ({ onHandleClose, open, notify }) => {
-  const { user, deleteNotify } = useEventsStore()
-
+export const Notify = ({ onHandleClose, open, notify, user, deleteNotify }) => {
   const handleCancelNotify = async (e, notifyId) => {
     console.log(notifyId, user)
     try {

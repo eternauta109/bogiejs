@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 /* eslint-disable no-unused-vars */
 import React, { forwardRef } from 'react'
-import useEventsStore from '../../store/EventDataContext'
+
 import OutlinedInput from '@mui/material/OutlinedInput'
 import { Box, InputLabel, FormControl, Select, MenuItem, TextField, Button } from '@mui/material'
 import { useMemo, useState } from 'react'
@@ -43,8 +43,7 @@ function getStyles(name, personName, theme) {
   }
 }
 
-export const MessageForm = forwardRef((props, ref) => {
-  const { user } = useEventsStore()
+export const MessageForm = forwardRef((props, ref, user) => {
   const [newMessage, setNewMessage] = useState({
     to: [],
     from: '',
