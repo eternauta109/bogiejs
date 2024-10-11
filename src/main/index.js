@@ -46,7 +46,10 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
-      preload: join(__dirname, '../preload/index.js')
+      webSecurity: true, // Disabilita richieste esterne a domini remoti
+
+      preload: join(__dirname, '../preload/index.js'),
+      devTools: false // Disabilita l'apertura di DevTools
     }
   })
 
