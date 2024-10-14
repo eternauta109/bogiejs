@@ -14,6 +14,7 @@ const api = {
   updateSupplyInDB,
 
   addTransactionToDB,
+  getTransactionsByDate,
   getTransactionsFromDB,
   deleteTransactionFromDB,
   updateTransactionInDB,
@@ -170,6 +171,16 @@ async function deleteTransactionFromDB(args) {
 async function getTransactionsFromDB() {
   try {
     const result = await ipcRenderer.invoke('getTransactionsFromDB')
+    return result
+  } catch (error) {
+    console.error('Errore in preload getTransactionsFromDB:', error)
+    throw error
+  }
+}
+
+async function getTransactionsByDate(date) {
+  try {
+    const result = await ipcRenderer.invoke('getTransactionsByDate', date)
     return result
   } catch (error) {
     console.error('Errore in preload getTransactionsFromDB:', error)

@@ -43,7 +43,7 @@ function getStyles(name, personName, theme) {
   }
 }
 
-export const MessageForm = forwardRef((props, ref, user) => {
+export const MessageForm = forwardRef((props, ref) => {
   const [newMessage, setNewMessage] = useState({
     to: [],
     from: '',
@@ -76,11 +76,11 @@ export const MessageForm = forwardRef((props, ref, user) => {
           input={<OutlinedInput label="Name" />}
           MenuProps={MenuProps}
         >
-          {user.managersName.map((name) => (
+          {/* {user.managersName.map((name) => (
             <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
               {name}
             </MenuItem>
-          ))}
+          ))} */}
         </Select>
       </FormControl>
       <TextField

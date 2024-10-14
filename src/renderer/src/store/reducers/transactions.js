@@ -55,6 +55,21 @@ export const addTransactionToDB = createAsyncThunk(
   }
 )
 
+// AsyncThunk per raccoglio le transazioni by date
+export const fetchTransactionsByDate = createAsyncThunk(
+  'transactions/fetchTransactionsByDate',
+  async (date, thunkAPI) => {
+    console.log('date in store', date)
+    try {
+      const transactions = await window.api.getTransactionsByDate(date)
+      console.log('return transa in store', transactions)
+      return transactions
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message })
+    }
+  }
+)
+
 const transactionsSlice = createSlice({
   name: 'transactions',
   initialState: {
@@ -76,6 +91,21 @@ const transactionsSlice = createSlice({
         state.transactions = action.payload
       })
       .addCase(fetchTransactions.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload.error
+      })
+
+      // Fetch Transactions by date
+      .addCase(fetchTransactionsByDate.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchTransactionsByDate.fulfilled, (state, action) => {
+        state.loading = false
+
+        state.transactions = action.payload
+      })
+      .addCase(fetchTransactionsByDate.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload.error
       })

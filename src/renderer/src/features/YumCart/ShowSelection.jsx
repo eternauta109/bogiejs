@@ -12,9 +12,10 @@ const ShowSelection = ({ selectedShow, setSelectedShow, attendance, setAttendanc
           Seleziona Spettacolo
         </Typography>
         <Select
-          value={selectedShow ? selectedShow : ''}
+          value={selectedShow !== null && selectedShow !== undefined ? selectedShow : ''}
           onChange={(e) => {
-            console.log(e.target.value), setSelectedShow(e.target.value)
+            console.log(e.target.value)
+            setSelectedShow(e.target.value)
           }}
           displayEmpty
           fullWidth

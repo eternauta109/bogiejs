@@ -55,6 +55,45 @@ async function getAllTransactions() {
   return allTransactions
 }
 
+async function getTransactionsByDate(selectedDate) {
+  console.log('Recupero transazioni per la data:', selectedDate)
+
+  // Calcola l'inizio della giornata in UTC alle 6:00 AM
+  const startOfDay = new Date(`${selectedDate}T06:00:00.000Z`)
+
+  // Calcola la fine della giornata successiva in UTC alle 3:00 AM
+  const endOfNextDay = new Date(`${selectedDate}T03:00:00.000Z`)
+  endOfNextDay.setUTCDate(endOfNextDay.getUTCDate() + 1) // Aggiungi un giorno
+
+  console.log('Cerco transazioni tra:', startOfDay, 'e', endOfNextDay)
+
+  const filteredTransactions = []
+  await connect() // Connetti al DB
+
+  try {
+    for await (const [key, value] of db.iterator()) {
+      const transaction = JSON.parse(value)
+
+      if (key !== 'transactionCounter') {
+        const transactionDate = new Date(transaction.transactionDate)
+
+        // Filtra le transazioni che si trovano nel range temporale specificato in UTC
+        if (transactionDate >= startOfDay && transactionDate <= endOfNextDay) {
+          filteredTransactions.push(transaction)
+        }
+      }
+    }
+    console.log('Transazioni filtrate per la data:', filteredTransactions.length)
+  } catch (error) {
+    console.error('Errore durante il recupero delle transazioni per data:', error)
+    throw error
+  } finally {
+    await close() // Chiudi la connessione al DB
+  }
+
+  return filteredTransactions
+}
+
 async function eventExists(key) {
   try {
     const value = await db.get(key)
@@ -144,6 +183,7 @@ function close() {
 
 module.exports = {
   insertTransaction,
+  getTransactionsByDate,
   createDbTransactions,
   getAllTransactions,
   deleteTransaction

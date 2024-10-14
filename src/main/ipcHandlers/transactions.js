@@ -2,6 +2,7 @@
 const {
   insertTransaction,
   getAllTransactions,
+  getTransactionsByDate,
   deleteTransaction
 } = require('../../database/transactionsDB')
 
@@ -19,6 +20,16 @@ export function handleTransactionsIpc(ipcMain) {
   ipcMain.handle('getTransactionsFromDB', async () => {
     try {
       return await getAllTransactions()
+    } catch (error) {
+      console.error('Errore nel main process getAllTransactions:', error)
+      throw error // Rilancia l'errore per essere gestito nel preload
+    }
+  })
+
+  ipcMain.handle('getTransactionsByDate', async (_, date) => {
+    console.log('main date', date)
+    try {
+      return await getTransactionsByDate(date)
     } catch (error) {
       console.error('Errore nel main process getAllTransactions:', error)
       throw error // Rilancia l'errore per essere gestito nel preload

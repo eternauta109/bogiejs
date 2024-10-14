@@ -9,19 +9,21 @@ const ProductList = ({ selectedShow, attendance }) => {
   const user = useSelector((state) => state.managers.user)
   const shows = useSelector((state) => state.shows.selectedShows)
   const dispatch = useDispatch()
-
+  console.log(selectedShow)
   // Aggiunge un prodotto al carrello
   const handleAddToCart = (supply) => {
     const showDetails = shows.find((show) => show.id === selectedShow)
+
     const newTransaction = {
       ...supply,
+      cinema: user.cinema,
       user: user.userName,
       FEATURE: showDetails.PLAYLIST,
       FEATURE_TIME: showDetails.FEATURE_TIME,
       attendance: parseInt(attendance, 10),
       SHOW_TIME: showDetails.SHOW_TIME,
       salesId: 'sales-' + uuidv4(),
-      transactionDate: new Date().toISOString()
+      transactionDate: new Date().toLocaleString()
     }
     console.log('newTransaction', newTransaction)
     dispatch(addItem(newTransaction))
@@ -47,7 +49,7 @@ const ProductList = ({ selectedShow, attendance }) => {
                 color="primary"
                 fullWidth
                 onClick={() => handleAddToCart(supply)}
-                disabled={!selectedShow || !attendance}
+                disabled={selectedShow == null || !attendance}
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',

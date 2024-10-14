@@ -42,7 +42,7 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} sx={{ height: '800px' }}>
       <DialogTitle>Pagamento Contanti</DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f4f4f4' }}>
@@ -50,7 +50,7 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
             Totale Scontrino
           </Typography>
           <Typography
-            variant="h4"
+            variant="h5"
             sx={{ fontWeight: 'bold', color: '#2c3e50', mb: 3, textAlign: 'center' }}
           >
             €{total.toFixed(2)}
@@ -62,11 +62,11 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
             Importo Digitato
           </Typography>
           <Typography
-            variant="h4"
+            variant="h6"
             sx={{
               fontWeight: 'bold',
               color: '#16a085',
-              mb: 2,
+              mb: 1,
               textAlign: 'center',
               borderBottom: '2px solid #ddd',
               paddingBottom: 1
@@ -76,7 +76,7 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
           </Typography>
 
           {/* Pulsanti rapidi per aggiungere importi */}
-          <Grid container spacing={1} sx={{ mb: 2 }}>
+          <Grid container spacing={1} sx={{ mb: 1 }}>
             {[10, 20, 50, 100].map((amount) => (
               <Grid item xs={3} key={amount}>
                 <Button
@@ -85,7 +85,7 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
                   onClick={() => handleQuickAdd(amount)}
                   sx={{
                     padding: 1,
-                    fontSize: '1.2rem',
+                    fontSize: '1rem',
                     backgroundColor: '#2ecc71',
                     color: '#fff',
                     '&:hover': {
@@ -108,8 +108,9 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
                   fullWidth
                   onClick={() => handleKeyPress(key)}
                   sx={{
+                    height: '50px',
                     padding: 3,
-                    fontSize: '1.5rem',
+                    fontSize: '1rem',
                     backgroundColor: '#3498db',
                     color: '#fff',
                     '&:hover': {

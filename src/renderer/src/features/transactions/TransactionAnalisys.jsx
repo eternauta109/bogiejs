@@ -1,24 +1,18 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Container, Box, Tab, Tabs } from '@mui/material'
-import { fetchTransactions } from '../../store/reducers/transactions'
+
 import CloseCashSummary from './CloseCashSummary' // Mostra il riepilogo della cassa
 import FilteredTransactionsByDay from './FilteredTransactionsByDay' // Già esistente
 
 import HistoricalTransactionsLoader from './HistoricalTransactionsLoader' // Nuovo componente
 
 const TransactionsList = () => {
-  const dispatch = useDispatch()
-
   const user = useSelector((state) => state.managers.user)
 
   const [tab, setTab] = useState(0)
-
-  useEffect(() => {
-    dispatch(fetchTransactions()) // Fetch delle transazioni
-  }, [dispatch])
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -35,7 +29,6 @@ const TransactionsList = () => {
       </Box>
 
       <CustomTabPanel value={tab} index={0}>
-        Item One
         {/* Riepilogo chiusura cassa */}
         <CloseCashSummary user={user} />
       </CustomTabPanel>
@@ -47,7 +40,7 @@ const TransactionsList = () => {
 
       <CustomTabPanel value={tab} index={2}>
         {/* Caricamento transazioni storiche */}
-        <HistoricalTransactionsLoader />
+        <HistoricalTransactionsLoader user={user} />
       </CustomTabPanel>
     </Container>
   )
