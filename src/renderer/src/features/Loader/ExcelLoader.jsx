@@ -94,14 +94,35 @@ const ExcelLoader = () => {
       <Typography variant="h4" gutterBottom>
         Carica gli Spettacoli in YumTrek
       </Typography>
+
       <Box mt={2} mb={4}>
-        <input
-          type="file"
-          accept=".xlsx, .xls"
-          onChange={handleFileUpload}
-          style={{ display: 'none' }}
-          id="upload-file"
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row', // Direzione orizzontale
+            justifyContent: 'space-between', // Spaziatura tra i due elementi
+            alignItems: 'center', // Allinea verticalmente gli elementi al centro
+            mb: 2
+          }}
+        >
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+            id="upload-file"
+          />
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSaveSelectedShows}
+            disabled={selectedShows.length === 0}
+          >
+            Salva Spettacoli Selezionati
+          </Button>
+        </Box>
+
         <label htmlFor="upload-file">
           <Button variant="contained" component="span" color="primary">
             Carica File Excel
@@ -119,15 +140,7 @@ const ExcelLoader = () => {
           rowSelectionModel={selectedShows}
         />
       </div>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleSaveSelectedShows}
-        disabled={selectedShows.length === 0}
-        style={{ marginTop: 20 }}
-      >
-        Salva Spettacoli Selezionati
-      </Button>
+
       {/* Snackbar può essere aggiunto qui per visualizzare messaggi di successo o errore */}
     </Container>
   )
