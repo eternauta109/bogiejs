@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, autoUpdater } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -9,6 +9,21 @@ ipcMain.handle('getPath', async () => {
   const appPath = await app.getAppPath()
   return appPath
 })
+
+//disabilita aggiornamenti electron
+autoUpdater.autoDownload = false
+autoUpdater.autoInstallOnAppQuit = false
+
+// Disabilita funzionalità di telemetria di Chromium
+app.commandLine.appendSwitch('disable-features', 'MetricsReportingEnabled')
+app.commandLine.appendSwitch('disable-breakpad') // Disabilita i report di crash
+
+// Disabilita servizi esterni di Google e altre funzionalità di rete non necessarie
+app.commandLine.appendSwitch('disable-background-networking')
+app.commandLine.appendSwitch('disable-client-side-phishing-detection')
+app.commandLine.appendSwitch('disable-default-apps')
+app.commandLine.appendSwitch('disable-domain-reliability')
+app.commandLine.appendSwitch('disable-component-update')
 
 const { createDbUser } = require('../../database/databaseManagersHandle')
 const { createDbProducts } = require('../../database/productsDB')
@@ -48,8 +63,8 @@ function createWindow() {
       sandbox: false,
       webSecurity: true, // Disabilita richieste esterne a domini remoti
 
-      preload: join(__dirname, '../preload/index.js'),
-      devTools: false // Disabilita l'apertura di DevTools
+      preload: join(__dirname, '../preload/index.js')
+      /* devTools: false */ // Disabilita l'apertura di DevTools
     }
   })
 
@@ -69,7 +84,7 @@ function createWindow() {
     }
   })
 
-  /* mainWindow.webContents.openDevTools({ mode: 'detach' }) */
+  mainWindow.webContents.openDevTools({ mode: 'detach' })
 
   // Mostra la finestra quando è pronta
   mainWindow.once('ready-to-show', () => {
