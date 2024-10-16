@@ -92,6 +92,7 @@ const Supplies = () => {
         setNewSupply((prevSupply) => ({
           ...prevSupply,
           [name]: value,
+          tab: selectedProduct.tab,
           category: selectedProduct.category,
           prezzo: selectedProduct.prezzoVendita,
           codice: selectedProduct.codice // Imposta il codice selezionato

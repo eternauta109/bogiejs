@@ -362,5 +362,60 @@ const managers = [
     id: 'barman1',
     notification: [],
     messages: []
+  },
+  {
+    userName: 'giadam',
+    role: 'tm',
+    area: 'area2',
+    password: '0102',
+    isAuth: false,
+    cinema: 'trieste',
+    id: 'triman1',
+    notification: [],
+    messages: []
+  },
+  {
+    userName: 'alessandrab',
+    role: 'tm',
+    area: 'area1',
+    password: '0106',
+    isAuth: false,
+    cinema: 'beinasco',
+    id: 'beiman1',
+    notification: [],
+    messages: []
+  },
+  {
+    userName: 'andreac',
+    role: 'tm',
+    area: 'area',
+    password: '0106',
+    isAuth: false,
+    cinema: 'cerro',
+    id: 'cerman1',
+    notification: [],
+    messages: []
+  },
+  {
+    userName: 'maurod',
+    role: 'tm',
+    area: 'area3',
+    password: '0106',
+    isAuth: false,
+    cinema: 'montesilvano',
+    id: 'monman1',
+    notification: [],
+    messages: []
+  },
+  {
+    userName: 'marcol',
+    role: 'tm',
+    area: 'area2',
+    password: '0106',
+    isAuth: false,
+    cinema: 'corciano',
+    id: 'corman1',
+    notification: [],
+    messages: []
   }
 ]

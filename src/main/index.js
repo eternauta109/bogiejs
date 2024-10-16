@@ -54,7 +54,7 @@ function createWindow() {
     width: 1300,
     height: 800,
     show: false,
-    icon: join(__dirname, '../../resources/icon.png'),
+    icon: join(__dirname, '../../resources/food_cart.ico'),
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -67,9 +67,9 @@ function createWindow() {
       /* devTools: false */ // Disabilita l'apertura di DevTools
     }
   })
-
+  mainWindow.webContents.openDevTools()
   // Blocca tutte le richieste di rete, eccetto quelle locali
-  /*  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+  /* mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
     console.log('Richiesta URL:', details.url)
 
     if (
@@ -83,8 +83,6 @@ function createWindow() {
       callback({ cancel: true }) // Blocca tutte le altre
     }
   }) */
-
-  mainWindow.webContents.openDevTools({ mode: 'detach' })
 
   // Mostra la finestra quando è pronta
   mainWindow.once('ready-to-show', () => {

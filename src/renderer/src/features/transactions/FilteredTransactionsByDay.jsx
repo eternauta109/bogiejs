@@ -42,6 +42,26 @@ const FilteredTransactionsByDay = () => {
     return acc
   }, {})
 
+  // Calcola il riepilogo totale per cash e card separatamente
+  const totalSummary = transactions.reduce(
+    (acc, transaction) => {
+      const { supplyName, prezzo, paymentType } = transaction
+
+      // Raggruppa per prodotto (supplyName) separando cash e card
+      const group = paymentType === 'cash' ? acc.cash : acc.card
+
+      if (!group[supplyName]) {
+        group[supplyName] = { count: 0, total: 0 }
+      }
+
+      group[supplyName].count += 1
+      group[supplyName].total += prezzo
+
+      return acc
+    },
+    { cash: {}, card: {} }
+  )
+
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h5" fontWeight="bold">
@@ -122,6 +142,45 @@ const FilteredTransactionsByDay = () => {
                 </Box>
               </Box>
             ))}
+
+            {/* Riepilogo totale per cash e card */}
+            <Box sx={{ mt: 4, borderTop: '1px solid gray', pt: 2 }}>
+              <Typography variant="h6" fontWeight="bold">
+                Riepilogo Vendite Totali (Pagamenti in Contanti):
+              </Typography>
+              {Object.entries(totalSummary.cash).map(([productName, details]) => (
+                <Box key={productName} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography>
+                    {details.count}x {productName} venduti
+                  </Typography>
+                  <Typography>Totale incasso: €{details.total.toFixed(2)}</Typography>
+                </Box>
+              ))}
+              <Typography variant="h6" sx={{ mt: 2, fontWeight: 'bold' }}>
+                Totale contanti: €
+                {Object.values(totalSummary.cash)
+                  .reduce((acc, { total }) => acc + total, 0)
+                  .toFixed(2)}
+              </Typography>
+
+              <Typography variant="h6" fontWeight="bold" sx={{ mt: 4 }}>
+                Riepilogo Vendite Totali (Pagamenti con Carta):
+              </Typography>
+              {Object.entries(totalSummary.card).map(([productName, details]) => (
+                <Box key={productName} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography>
+                    {details.count}x {productName} venduti
+                  </Typography>
+                  <Typography>Totale incasso: €{details.total.toFixed(2)}</Typography>
+                </Box>
+              ))}
+              <Typography variant="h6" sx={{ mt: 2, fontWeight: 'bold' }}>
+                Totale carta: €
+                {Object.values(totalSummary.card)
+                  .reduce((acc, { total }) => acc + total, 0)
+                  .toFixed(2)}
+              </Typography>
+            </Box>
           </Box>
         ) : (
           <Typography>Nessuna transazione trovata per la data selezionata.</Typography>

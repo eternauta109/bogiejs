@@ -55,7 +55,7 @@ const YumCart = () => {
   }, [dispatch])
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Box display="flex" height="80vh">
         {/* Parte Sinistra: Selezione dello spettacolo e Prodotti */}
         <Box

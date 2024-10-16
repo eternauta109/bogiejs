@@ -70,6 +70,7 @@ export const MessageForm = forwardRef((props, ref) => {
         <Select
           labelId="demo-multiple-name-label"
           id="demo-multiple-name"
+          disabled
           multiple
           value={personName}
           onChange={handleChange}
@@ -87,6 +88,7 @@ export const MessageForm = forwardRef((props, ref) => {
         fullWidth
         variant="filled"
         multiline
+        disabled
         inputProps={{ maxLength: maxDescriptionLength }}
         label={`text msg: ${newMessage.text?.length || 0}/${maxDescriptionLength}`}
         value={newMessage?.text || ''}
@@ -95,7 +97,7 @@ export const MessageForm = forwardRef((props, ref) => {
         rows={4}
         sx={{ mb: 2 }}
       />
-      <Button>send message</Button>
+      {/*  <Button>send message</Button> */}
     </Box>
   )
 })

@@ -26,8 +26,13 @@ const ExportTransactionsToCSV = ({ transactions, allTrans, user, selectedDate, s
 
     // Aggiungi le righe con i dati delle transazioni
     transactions.forEach((transaction) => {
+      const dateTrans = new Date(transaction.transactionDate)
+      dateTrans.setHours(dateTrans.getHours() - 2)
+      const formatedPrice = transaction.prezzo.toFixed(2).replace('.', ',')
+
       worksheet.addRow({
         ...transaction,
+        prezzo: formatedPrice,
         transactionDate: new Date(transaction.transactionDate).toLocaleString(),
         SHOW_TIME: new Date(transaction.SHOW_TIME).toLocaleString()
       })

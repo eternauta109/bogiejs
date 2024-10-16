@@ -26,7 +26,7 @@ const countProductsBySupplyName = (transactionItems) => {
 
 const HistoricalTransactionsGrouped = ({ transactions }) => {
   const groupedTransactions = groupTransactionsByTransactionId(transactions)
-
+  console.log(groupedTransactions)
   return (
     <Box>
       {Object.keys(groupedTransactions).map((transactionId) => {

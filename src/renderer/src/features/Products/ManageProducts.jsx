@@ -27,6 +27,7 @@ import {
   updateProductInDB,
   deleteProductFromDB
 } from '../../store/reducers/products'
+/* import LoadProducts from './LoadProducts' */
 
 const ManageProducts = () => {
   const dispatch = useDispatch()
@@ -117,6 +118,7 @@ const ManageProducts = () => {
       setErrorMessage(
         `inserisci anche la categoria. un piccolo sforzo per te, un importante passo per porto`
       )
+
       setSnackbarOpen(true)
       return
     }
@@ -130,14 +132,13 @@ const ManageProducts = () => {
     if (existingProduct) {
       // Mostra un messaggio di errore se il codice è già presente
       setErrorMessage(
-        `Il codice prodotto "${selectedProduct.codice}" è già in uso. Si prega di inserire un codice diverso.`
+        `Il codice prodotto "${selectedProduct.codice}" è già in uso. Si prega di avere piu fantasia.`
       )
       setSnackbarOpen(true)
       return
     }
 
     if (selectedProduct.idProduct) {
-      console.log('sto facendo update prodotto')
       dispatch(
         updateProductInDB({
           ...selectedProduct
@@ -162,6 +163,8 @@ const ManageProducts = () => {
     setSnackbarOpen(false)
   }
 
+  //carica i prodotti da un file excel
+
   useEffect(() => {
     console.log('useeffect MAnageProd.:', products)
     // Recupera i prodotti quando il componente si monta
@@ -177,6 +180,7 @@ const ManageProducts = () => {
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleAdd}>
           Aggiungi Prodotto
         </Button>
+        {/* <LoadProducts /> */}
       </Box>
 
       <Box sx={{ height: 400, width: '100%' }}>
@@ -230,6 +234,7 @@ const ManageProducts = () => {
               })
             }
           />
+          {/* categoria */}
           <Select
             value={selectedProduct?.category || ''}
             name="category"
@@ -244,6 +249,26 @@ const ManageProducts = () => {
             {categoryList.map((cat, key) => (
               <MenuItem key={key} value={cat}>
                 {cat}
+              </MenuItem>
+            ))}
+          </Select>
+          {/* tab */}
+          <Select
+            value={selectedProduct?.tab || ''}
+            name="tab"
+            required
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, tab: e.target.value })}
+            displayEmpty
+            sx={{ width: 200, ml: 2 }}
+          >
+            <MenuItem value="" disabled>
+              Seleziona la pagina
+            </MenuItem>
+
+            {/* Genera automaticamente 4 MenuItem */}
+            {Array.from({ length: 4 }, (_, index) => (
+              <MenuItem key={index + 1} value={index + 1}>
+                tab {index + 1}
               </MenuItem>
             ))}
           </Select>

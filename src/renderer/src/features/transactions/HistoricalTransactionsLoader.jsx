@@ -16,12 +16,12 @@ const HistoricalTransactionsLoader = (user) => {
   const dispatch = useDispatch()
 
   // Funzione per caricare le transazioni storiche in base alla data
-  const loadHistoricalTransactions = () => {
+  /*   const loadHistoricalTransactions = () => {
     if (!selectedDate) return
 
     // Dispatch per caricare le transazioni per il range di date
     dispatch(fetchTransactionsByDate(selectedDate))
-  }
+  } */
 
   //funzione per caricare tutte le transazioni
   const loadAllTransactions = () => {
@@ -32,6 +32,8 @@ const HistoricalTransactionsLoader = (user) => {
   // Funzione per aggiornare la data selezionata
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value)
+    if (!selectedDate) return
+    dispatch(fetchTransactionsByDate(e.target.value))
   }
 
   return (
@@ -47,15 +49,6 @@ const HistoricalTransactionsLoader = (user) => {
             shrink: true
           }}
         />
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={loadHistoricalTransactions}
-          disabled={!selectedDate} // Disabilitato finché non viene selezionata una data
-          sx={{ ml: 2 }}
-        >
-          Carica Transazioni Per la giornata selezionata
-        </Button>
 
         <ExportTransactionsToExcel
           transactions={transactions}
@@ -83,7 +76,10 @@ const HistoricalTransactionsLoader = (user) => {
         {groupedView ? (
           <HistoricalTransactionsGrouped transactions={transactions} />
         ) : (
-          <TransactionsDataGrid transactions={transactions} loading={loading} error={error} />
+          // Condizione corretta per verificare se c'è una data selezionata
+          selectedDate && (
+            <TransactionsDataGrid transactions={transactions} loading={loading} error={error} />
+          )
         )}
 
         <Button variant="contained" color="secondary" onClick={loadAllTransactions} sx={{ mt: 2 }}>

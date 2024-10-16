@@ -10,37 +10,27 @@ import {
   DialogActions,
   TextField,
   Grid,
-  Box
+  Box,
+  Alert
 } from '@mui/material'
 import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { resetSales } from '../../store/reducers/sales'
+import { fetchTransactionsByDate } from '../../store/reducers/transactions'
 
-const CloseCashSummary = ({ user }) => {
-  const { totalCash, totalSales, totalCard } = useSelector((state) => state.sales)
+const CloseCashSummary = () => {
   const dispatch = useDispatch()
-
   const [open, setOpen] = useState(false)
-  const [cashCount, setCashCount] = useState({
-    '500€': 0,
-    '200€': 0,
-    '100€': 0,
-    '50€': 0,
-    '20€': 0,
-    '10€': 0,
-    '5€': 0,
-    '2€': 0,
-    '1€': 0,
-    '0.50€': 0,
-    '0.20€': 0,
-    '0.10€': 0,
-    '0.05€': 0,
-    '0.02€': 0,
-    '0.01€': 0
-  })
-  const [totalRealCash, setTotalRealCash] = useState(0)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedDate, setSelectedDate] = useState('')
+  const transactions = useSelector((state) => state.transactions.transactions)
+  const [groupedTransactions, setGroupedTransactions] = useState([])
+  const [cashCount, setCashCount] = useState({})
+  const [aspettato, setAspettato] = useState(0)
   const [difference, setDifference] = useState(0)
+  const [showDiscrepancyAlert, setShowDiscrepancyAlert] = useState(false)
 
+  // Funzione per calcolare il totale inserito
   const calculateTotalRealCash = (newCashCount) => {
     const cashDenominations = {
       '500€': 500,
@@ -68,37 +58,67 @@ const CloseCashSummary = ({ user }) => {
     return newTotal
   }
 
-  const handleCashCountChange = (value, denomination) => {
+  // Funzione per fare il fetch delle transazioni in base alla data
+  const loadTransactionsByDate = async () => {
+    const response = await dispatch(fetchTransactionsByDate(selectedDate))
+
+    const newTrans = response.payload
+    // Raggruppa le transazioni per utente
+    const groupedByUser = newTrans.reduce((acc, transaction) => {
+      const { user, paymentType, prezzo } = transaction
+
+      if (!acc[user]) {
+        acc[user] = { totalCash: 0, totalCard: 0, totalSales: 0 }
+      }
+
+      if (paymentType === 'cash') {
+        acc[user].totalCash += prezzo
+      } else if (paymentType === 'card') {
+        acc[user].totalCard += prezzo
+      }
+
+      acc[user].totalSales += prezzo
+      return acc
+    }, {})
+
+    setGroupedTransactions(groupedByUser)
+  }
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value)
+  }
+
+  const handleCashCountChange = (value, denomination, user) => {
     const newCount = parseInt(value, 10) || 0
     const newCashCount = { ...cashCount, [denomination]: newCount }
     setCashCount(newCashCount)
 
     const newTotalRealCash = calculateTotalRealCash(newCashCount)
-    setTotalRealCash(newTotalRealCash)
-    setDifference(newTotalRealCash - totalCash)
+
+    const diff = newTotalRealCash - groupedTransactions[user].totalCash
+    console.log()
+    setAspettato(groupedTransactions[user].totalCash)
+    setDifference(diff)
+
+    // Mostra un avviso se c'è una differenza significativa (> 0.01)
+    setShowDiscrepancyAlert(Math.abs(diff) > 0.01)
   }
 
-  const handleConfirm = () => {
-    dispatch(resetSales())
-    setOpen(false)
-    setTotalRealCash(0)
-    setCashCount({
-      '500€': 0,
-      '200€': 0,
-      '100€': 0,
-      '50€': 0,
-      '20€': 0,
-      '10€': 0,
-      '5€': 0,
-      '2€': 0,
-      '1€': 0,
-      '0.50€': 0,
-      '0.20€': 0,
-      '0.10€': 0,
-      '0.05€': 0,
-      '0.02€': 0,
-      '0.01€': 0
-    })
+  const handleOpenCashDialog = (user) => {
+    setSelectedUser(user)
+    setOpen(true)
+  }
+
+  const handleConfirmClose = () => {
+    if (showDiscrepancyAlert) {
+      alert(
+        "Attenzione! C'è una discrepanza significativa tra il contante aspettato e quello inserito."
+      )
+    } else {
+      dispatch(resetSales())
+      setCashCount({})
+      setOpen(false)
+    }
   }
 
   const handleFocus = (event) => {
@@ -107,64 +127,95 @@ const CloseCashSummary = ({ user }) => {
 
   return (
     <>
-      <Card>
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold">
-            Incasso di {user.userName}
-          </Typography>
-          <Typography variant="h6">Incasso totale: €{totalSales}</Typography>
-          <Typography variant="h6">Incasso contanti: €{totalCash}</Typography>
-          <Typography variant="h6">Incasso carta: €{totalCard}</Typography>
-          <Button variant="contained" sx={{ mt: 2 }} onClick={() => setOpen(true)}>
-            Chiudi cassa
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Seleziona la data */}
+      <Box sx={{ display: 'flex', mb: 2 }}>
+        <TextField
+          label="Seleziona una data"
+          type="date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          InputLabelProps={{ shrink: true }}
+        />
+        <Button variant="contained" sx={{ ml: 2 }} onClick={loadTransactionsByDate}>
+          Chiudi una giornata
+        </Button>
+      </Box>
 
-      {/* Dialog per il conteggio dei soldi */}
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>Conteggio Cassa</DialogTitle>
+      {/* Mostra le card per ogni utente */}
+      {transactions && transactions.length > 0 ? (
+        <Box>
+          {Object.entries(groupedTransactions).map(([user, totals]) => (
+            <Card key={user} sx={{ mb: 2 }}>
+              <CardContent>
+                <Typography variant="h6">Utente: {user}</Typography>
+                <Typography variant="body1">Totale cash: €{totals.totalCash.toFixed(2)}</Typography>
+                <Typography variant="body1">Totale card: €{totals.totalCard.toFixed(2)}</Typography>
+                <Typography variant="body1">
+                  Totale vendite: €{totals.totalSales.toFixed(2)}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleOpenCashDialog(user)}
+                >
+                  Chiudi Cassa
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+      ) : (
+        <Typography variant="h6" color="textSecondary">
+          il carreto questo giorno non passò
+        </Typography>
+      )}
+
+      {/* Dialog per chiudere la cassa per un utente */}
+      <Dialog open={!!open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Conteggio Cassa per {selectedUser}</DialogTitle>
         <DialogContent>
-          <Box display="flex" gap={2}>
-            {/* Colonna per le banconote */}
-            <Grid container spacing={2} sx={{ width: '50%', mt: 1 }}>
-              {['500€', '200€', '100€', '50€', '20€', '10€', '5€'].map((denomination) => (
-                <Grid item xs={6} key={denomination}>
-                  <TextField
-                    label={denomination}
-                    type="number"
-                    value={cashCount[denomination]}
-                    onChange={(e) => handleCashCountChange(e.target.value, denomination)}
-                    onFocus={handleFocus} // Seleziona tutto il testo quando si clicca
-                    fullWidth
-                  />
-                </Grid>
-              ))}
-            </Grid>
-
-            {/* Colonna per le monete */}
-            <Grid container spacing={2} sx={{ width: '50%', mt: 1 }}>
-              {['2€', '1€', '0.50€', '0.20€', '0.10€', '0.05€', '0.02€', '0.01€'].map(
-                (denomination) => (
-                  <Grid item xs={6} key={denomination}>
-                    <TextField
-                      label={denomination}
-                      type="number"
-                      value={cashCount[denomination]}
-                      onChange={(e) => handleCashCountChange(e.target.value, denomination)}
-                      onFocus={handleFocus} // Seleziona tutto il testo quando si clicca
-                      fullWidth
-                    />
-                  </Grid>
-                )
-              )}
-            </Grid>
-          </Box>
-          <Typography variant="h6" sx={{ mt: 2, color: 'green' }}>
-            Totale aspettato: €{totalCash.toFixed(2)}
+          {showDiscrepancyAlert && (
+            <Alert severity="warning" sx={{ mb: 2 }}>
+              Attenzione! esiste una discrepanza significativa tra il contante aspettato e quello
+              inserito.
+            </Alert>
+          )}
+          <Grid container spacing={1} sx={{ mt: 2 }}>
+            {[
+              '500€',
+              '200€',
+              '100€',
+              '50€',
+              '20€',
+              '10€',
+              '5€',
+              '2€',
+              '1€',
+              '0.50€',
+              '0.20€',
+              '0.10€',
+              '0.05€',
+              '0.02€',
+              '0.01€'
+            ].map((denomination) => (
+              <Grid item xs={3} key={denomination}>
+                <TextField
+                  label={denomination}
+                  type="number"
+                  value={cashCount[denomination] || 0}
+                  onChange={(e) =>
+                    handleCashCountChange(e.target.value, denomination, selectedUser)
+                  }
+                  onFocus={handleFocus}
+                  fullWidth
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Aspettato: €{aspettato.toFixed(2)}
           </Typography>
-          <Typography variant="h6">Totale inserito: €{totalRealCash.toFixed(2)}</Typography>
-          <Typography variant="h6" color={difference >= 0 ? 'success' : 'error'}>
+          <Typography variant="h6" sx={{ mt: 2 }}>
             Differenza: €{difference.toFixed(2)}
           </Typography>
         </DialogContent>
@@ -172,7 +223,11 @@ const CloseCashSummary = ({ user }) => {
           <Button onClick={() => setOpen(false)} color="secondary">
             Annulla
           </Button>
-          <Button onClick={handleConfirm} color="primary" variant="contained">
+          <Button
+            onClick={() => handleConfirmClose(selectedUser)}
+            color="primary"
+            variant="contained"
+          >
             Conferma
           </Button>
         </DialogActions>

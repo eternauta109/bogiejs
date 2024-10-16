@@ -27,7 +27,7 @@ function Copyright(props) {
       borderRadius="5px"
       align="center"
       {...props}
-      sx={{ bgcolor: '#ba4a00 ', opacity: 0.9, width: '300px', fontSize: '10px' }}
+      sx={{ bgcolor: '#3498DB', opacity: 0.9, width: '300px', fontSize: '10px', color: '#3498DB' }}
     >
       {'Dev By  '}
       <Link color="inherit" href="#">
@@ -87,11 +87,12 @@ export default function Login() {
   return (
     <Box
       sx={{
-        width: '1200px',
-        height: '750px',
+        width: '100%',
+        height: '760px',
         display: 'flex',
         flexDirection: 'column',
-        background: 'linear-gradient(135deg, #f39c12 0%, #ba4a00 100%)',
+        background: 'linear-gradient(45deg, #3498DB 30%, #58D68D 90%)',
+        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         color: 'white'
       }}
     >
