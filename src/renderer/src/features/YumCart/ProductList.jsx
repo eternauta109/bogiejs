@@ -22,11 +22,12 @@ const ProductList = ({ selectedShow, attendance }) => {
     a === 'Tutti' ? -1 : b === 'Tutti' ? 1 : a - b
   )
 
-  // Filtra i supplies in base al tab selezionato
-  const filteredSupplies =
+  // Filtra e ordina i supplies in base al tab selezionato
+  const filteredSupplies = (
     selectedTab === 0
-      ? supplies // Tab "Tutti", mostra tutto
+      ? [...supplies] // Usa lo spread operator per creare una copia
       : supplies.filter((supply) => supply.tab === uniqueTabs[selectedTab])
+  ).sort((a, b) => a.supplyName.localeCompare(b.supplyName, 'it-IT'))
 
   // Aggiunge un prodotto al carrello
   const handleAddToCart = (supply) => {
@@ -78,7 +79,7 @@ const ProductList = ({ selectedShow, attendance }) => {
         <Grid container spacing={2}>
           {filteredSupplies.map((supply) => (
             <Grid item xs={6} sm={2} key={supply.codice}>
-              <Paper elevation={3} sx={{ padding: 1, backgroundColor: '#f8f9fa', height: '100%' }}>
+              <Paper elevation={10} sx={{ padding: 1, backgroundColor: '#f8f9fa', height: '90%' }}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -90,10 +91,10 @@ const ProductList = ({ selectedShow, attendance }) => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     padding: 1,
-                    backgroundColor: '#3498db',
+                    backgroundColor: '#229954',
                     color: '#fff',
                     '&:hover': {
-                      backgroundColor: '#2980b9'
+                      backgroundColor: '#27ae60'
                     },
                     height: '100%'
                   }}
@@ -104,6 +105,7 @@ const ProductList = ({ selectedShow, attendance }) => {
                       fontSize: '0.8rem',
                       textAlign: 'center',
                       color: '#fff',
+
                       mb: 1
                     }}
                   >

@@ -16,9 +16,11 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import MovieIcon from '@mui/icons-material/Movie'
 import RollerShadesClosed from '@mui/icons-material/RollerShadesClosed'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Landing = () => {
   const navigate = useNavigate()
+  const user = useSelector((state) => state.managers.user)
 
   // Funzioni di navigazione per ogni opzione
   const handleStartCashRegister = () => {
@@ -103,48 +105,50 @@ const Landing = () => {
         </Grid>
 
         {/* Card per "Aggiungere/modificare prodotti" */}
-        <Grid item xs={12} md={4}>
-          <Card
-            sx={{
-              boxShadow: 5,
-              transition: 'transform 0.3s, box-shadow 0.3s',
-              '&:hover': {
-                transform: 'scale(1.05)',
-                boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)'
-              }
-            }}
-          >
-            <CardContent sx={{ textAlign: 'center' }}>
-              <EditIcon
-                sx={{
-                  fontSize: 60,
-                  color: '#e67e22',
-                  transition: 'color 0.3s',
-                  '&:hover': { color: '#d35400' }
-                }}
-              />
-              <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
-                Gestisci Prodotti
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Aggiungi o modifica i prodotti disponibili
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleManageProducts}
-                sx={{
-                  backgroundColor: '#e67e22',
-                  '&:hover': { backgroundColor: '#d35400', transform: 'scale(1.02)' }
-                }}
-              >
-                Gestisci Prodotti
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
+        {(user.role === 'tm' || user.role === 'manager') && (
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                boxShadow: 5,
+                transition: 'transform 0.3s, box-shadow 0.3s',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)'
+                }
+              }}
+            >
+              <CardContent sx={{ textAlign: 'center' }}>
+                <EditIcon
+                  sx={{
+                    fontSize: 60,
+                    color: '#e67e22',
+                    transition: 'color 0.3s',
+                    '&:hover': { color: '#d35400' }
+                  }}
+                />
+                <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
+                  Gestisci Prodotti
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Aggiungi o modifica i prodotti disponibili
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleManageProducts}
+                  sx={{
+                    backgroundColor: '#e67e22',
+                    '&:hover': { backgroundColor: '#d35400', transform: 'scale(1.02)' }
+                  }}
+                >
+                  Gestisci Prodotti
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        )}
 
         {/* Card per "Caricare il YumTrek" */}
         <Grid item xs={12} md={4}>
@@ -235,48 +239,50 @@ const Landing = () => {
         </Grid>
 
         {/* Card per "analisys trans" */}
-        <Grid item xs={12} md={4}>
-          <Card
-            sx={{
-              boxShadow: 5,
-              transition: 'transform 0.3s, box-shadow 0.3s',
-              '&:hover': {
-                transform: 'scale(1.05)',
-                boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)'
-              }
-            }}
-          >
-            <CardContent sx={{ textAlign: 'center' }}>
-              <RollerShadesClosed
-                sx={{
-                  fontSize: 60,
-                  color: '#bdc3c7',
-                  transition: 'color 0.3s',
-                  '&:hover': { color: '#a6acaf' }
-                }}
-              />
-              <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
-                Chiusura YumTrek
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Qui fai i conteggi di yum trek e scarichi le transazioni, frai gli storni etc
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleAnalisys}
-                sx={{
-                  backgroundColor: '#bdc3c7',
-                  '&:hover': { backgroundColor: '#a6acaf', transform: 'scale(1.02)' }
-                }}
-              >
-                Chiudi Cassa
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
+        {(user.role === 'tm' || user.role === 'manager') && (
+          <Grid item xs={12} md={4}>
+            <Card
+              sx={{
+                boxShadow: 5,
+                transition: 'transform 0.3s, box-shadow 0.3s',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)'
+                }
+              }}
+            >
+              <CardContent sx={{ textAlign: 'center' }}>
+                <RollerShadesClosed
+                  sx={{
+                    fontSize: 60,
+                    color: '#bdc3c7',
+                    transition: 'color 0.3s',
+                    '&:hover': { color: '#a6acaf' }
+                  }}
+                />
+                <Typography variant="h5" fontWeight="bold" sx={{ mt: 2 }}>
+                  Chiusura YumTrek
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Qui fai i conteggi di yum trek e scarichi le transazioni, frai gli storni etc
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleAnalisys}
+                  sx={{
+                    backgroundColor: '#bdc3c7',
+                    '&:hover': { backgroundColor: '#a6acaf', transform: 'scale(1.02)' }
+                  }}
+                >
+                  Chiudi Cassa
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        )}
       </Grid>
     </Container>
   )

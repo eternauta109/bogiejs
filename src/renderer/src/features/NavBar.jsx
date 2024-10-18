@@ -49,12 +49,19 @@ function NavBar() {
 
   const pages = [
     { name: 'Home', icon: <TopicIcon /> },
-    { name: 'Gestione Prodotti', icon: <CalendarTodayIcon /> },
+
+    ...(user.role === 'tm' || user.role === 'manager'
+      ? [{ name: 'Gestione Prodotti', icon: <CalendarTodayIcon /> }]
+      : []),
     { name: 'Rifornisci YumTrek', icon: <DashboardIcon /> },
     { name: 'carica spettacoli', icon: <MovieIcon /> },
     { name: 'cassa', icon: <PointOfSaleIcon /> },
-    ...(user.role === 'tm' ? [{ name: 'analisi', icon: <RollerShadesClosed /> }] : []),
-    ...(user.role === 'tm' ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }] : [])
+    ...(user.role === 'tm' || user.role === 'manager'
+      ? [{ name: 'analisi', icon: <RollerShadesClosed /> }]
+      : []),
+    ...(user.role === 'tm' || user.role === 'manager'
+      ? [{ name: 'dashboard', icon: <ManageAccountsIcon /> }]
+      : [])
   ]
 
   const settings = [`name: ${user.userName}`, `role: ${user.role}`]

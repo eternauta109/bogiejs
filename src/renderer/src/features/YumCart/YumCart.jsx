@@ -78,8 +78,21 @@ const YumCart = () => {
           <ProductList selectedShow={selectedShow} attendance={attendance} />
 
           {/* Totale */}
-          <Box mt={2}>
-            <Typography variant="h6">Totale: €{parseFloat(total).toFixed(2)}</Typography>
+          <Box mt={1}>
+            <Typography
+              variant="h4"
+              sx={{
+                backgroundColor: '#dc7633', // Colore di sfondo
+                color: '#fff', // Colore del testo
+                padding: '5px', // Padding interno per dare più spazio
+                borderRadius: '8px', // Bordo arrotondato
+                textAlign: 'center', // Centra il testo
+                fontWeight: 'bold', // Testo in grassetto
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' // Effetto ombra per esaltare
+              }}
+            >
+              Totale: €{parseFloat(total).toFixed(2)}
+            </Typography>
           </Box>
         </Box>
 

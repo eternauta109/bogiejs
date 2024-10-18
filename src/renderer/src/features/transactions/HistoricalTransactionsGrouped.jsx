@@ -1,14 +1,20 @@
 /* eslint-disable react/prop-types */
-import { Box, Typography, Divider, Card, CardContent } from '@mui/material'
+import { Box, Typography, Divider, Card, CardContent, Button } from '@mui/material'
+import { deleteTransactionFromDB } from '../../store/reducers/transactions'
+import { useDispatch } from 'react-redux'
 
 // Funzione per raggruppare le transazioni per transactionId
 const groupTransactionsByTransactionId = (transactions) => {
   return transactions.reduce((groups, transaction) => {
     const { transactionId } = transaction
     if (!groups[transactionId]) {
-      groups[transactionId] = []
+      groups[transactionId] = {
+        items: [],
+        paymentType: transaction.paymentType,
+        transDate: transaction.transactionDate
+      }
     }
-    groups[transactionId].push(transaction)
+    groups[transactionId].items.push(transaction)
     return groups
   }, {})
 }
@@ -26,11 +32,21 @@ const countProductsBySupplyName = (transactionItems) => {
 
 const HistoricalTransactionsGrouped = ({ transactions }) => {
   const groupedTransactions = groupTransactionsByTransactionId(transactions)
+  const dispatch = useDispatch()
   console.log(groupedTransactions)
+
+  const onDeleteTransaction = (transId) => {
+    dispatch(deleteTransactionFromDB(transId))
+    console.log(transId)
+  }
   return (
     <Box>
       {Object.keys(groupedTransactions).map((transactionId) => {
-        const transactionItems = groupedTransactions[transactionId]
+        const {
+          items: transactionItems,
+          paymentType,
+          transDate
+        } = groupedTransactions[transactionId]
         const productCounts = countProductsBySupplyName(transactionItems)
 
         const totalQuantity = Object.values(productCounts).reduce(
@@ -48,6 +64,14 @@ const HistoricalTransactionsGrouped = ({ transactions }) => {
               <Typography variant="h6" fontWeight="bold">
                 Transazione ID: {transactionId}
               </Typography>
+
+              <Typography variant="subtitle" fontWeight="bold" sx={{ mr: 4 }}>
+                Tipo pagamento: {paymentType}
+              </Typography>
+              <Typography variant="subtitle" fontWeight="bold">
+                data: {transDate}
+              </Typography>
+
               <Box sx={{ ml: 2 }}>
                 {Object.keys(productCounts).map((productName, index) => (
                   <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -62,6 +86,16 @@ const HistoricalTransactionsGrouped = ({ transactions }) => {
                 <Typography fontWeight="bold">
                   Totale transazione: {totalAmount.toFixed(2)} €
                 </Typography>
+
+                {/* Pulsante per cancellare la transazione */}
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  sx={{ mt: 2 }}
+                  onClick={() => onDeleteTransaction(transactionId)}
+                >
+                  Elimina Transazione
+                </Button>
               </Box>
             </CardContent>
           </Card>

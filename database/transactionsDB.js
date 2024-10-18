@@ -129,13 +129,21 @@ async function insertTransaction(transactions) {
 }
 
 async function deleteTransaction(transactionId) {
-  await createDbTransactions() // Ensure DB is created
   await connect()
   try {
-    await db.del(transactionId)
-    console.log('Event deleted successfully.')
+    // Itera su tutte le transazioni nel DB
+    for await (const [key, value] of db.iterator()) {
+      const transaction = JSON.parse(value)
+      // Controlla se il transactionId corrisponde
+      if (transaction.transactionId === transactionId) {
+        // Elimina la transazione
+        await db.del(key)
+        console.log(`Transaction with ID ${key} deleted successfully.`)
+      }
+    }
+    console.log(`All transactions with transactionId ${transactionId} deleted successfully.`)
   } catch (error) {
-    console.error('Error deleting event:', error)
+    console.error('Error deleting transactions:', error)
     throw error
   } finally {
     await close()

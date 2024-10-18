@@ -11,6 +11,7 @@ const FilteredTransactionsByDay = () => {
   // Funzione per gestire il cambio di data
   const handleDateChange = (e) => {
     const selected = e.target.value
+    console.log(selected)
     setSelectedDate(selected)
 
     if (selected) {

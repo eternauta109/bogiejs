@@ -63,17 +63,19 @@ const ExcelLoader = () => {
   // Colonne della DataGrid
   const columns = [
     { field: 'AUDITORIUM', headerName: 'Auditorium', width: 150 },
-    { field: 'SCHEDULED_TIME', headerName: 'Orario Programmato', width: 180 },
+
     { field: 'SHOW_TIME', headerName: 'Orario Spettacolo', width: 180 },
+    { field: 'PLAYLIST', headerName: 'Playlist', width: 200 },
     { field: 'FEATURE_TIME', headerName: 'Orario Feature (-10 min)', width: 200 },
     { field: 'CREDITS_TIME', headerName: 'Orario Crediti', width: 180 },
     { field: 'END_TIME', headerName: 'Orario Fine', width: 180 },
     { field: 'DURATION', headerName: 'Durata', width: 150 },
-    { field: 'PLAYLIST', headerName: 'Playlist', width: 200 },
+
     { field: 'FEATURE', headerName: 'Feature', width: 300 },
     { field: 'SHOW_STOPPERS', headerName: 'Show Stoppers', width: 150 },
     { field: 'LOCKED', headerName: 'Locked', width: 150 },
-    { field: 'FEATURE_RATING', headerName: 'Feature Rating', width: 150 }
+    { field: 'FEATURE_RATING', headerName: 'Feature Rating', width: 150 },
+    { field: 'SCHEDULED_TIME', headerName: 'Orario Programmato', width: 180 }
   ]
 
   // Gestisci la selezione degli spettacoli

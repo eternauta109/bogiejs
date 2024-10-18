@@ -31,8 +31,10 @@ const HistoricalTransactionsLoader = (user) => {
 
   // Funzione per aggiornare la data selezionata
   const handleDateChange = (e) => {
-    setSelectedDate(e.target.value)
-    if (!selectedDate) return
+    const selected = e.target.value
+    console.log(selected)
+    setSelectedDate(selected)
+
     dispatch(fetchTransactionsByDate(e.target.value))
   }
 
