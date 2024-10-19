@@ -12,7 +12,7 @@ import {
 const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
   return (
     <Dialog open={open} onClose={handleClose} sx={{ height: '800px' }}>
-      <DialogTitle>Pagamento Carta</DialogTitle>
+      <DialogTitle>Pagamento Carta. Ricevi conferma dal pos</DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f4f4f4' }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
