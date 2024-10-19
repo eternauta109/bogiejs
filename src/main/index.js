@@ -62,13 +62,13 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: false,
       webSecurity: true, // Disabilita richieste esterne a domini remoti
-      preload: join(__dirname, '../preload/index.js'),
-      devTools: false // Disabilita l'apertura di DevTools
+      preload: join(__dirname, '../preload/index.js')
+      /* devTools: false */ // Disabilita l'apertura di DevTools
     }
   })
-  /* mainWindow.webContents.openDevTools() */
+  mainWindow.webContents.openDevTools()
   // Blocca tutte le richieste di rete, eccetto quelle locali
-  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+  /*  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
     console.log('Richiesta URL:', details.url)
 
     if (
@@ -81,7 +81,7 @@ function createWindow() {
       console.log('Bloccato:', details.url) // Log delle richieste bloccate
       callback({ cancel: true }) // Blocca tutte le altre
     }
-  })
+  }) */
 
   // Mostra la finestra quando è pronta
   mainWindow.once('ready-to-show', () => {

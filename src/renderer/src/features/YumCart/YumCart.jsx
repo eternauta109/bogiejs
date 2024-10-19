@@ -9,11 +9,13 @@ import ProductList from './ProductList'
 import CartItem from './CartItem'
 import PaymentDialog from './PaymentDialog'
 import ShowSelection from './ShowSelection'
+import PaymentCardDialog from './PaymentCardDialog'
 
 const YumCart = () => {
   const [selectedShow, setSelectedShow] = useState()
   const [attendance, setAttendance] = useState('')
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false)
+  const [cardPaymentDialogOpen, setCardPaymentDialogOpen] = useState(false)
 
   const dispatch = useDispatch()
   const cart = useSelector((state) => state.cart.items)
@@ -21,6 +23,9 @@ const YumCart = () => {
 
   const handleOpenPaymentDialog = () => setIsPaymentDialogOpen(true)
   const handleClosePaymentDialog = () => setIsPaymentDialogOpen(false)
+
+  const handleOpenCardOpenDialog = () => setCardPaymentDialogOpen(true)
+  const handleCloseCardOpenDialog = () => setCardPaymentDialogOpen(false)
 
   const handlePayment = (payment) => {
     console.log(payment)
@@ -127,10 +132,11 @@ const YumCart = () => {
           </Box>
 
           {/* Pulsanti per il pagamento */}
-          <Box display="flex" flexDirection="column" gap={2} mt={2}>
+          <Box display="flex" flexDirection="row" gap={1} mt={1}>
             <Button
               variant="contained"
               color="success"
+              sx={{ height: '100px' }}
               onClick={handleOpenPaymentDialog}
               disabled={cart.length === 0}
               fullWidth
@@ -140,7 +146,8 @@ const YumCart = () => {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => handlePayment('card')}
+              sx={{ height: '100px' }}
+              onClick={handleOpenCardOpenDialog}
               disabled={cart.length === 0}
               fullWidth
             >
@@ -154,6 +161,14 @@ const YumCart = () => {
       <PaymentDialog
         open={isPaymentDialogOpen}
         handleClose={handleClosePaymentDialog}
+        total={total}
+        handlePayment={handlePayment}
+      />
+
+      {/* Dialog per il pagamento con carta */}
+      <PaymentCardDialog
+        open={cardPaymentDialogOpen}
+        handleClose={handleCloseCardOpenDialog}
         total={total}
         handlePayment={handlePayment}
       />

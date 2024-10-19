@@ -22,7 +22,7 @@ const ShowSelection = ({ selectedShow, setSelectedShow, attendance, setAttendanc
           </MenuItem>
           {shows.map((show) => (
             <MenuItem key={show.id} value={show.id}>
-              {show.PLAYLIST} - {show.FEATURE_TIME}
+              {show.PLAYLIST} -{show.AUDITORIUM} -{show.FEATURE_TIME}
             </MenuItem>
           ))}
         </Select>
