@@ -62,26 +62,32 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: false,
       webSecurity: true, // Disabilita richieste esterne a domini remoti
-      preload: join(__dirname, '../preload/index.js')
-      /* devTools: false */ // Disabilita l'apertura di DevTools
+      preload: join(__dirname, '../preload/index.js'),
+      devTools: process.env.NODE_ENV === 'development'
     }
   })
-  mainWindow.webContents.openDevTools()
+  // Apri DevTools solo se sei in modalità 'development'
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+  }
   // Blocca tutte le richieste di rete, eccetto quelle locali
-  /*  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
-    console.log('Richiesta URL:', details.url)
+  if (process.env.NODE_ENV === 'production') {
+    // Blocca tutte le richieste di rete, eccetto quelle locali
+    mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+      console.log('Richiesta URL:', details.url)
 
-    if (
-      details.url.startsWith('http://localhost') ||
-      details.url.startsWith('file://') ||
-      details.url.startsWith('ws://localhost') // Permetti richieste WebSocket in localhost
-    ) {
-      callback({ cancel: false }) // Consenti le richieste locali
-    } else {
-      console.log('Bloccato:', details.url) // Log delle richieste bloccate
-      callback({ cancel: true }) // Blocca tutte le altre
-    }
-  }) */
+      if (
+        details.url.startsWith('http://localhost') ||
+        details.url.startsWith('file://') ||
+        details.url.startsWith('ws://localhost') // Permetti richieste WebSocket in localhost
+      ) {
+        callback({ cancel: false }) // Consenti le richieste locali
+      } else {
+        console.log('Bloccato:', details.url) // Log delle richieste bloccate
+        callback({ cancel: true }) // Blocca tutte le altre
+      }
+    })
+  }
 
   // Mostra la finestra quando è pronta
   mainWindow.once('ready-to-show', () => {
