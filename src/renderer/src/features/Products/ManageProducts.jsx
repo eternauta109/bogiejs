@@ -252,26 +252,6 @@ const ManageProducts = () => {
               </MenuItem>
             ))}
           </Select>
-          {/* tab */}
-          <Select
-            value={selectedProduct?.tab || ''}
-            name="tab"
-            required
-            onChange={(e) => setSelectedProduct({ ...selectedProduct, tab: e.target.value })}
-            displayEmpty
-            sx={{ width: 200, ml: 2 }}
-          >
-            <MenuItem value="" disabled>
-              Seleziona la pagina
-            </MenuItem>
-
-            {/* Genera automaticamente 4 MenuItem */}
-            {Array.from({ length: 4 }, (_, index) => (
-              <MenuItem key={index + 1} value={index + 1}>
-                tab {index + 1}
-              </MenuItem>
-            ))}
-          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Annulla</Button>

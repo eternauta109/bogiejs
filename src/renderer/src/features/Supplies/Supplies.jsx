@@ -58,6 +58,12 @@ const Supplies = () => {
       type: 'number'
     },
     {
+      field: 'tab',
+      headerName: 'pagina di vendita',
+      width: 150,
+      type: 'number'
+    },
+    {
       field: 'actions',
       headerName: 'Azioni',
       width: 200,
@@ -92,7 +98,7 @@ const Supplies = () => {
         setNewSupply((prevSupply) => ({
           ...prevSupply,
           [name]: value,
-          tab: selectedProduct.tab,
+
           category: selectedProduct.category,
           prezzo: selectedProduct.prezzoVendita,
           codice: selectedProduct.codice // Imposta il codice selezionato
@@ -108,8 +114,12 @@ const Supplies = () => {
 
   // Salva la nuova supply o aggiorna l'esistente
   const handleSaveSupply = async () => {
-    if (newSupply.supplyName === '' || newSupply.initialQuantity === '') {
-      return console.log('campi obligatori')
+    if (
+      newSupply.supplyName === '' ||
+      newSupply.initialQuantity === '' ||
+      newSupply.tab === undefined
+    ) {
+      return console.log('campi obligatori', newSupply.tab)
     }
 
     /*   // Controlla se esiste già un prodotto con lo stesso codice
@@ -248,6 +258,26 @@ const Supplies = () => {
           value={newSupply.initialQuantity}
           onChange={handleInputChange}
         />
+        {/* tab */}
+        <Select
+          value={newSupply?.tab || ''}
+          name="tab"
+          required
+          onChange={handleInputChange}
+          displayEmpty
+          sx={{ width: 200, ml: 2 }}
+        >
+          <MenuItem value="" disabled>
+            Seleziona la pagina
+          </MenuItem>
+
+          {/* Genera automaticamente 4 MenuItem */}
+          {Array.from({ length: 4 }, (_, index) => (
+            <MenuItem key={index + 1} value={index + 1}>
+              tab {index + 1}
+            </MenuItem>
+          ))}
+        </Select>
 
         <Button variant="contained" color="primary" onClick={handleSaveSupply} disabled={loading}>
           {editing ? 'Aggiorna' : 'Aggiungi'}
