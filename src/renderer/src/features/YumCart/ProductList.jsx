@@ -106,7 +106,7 @@ const ProductList = ({ selectedShow, attendance }) => {
             ))}
         </Grid>
 
-        <Typography sx={{ mb: 1 }}>confetionary</Typography>
+        <Typography sx={{ mb: 1 }}>confectionery</Typography>
         <Grid container spacing={2}>
           {filteredSupplies
             .filter((supply) => supply.category === 'confectionery') // Filtra i supplies per categoria "food"
