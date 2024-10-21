@@ -38,7 +38,7 @@ const ManageProducts = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
 
   //valory delle category
-  const categoryList = ['food', 'confetionary', 'drink', 'sweeties', 'menu']
+  const categoryList = ['food', 'confectionery', 'drink', 'altro', 'menu']
 
   // Colonne del DataGrid
   const columns = [
