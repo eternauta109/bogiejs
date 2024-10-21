@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Grid, Button, Typography, Paper, Box, Tabs, Tab } from '@mui/material'
+import { Grid, Box, Tabs, Tab, Typography } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { addItem } from '../../store/reducers/cart'
+import ProductSubList from './ProductSubList'
 
 // eslint-disable-next-line react/prop-types
 const ProductList = ({ selectedShow, attendance }) => {
@@ -76,56 +77,62 @@ const ProductList = ({ selectedShow, attendance }) => {
           backgroundColor: '#f4f4f4' // Sfondo neutro
         }}
       >
+        <Typography sx={{ mb: 1 }}>Food</Typography>
         <Grid container spacing={2}>
-          {filteredSupplies.map((supply) => (
-            <Grid item xs={6} sm={2} key={supply.codice}>
-              <Paper elevation={10} sx={{ padding: 1, backgroundColor: '#f8f9fa', height: '90%' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={() => handleAddToCart(supply)}
-                  disabled={selectedShow == null || !attendance}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    padding: 1,
-                    backgroundColor: '#229954',
-                    color: '#fff',
-                    '&:hover': {
-                      backgroundColor: '#27ae60'
-                    },
-                    height: '100%'
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: 'bold',
-                      fontSize: '0.8rem',
-                      textAlign: 'center',
-                      color: '#fff',
+          {filteredSupplies
+            .filter((supply) => supply.category === 'food') // Filtra i supplies per categoria "food"
+            .map((supply) => (
+              <ProductSubList
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
+        </Grid>
+        <Typography sx={{ mb: 1 }}>Drink</Typography>
+        <Grid container spacing={2}>
+          {filteredSupplies
+            .filter((supply) => supply.category === 'drink') // Filtra i supplies per categoria "food"
+            .map((supply) => (
+              <ProductSubList
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
+        </Grid>
 
-                      mb: 1
-                    }}
-                  >
-                    {supply.supplyName}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      textAlign: 'center',
-                      color: '#fff'
-                    }}
-                  >
-                    €{parseFloat(supply.prezzo).toFixed(2)}
-                  </Typography>
-                </Button>
-              </Paper>
-            </Grid>
-          ))}
+        <Typography sx={{ mb: 1 }}>confetionary</Typography>
+        <Grid container spacing={2}>
+          {filteredSupplies
+            .filter((supply) => supply.category === 'confectionery') // Filtra i supplies per categoria "food"
+            .map((supply) => (
+              <ProductSubList
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
+        </Grid>
+        <Typography sx={{ mb: 1 }}>menu</Typography>
+        <Grid container spacing={2}>
+          {filteredSupplies
+            .filter((supply) => supply.category === 'menu') // Filtra i supplies per categoria "food"
+            .map((supply) => (
+              <ProductSubList
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
         </Grid>
       </Box>
     </Box>
