@@ -58,6 +58,7 @@ const ShowSelection = ({ selectedShow, setSelectedShow, attendance, setAttendanc
                 value={show.id}
                 key={show.id}
                 sx={{
+                  mb: 1,
                   backgroundColor: isWithinNext15Min ? '#f39c12' : 'inherit', // Colore arancione se entro 15 minuti, altrimenti normale
                   padding: 1, // Aggiungi un po' di padding
                   borderRadius: '4px' // Aggiungi border-radius per un effetto migliore
