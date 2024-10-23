@@ -94,7 +94,7 @@ const ExcelLoader = () => {
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom>
-        Carica gli Spettacoli in YumTrek
+        Carica i Spettacoli in YumTrek
       </Typography>
 
       <Box mt={2} mb={4}>

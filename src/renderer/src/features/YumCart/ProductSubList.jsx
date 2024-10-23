@@ -2,13 +2,12 @@
 
 import { Grid, Typography, Paper, Button } from '@mui/material'
 
-const ProductSubList = ({ supply, handleAddToCart, selectedShow, attendance }) => {
+const ProductSubList = ({ supply, handleAddToCart, selectedShow, attendance, color }) => {
   return (
     <Grid item xs={6} sm={2}>
       <Paper elevation={10} sx={{ padding: 1, backgroundColor: '#f8f9fa', height: '90%' }}>
         <Button
           variant="contained"
-          color="primary"
           fullWidth
           onClick={() => handleAddToCart(supply)}
           disabled={selectedShow == null || !attendance}
@@ -17,7 +16,7 @@ const ProductSubList = ({ supply, handleAddToCart, selectedShow, attendance }) =
             flexDirection: 'column',
             alignItems: 'center',
             padding: 1,
-            backgroundColor: '#229954',
+            backgroundColor: color,
             color: '#fff',
             '&:hover': {
               backgroundColor: '#27ae60'

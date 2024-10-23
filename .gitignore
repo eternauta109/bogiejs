@@ -7,3 +7,4 @@ bigDb
 out
 .DS_Store
 *.log*
+stats.html

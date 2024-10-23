@@ -51,6 +51,14 @@ const ProductList = ({ selectedShow, attendance }) => {
     dispatch(addItem(newTransaction))
   }
 
+  const filterByFood = filteredSupplies.filter((supply) => supply.category === 'food')
+  const filterByDrink = filteredSupplies.filter((supply) => supply.category === 'drink')
+  const filterByConfectionery = filteredSupplies.filter(
+    (supply) => supply.category === 'confectionery'
+  )
+  const filterByAltro = filteredSupplies.filter((supply) => supply.category === 'altro')
+  const filterByMenu = filteredSupplies.filter((supply) => supply.category === 'menu')
+
   return (
     <Box>
       {/* Tabs per filtrare i supplies */}
@@ -77,62 +85,77 @@ const ProductList = ({ selectedShow, attendance }) => {
           backgroundColor: '#f4f4f4' // Sfondo neutro
         }}
       >
-        <Typography sx={{ mb: 1 }}>Food</Typography>
+        {filterByFood.length > 0 && <Typography sx={{ mb: 1 }}>Food</Typography>}
         <Grid container spacing={2}>
-          {filteredSupplies
-            .filter((supply) => supply.category === 'food') // Filtra i supplies per categoria "food"
-            .map((supply) => (
+          {
+            // Filtra i supplies per categoria "food"
+
+            filterByFood.map((supply) => (
               <ProductSubList
+                color="#F39C12"
                 key={supply.codice}
                 supply={supply}
                 handleAddToCart={handleAddToCart}
                 selectedShow={selectedShow}
                 attendance={attendance}
               />
-            ))}
+            ))
+          }
         </Grid>
-        <Typography sx={{ mb: 1 }}>Drink</Typography>
+        {filterByDrink.length > 0 && <Typography sx={{ mb: 1, mt: 1 }}>Drink</Typography>}
         <Grid container spacing={2}>
-          {filteredSupplies
-            .filter((supply) => supply.category === 'drink') // Filtra i supplies per categoria "food"
-            .map((supply) => (
-              <ProductSubList
-                key={supply.codice}
-                supply={supply}
-                handleAddToCart={handleAddToCart}
-                selectedShow={selectedShow}
-                attendance={attendance}
-              />
-            ))}
+          {filterByDrink.map((supply) => (
+            <ProductSubList
+              color="#48C9B0"
+              key={supply.codice}
+              supply={supply}
+              handleAddToCart={handleAddToCart}
+              selectedShow={selectedShow}
+              attendance={attendance}
+            />
+          ))}
         </Grid>
 
-        <Typography sx={{ mb: 1 }}>confectionery</Typography>
+        {filterByConfectionery.length > 0 && (
+          <Typography sx={{ mb: 1, mt: 1 }}>confectionery</Typography>
+        )}
         <Grid container spacing={2}>
-          {filteredSupplies
-            .filter((supply) => supply.category === 'confectionery') // Filtra i supplies per categoria "food"
-            .map((supply) => (
-              <ProductSubList
-                key={supply.codice}
-                supply={supply}
-                handleAddToCart={handleAddToCart}
-                selectedShow={selectedShow}
-                attendance={attendance}
-              />
-            ))}
+          {filterByConfectionery.map((supply) => (
+            <ProductSubList
+              color="#A569BD"
+              key={supply.codice}
+              supply={supply}
+              handleAddToCart={handleAddToCart}
+              selectedShow={selectedShow}
+              attendance={attendance}
+            />
+          ))}
         </Grid>
-        <Typography sx={{ mb: 1 }}>menu</Typography>
+        {filterByAltro.length > 0 && <Typography sx={{ mb: 1, mt: 1 }}>altro</Typography>}
         <Grid container spacing={2}>
-          {filteredSupplies
-            .filter((supply) => supply.category === 'menu') // Filtra i supplies per categoria "food"
-            .map((supply) => (
-              <ProductSubList
-                key={supply.codice}
-                supply={supply}
-                handleAddToCart={handleAddToCart}
-                selectedShow={selectedShow}
-                attendance={attendance}
-              />
-            ))}
+          {filterByAltro.map((supply) => (
+            <ProductSubList
+              color="#B2BABB"
+              key={supply.codice}
+              supply={supply}
+              handleAddToCart={handleAddToCart}
+              selectedShow={selectedShow}
+              attendance={attendance}
+            />
+          ))}
+        </Grid>
+        {filterByMenu.length > 0 && <Typography sx={{ mb: 1, mt: 2 }}>menu</Typography>}
+        <Grid container spacing={2}>
+          {filterByMenu.map((supply) => (
+            <ProductSubList
+              color="#CD6155"
+              key={supply.codice}
+              supply={supply}
+              handleAddToCart={handleAddToCart}
+              selectedShow={selectedShow}
+              attendance={attendance}
+            />
+          ))}
         </Grid>
       </Box>
     </Box>
