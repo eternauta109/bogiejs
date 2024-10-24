@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Grid, Box, Tabs, Tab, Typography } from '@mui/material'
+import { Grid, Box, Tabs, Tab, Typography, TextField } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { addItem } from '../../store/reducers/cart'
@@ -13,8 +13,11 @@ const ProductList = ({ selectedShow, attendance }) => {
   const dispatch = useDispatch()
   const [selectedTab, setSelectedTab] = useState(0)
 
+  const [barcode, setBarcode] = useState('') // Stato per il codice a barre
+
   // Gestisci il cambio di tab
   const handleTabChange = (event, newValue) => {
+    console.log(newValue)
     setSelectedTab(newValue)
   }
 
@@ -59,6 +62,18 @@ const ProductList = ({ selectedShow, attendance }) => {
   const filterByAltro = filteredSupplies.filter((supply) => supply.category === 'altro')
   const filterByMenu = filteredSupplies.filter((supply) => supply.category === 'menu')
 
+  // Effetto per ascoltare il cambiamento del codice a barre
+  const handleBarcodeChange = (e) => {
+    if (e.key === 'Enter') {
+      const findBarSupply = supplies.find((supply) => supply.codice === barcode)
+      console.log('find prod', findBarSupply)
+      handleAddToCart(findBarSupply)
+      setBarcode('') // Azzera l'input dopo aver trovato il prodotto
+    } else {
+      console.log('tasto', e.target.value)
+    }
+  }
+
   return (
     <Box>
       {/* Tabs per filtrare i supplies */}
@@ -73,91 +88,111 @@ const ProductList = ({ selectedShow, attendance }) => {
         {uniqueTabs.map((tab, index) => (
           <Tab key={index} label={tab} />
         ))}
+        <Tab key={5} label={'usa i codici a barre'} />
       </Tabs>
+      {/* Visualizza l'input dei codici a barre solo se il tab selezionato è "Usa i codici a barre" */}
+      {selectedTab === 5 && (
+        <Box mb={2}>
+          <TextField
+            label="Usa codici a barre"
+            value={barcode}
+            onChange={(e) => setBarcode(e.target.value)}
+            onKeyDown={handleBarcodeChange} // Usa onKeyDown per rilevare Enter
+            placeholder="Scansiona o inserisci codice a barre"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+      )}
 
-      <Box
-        sx={{
-          height: '450px', // Altezza fissa per il contenitore
-          overflowY: 'auto', // Scorrimento verticale
-          border: '1px solid #ddd', // Bordo leggero
-          borderRadius: '8px',
-          padding: 2,
-          backgroundColor: '#f4f4f4' // Sfondo neutro
-        }}
-      >
-        {filterByFood.length > 0 && <Typography sx={{ mb: 1 }}>Food</Typography>}
-        <Grid container spacing={2}>
-          {
-            // Filtra i supplies per categoria "food"
+      {selectedTab !== 5 && (
+        <Box
+          sx={{
+            height: '450px', // Altezza fissa per il contenitore
+            overflowY: 'auto', // Scorrimento verticale
+            border: '1px solid #ddd', // Bordo leggero
+            borderRadius: '8px',
+            padding: 2,
+            backgroundColor: '#f4f4f4' // Sfondo neutro
+          }}
+        >
+          {filterByFood.length > 0 && <Typography sx={{ mb: 1 }}>Food</Typography>}
+          <Grid container spacing={2}>
+            {
+              // Filtra i supplies per categoria "food"
 
-            filterByFood.map((supply) => (
+              filterByFood.map((supply) => (
+                <ProductSubList
+                  color="#F39C12"
+                  key={supply.codice}
+                  supply={supply}
+                  handleAddToCart={handleAddToCart}
+                  selectedShow={selectedShow}
+                  attendance={attendance}
+                />
+              ))
+            }
+          </Grid>
+
+          {filterByDrink.length > 0 && <Typography sx={{ mb: 1, mt: 1 }}>Drink</Typography>}
+          <Grid container spacing={2}>
+            {filterByDrink.map((supply) => (
               <ProductSubList
-                color="#F39C12"
+                color="#48C9B0"
                 key={supply.codice}
                 supply={supply}
                 handleAddToCart={handleAddToCart}
                 selectedShow={selectedShow}
                 attendance={attendance}
               />
-            ))
-          }
-        </Grid>
-        {filterByDrink.length > 0 && <Typography sx={{ mb: 1, mt: 1 }}>Drink</Typography>}
-        <Grid container spacing={2}>
-          {filterByDrink.map((supply) => (
-            <ProductSubList
-              color="#48C9B0"
-              key={supply.codice}
-              supply={supply}
-              handleAddToCart={handleAddToCart}
-              selectedShow={selectedShow}
-              attendance={attendance}
-            />
-          ))}
-        </Grid>
+            ))}
+          </Grid>
 
-        {filterByConfectionery.length > 0 && (
-          <Typography sx={{ mb: 1, mt: 1 }}>confectionery</Typography>
-        )}
-        <Grid container spacing={2}>
-          {filterByConfectionery.map((supply) => (
-            <ProductSubList
-              color="#A569BD"
-              key={supply.codice}
-              supply={supply}
-              handleAddToCart={handleAddToCart}
-              selectedShow={selectedShow}
-              attendance={attendance}
-            />
-          ))}
-        </Grid>
-        {filterByAltro.length > 0 && <Typography sx={{ mb: 1, mt: 1 }}>altro</Typography>}
-        <Grid container spacing={2}>
-          {filterByAltro.map((supply) => (
-            <ProductSubList
-              color="#B2BABB"
-              key={supply.codice}
-              supply={supply}
-              handleAddToCart={handleAddToCart}
-              selectedShow={selectedShow}
-              attendance={attendance}
-            />
-          ))}
-        </Grid>
-        {filterByMenu.length > 0 && <Typography sx={{ mb: 1, mt: 2 }}>menu</Typography>}
-        <Grid container spacing={2}>
-          {filterByMenu.map((supply) => (
-            <ProductSubList
-              color="#CD6155"
-              key={supply.codice}
-              supply={supply}
-              handleAddToCart={handleAddToCart}
-              selectedShow={selectedShow}
-              attendance={attendance}
-            />
-          ))}
-        </Grid>
-      </Box>
+          {filterByConfectionery.length > 0 && (
+            <Typography sx={{ mb: 1, mt: 1 }}>confectionery</Typography>
+          )}
+          <Grid container spacing={2}>
+            {filterByConfectionery.map((supply) => (
+              <ProductSubList
+                color="#A569BD"
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
+          </Grid>
+
+          {filterByAltro.length > 0 && <Typography sx={{ mb: 1, mt: 1 }}>altro</Typography>}
+          <Grid container spacing={2}>
+            {filterByAltro.map((supply) => (
+              <ProductSubList
+                color="#B2BABB"
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
+          </Grid>
+
+          {filterByMenu.length > 0 && <Typography sx={{ mb: 1, mt: 2 }}>menu</Typography>}
+          <Grid container spacing={2}>
+            {filterByMenu.map((supply) => (
+              <ProductSubList
+                color="#CD6155"
+                key={supply.codice}
+                supply={supply}
+                handleAddToCart={handleAddToCart}
+                selectedShow={selectedShow}
+                attendance={attendance}
+              />
+            ))}
+          </Grid>
+        </Box>
+      )}
     </Box>
   )
 }

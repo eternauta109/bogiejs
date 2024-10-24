@@ -80,8 +80,9 @@ const YumCart = () => {
           />
 
           {/* Lista dei prodotti */}
-          <ProductList selectedShow={selectedShow} attendance={attendance} />
-
+          {selectedShow !== null && attendance && (
+            <ProductList selectedShow={selectedShow} attendance={attendance} />
+          )}
           {/* Totale */}
           <Box mt={1}>
             <Typography
