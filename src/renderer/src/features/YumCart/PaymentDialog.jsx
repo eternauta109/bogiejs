@@ -20,8 +20,6 @@ const PaymentDialog = ({ open, handleClose, total, handlePayment }) => {
       handlePayment('cash')
       setCashReceived('') // Azzera il valore inserito
       handleClose() // Chiude il dialog
-    } else {
-      alert('Importo insufficiente!')
     }
   }
 

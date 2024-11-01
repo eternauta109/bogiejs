@@ -12,7 +12,7 @@ const ProductList = ({ selectedShow, attendance }) => {
   const shows = useSelector((state) => state.shows.selectedShows)
   const dispatch = useDispatch()
   const [selectedTab, setSelectedTab] = useState(0)
-
+  const [barCodeNotFound, setBarCodeNotFound] = useState(true)
   const [barcode, setBarcode] = useState('') // Stato per il codice a barre
 
   // Gestisci il cambio di tab
@@ -25,6 +25,8 @@ const ProductList = ({ selectedShow, attendance }) => {
   const uniqueTabs = ['Tutti', ...new Set(supplies.map((supply) => supply.tab))].sort((a, b) =>
     a === 'Tutti' ? -1 : b === 'Tutti' ? 1 : a - b
   )
+
+  const allTabs = [...uniqueTabs, 'Usa i codici a barre']
 
   // Filtra e ordina i supplies in base al tab selezionato
   const filteredSupplies = (
@@ -64,11 +66,16 @@ const ProductList = ({ selectedShow, attendance }) => {
 
   // Effetto per ascoltare il cambiamento del codice a barre
   const handleBarcodeChange = (e) => {
+    setBarCodeNotFound(true)
     if (e.key === 'Enter') {
       const findBarSupply = supplies.find((supply) => supply.codice === barcode)
       console.log('find prod', findBarSupply)
-      handleAddToCart(findBarSupply)
-      setBarcode('') // Azzera l'input dopo aver trovato il prodotto
+      if (findBarSupply) {
+        handleAddToCart(findBarSupply)
+        setBarcode('') // Azzera l'input dopo aver trovato il prodotto
+      } else {
+        setBarCodeNotFound(false)
+      }
     } else {
       console.log('tasto', e.target.value)
     }
@@ -85,13 +92,12 @@ const ProductList = ({ selectedShow, attendance }) => {
         variant="scrollable"
         scrollButtons="auto"
       >
-        {uniqueTabs.map((tab, index) => (
+        {allTabs.map((tab, index) => (
           <Tab key={index} label={tab} />
         ))}
-        <Tab key={5} label={'usa i codici a barre'} />
       </Tabs>
       {/* Visualizza l'input dei codici a barre solo se il tab selezionato è "Usa i codici a barre" */}
-      {selectedTab === 5 && (
+      {selectedTab === allTabs.length - 1 && (
         <Box mb={2}>
           <TextField
             label="Usa codici a barre"
@@ -102,10 +108,15 @@ const ProductList = ({ selectedShow, attendance }) => {
             variant="outlined"
             fullWidth
           />
+          {!barCodeNotFound && (
+            <Typography variant="h3" color="error">
+              !!ATTENZIONE NON CI RISULTANO PRODOTTI CON QUESTO CODICE A BARRE
+            </Typography>
+          )}
         </Box>
       )}
 
-      {selectedTab !== 5 && (
+      {selectedTab !== allTabs.length - 1 && (
         <Box
           sx={{
             height: '450px', // Altezza fissa per il contenitore

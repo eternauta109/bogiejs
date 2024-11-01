@@ -2,15 +2,18 @@
 import { useState } from 'react'
 import ExcelJS from 'exceljs'
 import { DataGrid } from '@mui/x-data-grid'
-import { Button, Container, Typography, Box } from '@mui/material'
+import { Button, Container, Typography, Box, Dialog, DialogTitle } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { addSelectedShows } from '../../store/reducers/shows' // Importa l'azione dal tuo store
 import { subMinutes, format } from 'date-fns' // Importa le funzioni necessarie da date-fns
+import { useNavigate } from 'react-router-dom'
 
 const ExcelLoader = () => {
   const [rows, setRows] = useState([])
   const [selectedShows, setSelectedShows] = useState([])
+  const [showDialog, setShowDialog] = useState(false)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   // Funzione per leggere il file Excel usando ExcelJS
   const handleFileUpload = async (event) => {
@@ -88,6 +91,7 @@ const ExcelLoader = () => {
   const handleSaveSelectedShows = () => {
     const selectedData = rows.filter((row) => selectedShows.includes(row.id))
     dispatch(addSelectedShows(selectedData)) // Salva i dati nello store
+    setShowDialog(true)
     console.log('Spettacoli selezionati caricati nello store:', selectedData)
   }
 
@@ -142,6 +146,11 @@ const ExcelLoader = () => {
           rowSelectionModel={selectedShows}
         />
       </div>
+
+      <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
+        <DialogTitle> Spettacoli caricati</DialogTitle>
+        <Button onClick={() => navigate('/supplies')}>Vuoi caricare lo yum trek?</Button>
+      </Dialog>
 
       {/* Snackbar può essere aggiunto qui per visualizzare messaggi di successo o errore */}
     </Container>

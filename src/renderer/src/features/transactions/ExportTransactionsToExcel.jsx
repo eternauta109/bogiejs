@@ -9,6 +9,22 @@ const ExportTransactionsToCSV = ({ transactions, allTrans, user, selectedDate, s
     const workbook = new ExcelJS.Workbook()
     const worksheet = workbook.addWorksheet('Transazioni')
 
+    // Funzione per determinare la fascia di spettacolo
+    const getShowTimeRange = (showTime) => {
+      const hour = showTime.getHours()
+      const minute = showTime.getMinutes()
+
+      if (hour >= 14 && (hour < 16 || (hour === 16 && minute <= 30))) return '1° SPT'
+      if ((hour === 16 && minute > 30) || hour === 17 || (hour === 18 && minute <= 59))
+        return '2° SPT'
+      if ((hour === 19 && minute > 0) || hour === 20 || (hour === 21 && minute <= 30))
+        return '3° SPT'
+      if ((hour === 21 && minute > 30) || hour === 22 || (hour === 23 && minute <= 15))
+        return '4° SPT'
+      if ((hour === 23 && minute > 15) || hour < 8) return 'ALTRO'
+      return 'MATTINEE'
+    }
+
     // Definisci le colonne del CSV
     worksheet.columns = [
       { header: 'cinema', key: 'cinema', width: 25 },
@@ -21,7 +37,8 @@ const ExportTransactionsToCSV = ({ transactions, allTrans, user, selectedDate, s
       { header: 'Tipo Pagamento', key: 'paymentType', width: 20 },
       { header: 'Spettacolo', key: 'FEATURE', width: 30 },
       { header: 'Orario Show', key: 'SHOW_TIME', width: 20 },
-      { header: 'Attendance', key: 'attendance', width: 30 }
+      { header: 'Attendance', key: 'attendance', width: 30 },
+      { header: 'Fascia Spettacolo', key: 'showTimeRange', width: 20 }
     ]
 
     // Aggiungi le righe con i dati delle transazioni
@@ -29,12 +46,15 @@ const ExportTransactionsToCSV = ({ transactions, allTrans, user, selectedDate, s
       const dateTrans = new Date(transaction.transactionDate)
       dateTrans.setHours(dateTrans.getHours() - 2)
       const formatedPrice = transaction.prezzo.toFixed(2).replace('.', ',')
+      const showTime = new Date(transaction.SHOW_TIME)
+      const showTimeRange = getShowTimeRange(showTime) // Determina la fascia di spettacolo
 
       worksheet.addRow({
         ...transaction,
         prezzo: formatedPrice,
         transactionDate: new Date(transaction.transactionDate).toLocaleString(),
-        SHOW_TIME: new Date(transaction.SHOW_TIME).toLocaleString()
+        SHOW_TIME: new Date(transaction.SHOW_TIME).toLocaleString(),
+        showTimeRange
       })
     })
 
