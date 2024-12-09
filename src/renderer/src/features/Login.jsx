@@ -60,13 +60,14 @@ export default function Login() {
     setOpenSnackBar(false)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     // Chiama dispatch e attendi il completamento dell'azione asincrona
 
     try {
-      dispatch(loginUser({ userName, password }))
-      if (!user.isAuth) {
+      const result = await dispatch(loginUser({ userName, password }))
+
+      if (!result.payload.managerFound.isAuth) {
         openSnack()
       }
     } catch (error) {
