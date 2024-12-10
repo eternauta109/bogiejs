@@ -33,7 +33,7 @@ const ExcelLoader = () => {
         worksheet.eachRow((row, rowNumber) => {
           if (rowNumber > 1) {
             // Converte il valore di FEATURE_TIME in oggetto data e sottrae 10 minuti
-            const originalFeatureTime = new Date(row.getCell(4).value)
+            const originalFeatureTime = new Date(row.getCell(5).value)
             const adjustedFeatureTime = subMinutes(originalFeatureTime, 10) // Sottrae 10 minuti
 
             const rowData = {
