@@ -5,7 +5,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { Button, Container, Typography, Box, Dialog, DialogTitle } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { addSelectedShows } from '../../store/reducers/shows' // Importa l'azione dal tuo store
-import { subMinutes, format } from 'date-fns' // Importa le funzioni necessarie da date-fns
+// Importa le funzioni necessarie da date-fns
 import { useNavigate } from 'react-router-dom'
 
 const ExcelLoader = () => {
@@ -33,15 +33,14 @@ const ExcelLoader = () => {
         worksheet.eachRow((row, rowNumber) => {
           if (rowNumber > 1) {
             // Converte il valore di FEATURE_TIME in oggetto data e sottrae 10 minuti
-            const originalFeatureTime = new Date(row.getCell(5).value)
-            const adjustedFeatureTime = subMinutes(originalFeatureTime, 10) // Sottrae 10 minuti
+            // Sottrae 10 minuti
 
             const rowData = {
               id: rowNumber - 2, // Imposta l'ID per la DataGrid
               AUDITORIUM: row.getCell(1).value,
               SCHEDULED_TIME: row.getCell(2).value,
               SHOW_TIME: row.getCell(3).value,
-              FEATURE_TIME: format(adjustedFeatureTime, 'yyyy-MM-dd HH:mm:ss'), // Formatta la data modificata
+              FEATURE_TIME: row.getCell(5).value, // Formatta la data modificata
               CREDITS_TIME: row.getCell(5).value,
               END_TIME: row.getCell(6).value,
               DURATION: row.getCell(7).value,
