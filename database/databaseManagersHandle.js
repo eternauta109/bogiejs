@@ -417,5 +417,16 @@ const managers = [
     id: 'corman1',
     notification: [],
     messages: []
+  },
+  {
+    userName: 'massimilianol',
+    role: 'tm',
+    area: 'area1',
+    password: '0106',
+    isAuth: false,
+    cinema: 'montebello',
+    id: 'monman1',
+    notification: [],
+    messages: []
   }
 ]
